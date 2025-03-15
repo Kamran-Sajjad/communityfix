@@ -1,23 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import Waves from "./Wave.js"; // Import Waves component
+import "./App.css"; // Add your general styles if needed
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Hello <code>Basit and nizam</code> start working now.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app-container">
+      {/* Background Waves Animation */}
+      <Waves
+        lineColor="rgba(255, 255, 255, 0.5)"
+        backgroundColor="rgba(0, 0, 0, 0.8)"
+        waveSpeedX={0.02}
+        waveSpeedY={0.01}
+        waveAmpX={40}
+        waveAmpY={20}
+        friction={0.9}
+        tension={0.01}
+        maxCursorMove={120}
+        xGap={12}
+        yGap={36}
+      />
+
+      {/* Glassmorphic Login Form */}
+      <div className="login-container">
+        <h2>Welcome</h2>
+        <input type="email" placeholder="Email" className="input-field" />
+        <input type="password" placeholder="Password" className="input-field" />
+        <button className="button primary">Sign In</button>
+        <button className="button secondary">Sign Up</button>
+        <button className="button google">Continue with Google</button>
+      </div>
     </div>
   );
 }
