@@ -52,7 +52,8 @@
 // components/IssueStatusTable.jsx
 import { Filter } from "lucide-react";
 
-export default function IssueStatusTable() {
+const IssueStatusTable=()=> {
+// export default function IssueStatusTable() {
   return (
     <div className="bg-white rounded-lg border border-gray-100 p-4 overflow-x-auto">
       <div className="flex justify-between items-center mb-4">
@@ -101,3 +102,6 @@ export default function IssueStatusTable() {
     </div>
   );
 }
+
+
+export default IssueStatusTable;

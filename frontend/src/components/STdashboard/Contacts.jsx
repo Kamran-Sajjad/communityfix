@@ -40,7 +40,8 @@
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 
-export default function Contacts() {
+const Contacts=()=> {
+// export default function Contacts() {
   const [showContacts, setShowContacts] = useState(true);
 
   return (
@@ -73,3 +74,7 @@ function ContactItem({ name, message }) {
     </div>
   );
 }
+
+
+
+export default Contacts;

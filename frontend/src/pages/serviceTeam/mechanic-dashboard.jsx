@@ -99,7 +99,8 @@ import Services from "../../components/STdashboard/Services";
 // import IssueStatusTable from "../components/IssueStatusTable";
 // import Contacts from "../components/Contacts";
 // import Services from "../components/Services";
-export default function MechanicDashboard() {
+const MechanicDashboard=()=> {
+// export default function MechanicDashboard() {
   return (
     <div className="flex h-screen w-full bg-white">
       <Sidebar />
@@ -134,3 +135,4 @@ export default function MechanicDashboard() {
     </div>
   );
 }
+export default MechanicDashboard;

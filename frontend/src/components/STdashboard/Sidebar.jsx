@@ -38,7 +38,8 @@
 import { useState } from "react";
 import { Users, RefreshCw, History, MessageSquare, CircleDashed, LogOut, Menu } from "lucide-react";
 
-export default function Sidebar() {
+const Sidebar=()=> {
+// export default function Sidebar() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
@@ -79,3 +80,4 @@ function NavLink({ icon, text, className = "" }) {
     </div>
   );
 }
+export default Sidebar;
