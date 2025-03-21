@@ -1,7 +1,8 @@
 // components/Services.jsx
 import { Car, Zap, ChevronRight } from "lucide-react";
 
-export default function Services() {
+const Services=()=> {
+// export default function Services() {
   return (
     <div>
       <h2 className="text-xl font-bold mb-4">Services</h2>
@@ -25,3 +26,4 @@ function ServiceItem({ icon, text }) {
     </div>
   );
 }
+export default Services;

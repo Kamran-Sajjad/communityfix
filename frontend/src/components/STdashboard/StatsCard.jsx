@@ -12,7 +12,8 @@
 // components/StatsCard.jsx
 // components/StatsCard.jsx
 // components/StatsCard.jsx
-export default function StatsCard({ title, value, description }) {
+const StatsCard=({title, value, description} )=> {
+// export default function StatsCard({ title, value, description }) {
   return (
     <div className="bg-black text-white p-4 lg:p-6 rounded-lg flex-1">
       <h3 className="text-sm lg:text-lg font-medium mb-2">{title}</h3>
@@ -21,3 +22,4 @@ export default function StatsCard({ title, value, description }) {
     </div>
   );
 }
+export default StatsCard;

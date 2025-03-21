@@ -13,8 +13,11 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import UserDashboard from './pages/residents/UserDashboard';
 // import SDashboard from './pages/serviceTeam/ServiceTeamDashboard';
-import STDashboard from './pages/serviceTeam/mechanic-dashboard';
+import STDashboard from './pages/serviceTeam/MechanicDashboard';
+import ReportsPage from './pages/serviceTeam/ReportsPage';
 import Home from "./pages/Home";
+import AssignedIssues from './pages/serviceTeam/AssignedIssuesPage';
+import ReviewsPage from './pages/serviceTeam/ReviewsPage';
 
 const App = () => {
   return (
@@ -22,7 +25,10 @@ const App = () => {
       <Routes>
       <Route path="/" element={<Home />} /> 
         <Route path="/residents/dashboard" element={<UserDashboard />} />
-        <Route path="/serviceTeam/mechanic-dashboard" element={<STDashboard />} />
+        <Route path="/serviceTeam/MechanicDashboard" element={<STDashboard />} />
+        <Route path="/serviceTeam/ReportsPage" element={<ReportsPage  />} />
+        <Route path="/serviceTeam/AssignedIssuesPage" element={<AssignedIssues  />} />
+        <Route path="/serviceTeam/ReviewsPage" element={<ReviewsPage  />} />
         {/* Add more routes for admin and service team here */}
       </Routes>
     </Router>

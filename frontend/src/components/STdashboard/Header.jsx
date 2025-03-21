@@ -16,7 +16,8 @@
 // components/Header.jsx
 import { Bell } from "lucide-react";
 
-export default function Header() {
+const Header=()=> {
+// export default function Header() {
   return (
     <div className="h-20 bg-black flex items-center justify-between px-4 lg:px-6">
       <h1 className="text-white text-lg lg:text-xl">Welcome Back, Mr. Arslan</h1>
@@ -27,3 +28,4 @@ export default function Header() {
     </div>
   );
 }
+export default Header;

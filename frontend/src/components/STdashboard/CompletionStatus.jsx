@@ -1,7 +1,8 @@
 // components/CompletionStatus.jsx
 import { Car, ChevronLeft, ChevronRight } from "lucide-react";
 
-export default function CompletionStatus() {
+const CompletionStatus=()=> {
+// export default function CompletionStatus() {
   return (
     <div className="mb-8">
       <h2 className="text-xl font-bold mb-4">Completion status</h2>
@@ -26,3 +27,4 @@ export default function CompletionStatus() {
     </div>
   );
 }
+export default CompletionStatus;

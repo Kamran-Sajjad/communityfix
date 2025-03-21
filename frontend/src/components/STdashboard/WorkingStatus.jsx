@@ -37,7 +37,8 @@
 // components/WorkingStatus.jsx
 import { CircleDashed, ChevronLeft, ChevronRight } from "lucide-react";
 
-export default function WorkingStatus() {
+const WorkingStatus=()=> {
+// export default function WorkingStatus() {
   return (
     <div className="mb-8">
       <h2 className="text-lg lg:text-xl font-bold mb-4">Working status</h2>
@@ -67,3 +68,5 @@ export default function WorkingStatus() {
     </div>
   );
 }
+
+export default WorkingStatus;
