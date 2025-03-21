@@ -19,7 +19,20 @@ const Home = () => {
   };
 
   const handleSTButtonClick = () => {
-    navigate("/serviceTeam/mechanic-dashboard"); // Navigate to the dashboard page
+    navigate("/serviceTeam/MechanicDashboard"); // Navigate to the dashboard page
+    // navigate("/serviceTeam/mechanic-dashboard"); // Navigate to the dashboard page
+  };
+  const handleListedIssuesButtonClick = () => {
+    navigate("/serviceTeam/ReportsPage"); // Navigate to the dashboard page
+    // navigate("/serviceTeam/mechanic-dashboard"); // Navigate to the dashboard page
+  };
+  const handleAssignedIssuesButtonClick = () => {
+    navigate("/serviceTeam/AssignedIssuesPage"); // Navigate to the dashboard page
+    // navigate("/serviceTeam/mechanic-dashboard"); // Navigate to the dashboard page
+  };
+  const handleReviewsPageButtonClick = () => {
+    navigate("/serviceTeam/ReviewsPage"); // Navigate to the dashboard page
+    // navigate("/serviceTeam/mechanic-dashboard"); // Navigate to the dashboard page
   };
 
   return (
@@ -36,7 +49,25 @@ const Home = () => {
         onClick={handleSTButtonClick} 
         className="bg-black text-white py-2 px-4 rounded mt-4"
       >
-        Go to Service Team Dashboard
+        Service Team Dashboard
+      </button>
+      <button 
+        onClick={handleListedIssuesButtonClick} 
+        className="bg-black text-white py-2 px-4 rounded mt-4"
+      >
+        Listed Issues 
+      </button>
+      <button 
+        onClick={handleAssignedIssuesButtonClick} 
+        className="bg-black text-white py-2 px-4 rounded mt-4"
+      >
+        Assigned Issues 
+      </button>
+      <button 
+        onClick={handleReviewsPageButtonClick} 
+        className="bg-black text-white py-2 px-4 rounded mt-4"
+      >
+        Reviews Page  
       </button>
     </div>
   );

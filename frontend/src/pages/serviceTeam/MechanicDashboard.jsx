@@ -1,48 +1,4 @@
 
-// // pages/mechanic-dashboard.jsx
-// "use client";
-// import Sidebar from "../../components/STdashboard/Sidebar";
-// import Header from "../../components/STdashboard/Header";
-// import StatsCard from "../../components/STdashboard/StatsCard";
-// import WorkingStatus from "../../components/STdashboard/WorkingStatus";
-// import CompletionStatus from "../../components/STdashboard/CompletionStatus";
-// import IssueStatusTable from "../../components/STdashboard/IssueStatusTable";
-// import Contacts from "../../components/STdashboard/Contacts";
-// import Services from "../../components/STdashboard/Services";
-
-// export default function MechanicDashboard() {
-//   return (
-//     <div className="flex h-screen w-full bg-white">
-//       <Sidebar />
-//       <div className="flex-1 flex flex-col">
-//         <Header />
-//         <div className="flex flex-1">
-//           <div className="flex-1 p-6 overflow-auto">
-//             {/* <div className="grid grid-cols-3 gap-6 mb-8">
-//               <StatsCard title="Total Householders" value="14" description="registered users" />
-//               <StatsCard title="Work" value="8" description="completed" />
-//               <StatsCard title="Pending" value="6" description="requests" />
-//             </div> */}
-//             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6 mb-8">
-//   <StatsCard title="Total Householders" value="14" description="registered users" />
-//   <StatsCard title="Work" value="8" description="completed" />
-//   <StatsCard title="Pending" value="6" description="requests" />
-// </div>
-//             <WorkingStatus />
-//             <CompletionStatus />
-//             <IssueStatusTable />
-//           </div>
-//           <div className="w-[300px] border-l border-gray-200 p-4">
-//             <Contacts />
-//             <Services />
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-// pages/mechanic-dashboard.jsx
 "use client";
 
 
