@@ -162,7 +162,7 @@ export default function IssueTable({ issues, onUpdateIssue }) {
               <td className="py-4">
                 <button
                   onClick={() => handleUpdateClick(issue)}
-                  className="px-4 py-1 rounded-full bg-gray-200 text-sm"
+                  className="px-4 py-1 rounded-full bg-gray-200 text-sm hover:bg-gray-400"
                 >
                   Update
                 </button>
