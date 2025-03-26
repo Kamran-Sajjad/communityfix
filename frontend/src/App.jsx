@@ -11,7 +11,8 @@
 
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import UserDashboard from './pages/residents/UserDashboard';
+import UserDashboard from './pages/residents/Dashboard';
+// import UserDashboard from './pages/residents/UserDashboard';
 // import SDashboard from './pages/serviceTeam/ServiceTeamDashboard';
 import STDashboard from './pages/serviceTeam/MechanicDashboard';
 import ReportsPage from './pages/serviceTeam/ReportsPage';
