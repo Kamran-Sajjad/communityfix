@@ -15,17 +15,17 @@ import {
   FaChevronRight,
   FaChevronLeft,
 } from "react-icons/fa";
-import logo from "../../assets/logo.png"; // Import the logo
+import logo from "../../assets/logo.png"; 
 
 const Sidebar = () => {
-  const [isExpanded, setIsExpanded] = useState(false); // State for expanded/collapsed sidebar
+  const [isExpanded, setIsExpanded] = useState(false); 
 
-  // Toggle sidebar state
+ 
   const toggleSidebar = () => {
     setIsExpanded(!isExpanded);
   };
 
-  // Close sidebar when clicking outside
+ 
   const closeSidebar = () => {
     if (isExpanded) {
       setIsExpanded(false);
@@ -48,7 +48,7 @@ const Sidebar = () => {
           )}
         </div>
 
-        {/* Expansion Button */}
+   
         <button
           onClick={toggleSidebar}
           className="absolute top-6 -right-4 bg-gray-800 text-white p-2 rounded-full shadow-md hover:bg-blue-600 transition-colors duration-200"
@@ -59,8 +59,6 @@ const Sidebar = () => {
             <FaChevronRight className="w-4 h-4" />
           )}
         </button>
-
-        {/* Menu Items */}
         <ul className="mt-6 space-y-4 px-2">
           {[
             { icon: <FaHome className="w-5 h-5" />, text: "Home" },

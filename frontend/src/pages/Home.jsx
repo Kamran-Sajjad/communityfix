@@ -1,13 +1,3 @@
-// import React from "react";
-
-// const Home = () => {
-//   return <h1>Welcome to CommunityFix</h1>;
-// };
-
-// export default Home;
-
-
-
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
