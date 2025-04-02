@@ -1,13 +1,15 @@
 import React from "react";
 import { Link } from "react-router-dom";
+
 export const RegUsers = () => {
   return (
-    <div className="bg-white p-6 rounded-lg shadow-lg">
+    <div className="bg-white p-4 sm:p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
+      {/* Header Section */}
       <div className="flex items-center gap-3">
-        <div className="h-10 w-10 rounded-full bg-purple-200 flex items-center justify-center">
+        <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-purple-200 flex items-center justify-center flex-shrink-0">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5 text-purple-700"
+            className="h-4 w-4 sm:h-5 sm:w-5 text-purple-700"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -21,31 +23,43 @@ export const RegUsers = () => {
             <path d="M16 3.13a4 4 0 0 1 0 7.75" />
           </svg>
         </div>
-        <h3 className="text-xl font-bold">Registered Users</h3>
+        <h3 className="text-lg sm:text-xl font-bold">Registered Users</h3>
       </div>
-      <div className="mt-4">
+
+      {/* Status Section */}
+      <div className="mt-3 sm:mt-4">
         <div className="flex items-center gap-2">
-          <span className="font-medium">Status:</span>
-          <span className="px-2 py-1 bg-green-100 text-green-800 rounded">Online</span>
+          <span className="text-sm sm:text-base font-medium">Status:</span>
+          <span className="px-2 py-1 text-xs sm:text-sm bg-green-100 text-green-800 rounded">
+            Online
+          </span>
         </div>
       </div>
-      <div className="mt-4 flex">
-        <div className="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center -mr-2">
-          <span className="text-sm">U</span>
+
+      {/* Users Avatars Section */}
+      <div className="mt-3 sm:mt-4 flex items-center">
+        <div className="flex -space-x-2">
+          <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-gray-300 flex items-center justify-center border-2 border-white">
+            <span className="text-xs sm:text-sm">U</span>
+          </div>
+          <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-gray-300 flex items-center justify-center border-2 border-white">
+            <span className="text-xs sm:text-sm">K</span>
+          </div>
+          <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-gray-300 flex items-center justify-center border-2 border-white">
+            <span className="text-xs sm:text-sm">J</span>
+          </div>
         </div>
-        <div className="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center -mr-2">
-          <span className="text-sm">K</span>
-        </div>
-        <div className="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center -mr-2">
-          <span className="text-sm">J</span>
-        </div>
-        <span className="ml-2 text-sm font-medium">17 guests . kamran.jani. 1more...</span>
+        <span className="ml-2 text-xs sm:text-sm font-medium">
+          17 guests · kamran.jani · 1 more...
+        </span>
       </div>
-      <Link to="/regUsers">
-     <button className="mt-4 w-full px-4 py-2 bg-black text-white rounded hover:bg-gray-800 transition">
-        Check Community now
-      </button>
-   </Link>
+
+      {/* Button Section */}
+      <Link to="/regUsers" className="block mt-3 sm:mt-4">
+        <button className="w-full px-3 py-2 sm:px-4 sm:py-2 bg-black text-white text-sm sm:text-base rounded hover:bg-gray-800 transition-colors duration-300">
+          Check Community now
+        </button>
+      </Link>
     </div>
   );
 };

@@ -13,10 +13,7 @@ const Test = () => {
           Admin Board
         </button>
      </Link>
-     <Link to="/regUsers">
-        <button className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300">
-        Registered User list        </button>
-     </Link>
+
       <p className="bg-yellow-500 text-black text-lg font-semibold w-full text-center py-2 mt-4">
         Hello, I am Basit
       </p>

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom"; // Import Link for navigation
 import AdSideBare from "../../components/Dashboard/AdSideBare";
 import {AdHeader} from "../../components/Dashboard/AdHeader";
 import UserList from "./UserList";
