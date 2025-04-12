@@ -12,6 +12,8 @@ import Feedbackhistory from './components/Dashboard/Feedbackhistory';
 import  RegisteredUsers from './pages/admin/RegisteredUsers';
 import { PendingReports } from './components/Dashboard/PendingReports';
 import Analytics from './pages/admin/Analytics';
+import IssueReports from './components/Dashboard/IssueReports';
+import Reports from './pages/admin/Reports';
 const App = () => {
   return (
     <Router>
@@ -27,6 +29,8 @@ const App = () => {
         <Route path="/regUsers" element={<RegisteredUsers/>} />
         <Route path="/pending-reports" element={<PendingReports />} />
         <Route path="/analytics" element={<Analytics />} />
+        <Route path="/issue-reports" element={<IssueReports />} />
+        <Route path="/reports" element={<Reports />} />
       </Routes>
     </Router>
   );

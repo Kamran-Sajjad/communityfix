@@ -46,16 +46,6 @@ const AdSideBare = () => {
       path: "/requestedreports",
     },
     {
-      icon: <FaUsers className="w-5 h-5" />,
-      text: "Societal Reports",
-      path: "/societal-reports",
-    },
-    {
-      icon: <FaChartLine className="w-5 h-5" />,
-      text: "Reports",
-      path: "/reports",
-    },
-    {
       icon: <FaChartLine className="w-5 h-5" />,
       text: "Analytics",
       path: "/analytics",
