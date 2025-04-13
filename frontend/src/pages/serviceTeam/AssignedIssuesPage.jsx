@@ -258,9 +258,9 @@ export default function AssignedIssuesPage() {
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-lg font-bold">completed/pending issues</h3>
               <div className="flex space-x-2">
-                <Button onClick={() => setFilter("all")}>All</Button>
-                <Button onClick={() => setFilter("pending")}>Pending</Button>
-                <Button onClick={() => setFilter("completed")}>Completed</Button>
+                <Button className="hover:bg-gray-400" onClick={() => setFilter("all")}>All</Button>
+                <Button className="hover:bg-gray-400" onClick={() => setFilter("pending")}>Pending</Button>
+                <Button className="hover:bg-gray-400" onClick={() => setFilter("completed")}>Completed</Button>
               </div>
             </div>
             <IssueTable issues={filteredIssues} onUpdateIssue={handleUpdateIssue} />

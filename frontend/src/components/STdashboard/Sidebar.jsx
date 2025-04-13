@@ -89,7 +89,7 @@ const Sidebar = () => {
         <div className="flex flex-col space-y-6 px-6 py-8">
           {/* Navigation Links */}
           <NavLink icon={<Users className="w-6 h-6" />} text="Dashboard" to="/serviceTeam/MechanicDashboard" />
-          <NavLink icon={<Users className="w-6 h-6" />} text="Assigned Issues" to="/serviceTeam/AssignedIssues" />
+          <NavLink icon={<Users className="w-6 h-6" />} text="Assigned Issues" to="/serviceTeam/AssignedIssuesPage" />
           {/* <NavLink icon={<RefreshCw className="w-6 h-6" />} text="Update" to="/update" /> */}
           <NavLink icon={<MessageSquare className="w-6 h-6" />} text="Reviews" to="/serviceTeam/ReviewsPage" />
           <NavLink icon={<CircleDashed className="w-6 h-6" />} text="Reports" to="/serviceTeam/ReportsPage" />

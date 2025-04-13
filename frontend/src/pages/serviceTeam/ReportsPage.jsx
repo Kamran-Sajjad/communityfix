@@ -137,7 +137,7 @@ const ReportsPage=()=> {
       name: "Basit",
       location: "Airline, basharat chowk 003",
       title: "garbage cleaning",
-      description: "Remove waste efficiently to ensure a clean environment",
+      description: "Remove waste efficiently to ensure a clean environment. ",
     },
   ];
 
