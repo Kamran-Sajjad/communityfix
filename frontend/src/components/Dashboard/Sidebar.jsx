@@ -1,6 +1,4 @@
 
-
-
 import React, { useState } from "react";
 import OutsideClickHandler from "react-outside-click-handler";
 import {
@@ -64,7 +62,7 @@ const Sidebar = () => {
         <ul className="mt-6 space-y-4 px-2">
           {[
             { icon: <FaHome className="w-5 h-5" />, text: "Home" },
-            { icon: <FaBlog className="w-5 h-5" />, text: "Blog" },
+            // { icon: <FaBlog className="w-5 h-5" />, text: "Blog" },
             { icon: <FaUser className="w-5 h-5" />, text: "Profile" },
             { icon: <FaExclamationCircle className="w-5 h-5" />, text: "Report Issue" },
             { icon: <FaCommentDots className="w-5 h-5" />, text: "Feedback" },
