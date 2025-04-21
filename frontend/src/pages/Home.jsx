@@ -22,22 +22,11 @@ const Home = () => {
     navigate("/serviceTeam/MechanicDashboard"); // Navigate to the dashboard page
     // navigate("/serviceTeam/mechanic-dashboard"); // Navigate to the dashboard page
   };
-  const handleListedIssuesButtonClick = () => {
-    navigate("/serviceTeam/ReportsPage"); // Navigate to the dashboard page
+  const handleAuthenticationScreenClick = () => {
+    navigate("/auth/SignUp"); // Navigate to the dashboard page
     // navigate("/serviceTeam/mechanic-dashboard"); // Navigate to the dashboard page
   };
-  const handleAssignedIssuesButtonClick = () => {
-    navigate("/serviceTeam/AssignedIssuesPage"); // Navigate to the dashboard page
-    // navigate("/serviceTeam/mechanic-dashboard"); // Navigate to the dashboard page
-  };
-  const handleListedIssuesPageButtonClick = () => {
-    navigate("/residents/ListedIssuesPage"); // Navigate to the dashboard page
-    // navigate("/serviceTeam/mechanic-dashboard"); // Navigate to the dashboard page
-  };
-  const handleAddIssuesPageButtonClick = () => {
-    navigate("/residents/AddIssuesPage"); // Navigate to the dashboard page
-    // navigate("/serviceTeam/mechanic-dashboard"); // Navigate to the dashboard page
-  };
+
 
   return (
     <div>
@@ -46,7 +35,7 @@ const Home = () => {
         onClick={handleButtonClick} 
         className="bg-black text-white py-2 px-4 rounded mt-4"
       >
-        Go to User Dashboard
+        Resident Dashboard
       </button>
 
       <button 
@@ -56,29 +45,13 @@ const Home = () => {
         Service Team Dashboard
       </button>
       <button 
-        onClick={handleListedIssuesButtonClick} 
+        onClick={handleAuthenticationScreenClick} 
         className="bg-black text-white py-2 px-4 rounded mt-4"
       >
-        Listed Issues 
+        Authentication Screens 
       </button>
-      <button 
-        onClick={handleAssignedIssuesButtonClick} 
-        className="bg-black text-white py-2 px-4 rounded mt-4"
-      >
-        Assigned Issues 
-      </button>
-      <button 
-        onClick={handleListedIssuesPageButtonClick} 
-        className="bg-black text-white py-2 px-4 rounded mt-4"
-      >
-        Listed Issues Page  
-      </button>
-      <button 
-        onClick={handleAddIssuesPageButtonClick} 
-        className="bg-black text-white py-2 px-4 rounded mt-4"
-      >
-        Add Issues Page  
-      </button>
+     
+ 
     </div>
   );
 };
