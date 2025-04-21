@@ -30,8 +30,12 @@ const Home = () => {
     navigate("/serviceTeam/AssignedIssuesPage"); // Navigate to the dashboard page
     // navigate("/serviceTeam/mechanic-dashboard"); // Navigate to the dashboard page
   };
-  const handleReviewsPageButtonClick = () => {
-    navigate("/serviceTeam/ReviewsPage"); // Navigate to the dashboard page
+  const handleListedIssuesPageButtonClick = () => {
+    navigate("/residents/ListedIssuesPage"); // Navigate to the dashboard page
+    // navigate("/serviceTeam/mechanic-dashboard"); // Navigate to the dashboard page
+  };
+  const handleAddIssuesPageButtonClick = () => {
+    navigate("/residents/AddIssuesPage"); // Navigate to the dashboard page
     // navigate("/serviceTeam/mechanic-dashboard"); // Navigate to the dashboard page
   };
 
@@ -64,10 +68,16 @@ const Home = () => {
         Assigned Issues 
       </button>
       <button 
-        onClick={handleReviewsPageButtonClick} 
+        onClick={handleListedIssuesPageButtonClick} 
         className="bg-black text-white py-2 px-4 rounded mt-4"
       >
-        Reviews Page  
+        Listed Issues Page  
+      </button>
+      <button 
+        onClick={handleAddIssuesPageButtonClick} 
+        className="bg-black text-white py-2 px-4 rounded mt-4"
+      >
+        Add Issues Page  
       </button>
     </div>
   );

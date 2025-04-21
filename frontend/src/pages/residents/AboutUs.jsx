@@ -6,24 +6,38 @@ import {
   Lightbulb,
   RotateCw,
 } from "lucide-react"
-import Sidebar from "../../components/Dashboard/Sidebar" // Adjust the import path as needed
-import Header from "../../components/Dashboard/Header" // Import the Header component
+import Sidebar from "../../components/Rdashboard/Sidebar" // Adjust the import path as needed
+import Header from "../../components/Rdashboard/Header" // Import the Header component
 
 export default function AboutUs() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false);
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-white">
       {/* New Sidebar Component */}
       <div className={`${mobileMenuOpen ? "block" : "hidden"} md:block`}>
-        <Sidebar />
+      <Sidebar
+          mobileMenuOpen={mobileMenuOpen}
+          setMobileMenuOpen={setMobileMenuOpen}
+          isExpanded={isExpanded}
+          setIsExpanded={setIsExpanded}
+        />
       </div>
-
+      {mobileMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
         {/* Mobile Header - Replaced with new Header component */}
-        <Header onMenuToggle={() => setMobileMenuOpen(!mobileMenuOpen)} />
-        
+        {/* <Header onMenuToggle={() => setMobileMenuOpen(!mobileMenuOpen)} /> */}
+        <Header
+          setMobileMenuOpen={setMobileMenuOpen}
+          mobileMenuOpen={mobileMenuOpen}
+        />
         {/* Desktop Title - Added below the header */}
         <div className="hidden ml-18 md:block p-4 border-b">
           <h1 className="text-xl font-bold">About Us</h1>
