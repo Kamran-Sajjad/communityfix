@@ -2,8 +2,8 @@
 
 import { useState } from "react"
 import { toast } from "react-hot-toast"
-import Header from "../../components/Dashboard/Header"
-import Sidebar from "../../components/Dashboard/Sidebar"
+import Header from "../../components/Rdashboard/Header"
+import Sidebar from "../../components/Rdashboard/Sidebar"
 import ProfileHeader from "../../components/Dashboard/ProfileHeader"
 import EditableField from "../../components/Dashboard/EditableField"
 import SaveButton from "../../components/Dashboard/SaveButton"
@@ -11,6 +11,7 @@ import { SettingsIcon } from "lucide-react"
 
 export default function SettingsPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "Kamran Sajjad",
     email: "Kami32@gmail.com",
@@ -33,22 +34,30 @@ export default function SettingsPage() {
   return (
     <div className="flex h-screen w-full bg-white overflow-hidden">
       {/* Mobile Sidebar Overlay */}
-      {mobileMenuOpen && (
+      {/* {mobileMenuOpen && (
         <div 
           className="fixed inset-0 bg-black/50 z-20"
           onClick={() => setMobileMenuOpen(false)}
         />
-      )}
+      )} */}
 
       {/* Sidebar - Always visible */}
-      <div className={`fixed sm:static z-30 h-full ${mobileMenuOpen ? 'block' : 'visible'} sm:block`}>
-        <Sidebar />
+      {/* <div className={`fixed sm:static z-30 h-full ${mobileMenuOpen ? 'block' : 'visible'} sm:block`}> */}
+      <div >
+      <Sidebar
+          mobileMenuOpen={mobileMenuOpen}
+          setMobileMenuOpen={setMobileMenuOpen}
+          isExpanded={isExpanded}
+          setIsExpanded={setIsExpanded}
+        />
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col overflow-hidden sm:ml-16">
-        {/* Header */}
-        <Header onMenuToggle={() => setMobileMenuOpen(!mobileMenuOpen)} />
+      <div className="flex-1 flex flex-col overflow-hidden ">
+        <Header
+          setMobileMenuOpen={setMobileMenuOpen}
+          mobileMenuOpen={mobileMenuOpen}
+        />
 
         {/* Settings Content */}
         <div className="flex-1 overflow-auto p-4 sm:p-6">
