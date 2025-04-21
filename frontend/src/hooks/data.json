@@ -1,0 +1,66 @@
+[
+  {
+    "name": "Kamran Sajjad",
+    "address": "street 7 house 9",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQaiDKCOYMXEu8D-t6KEhyw2QsyFxnpjQqQA&s", 
+    "phone": "0300-1234567",
+    "area": "Gulshan",
+    "block": "A",
+    "city": "Karachi",
+    "cnic": "42101-1234567-8"
+  },
+  {
+    "name": "Abdul Basit",
+    "address": "house 344 street 42 ",
+    "image": "", 
+    "phone": "0312-7654321",
+    "area": "Clifton",
+    "block": "B",
+    "city": "Karachi",
+    "cnic": "42101-7654321-9"
+  },
+  {
+    "name": "Ahmad Nadeem",
+    "address": "street 4 House 13",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSc1Y5Zyg8TndBfV6Gjv4EwP-JEYX0qHaZmMA&s",
+    "phone": "0312-7654321",
+    "area": "Clifton",
+    "block": "B",
+    "city": "Karachi",
+    "cnic": "42101-7654321-9",
+    "Status": "Active"
+  },
+  {
+    "name": "Saad",
+    "address": "street 4 House 13",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTT8Dp4nSW8YJhicTMZ8p1h97EkFw8DCNhDnw&s",
+    "phone": "0312-7654321",
+    "area": "Clifton",
+    "block": "B",
+    "city": "Karachi",
+    "cnic": "42101-7654321-9",
+     "Status": "Active"
+  }
+  ,
+  {
+    "name": "hamza",
+    "address": "street 4 House 13",
+    "image": "",
+    "phone": "0312-7654321",
+    "area": "Clifton",
+    "block": "B",
+    "city": "Karachi",
+    "cnic": "42101-7654321-9", "Status": "Active"
+  },
+  {
+    "name": "kashif",
+    "address": "street 4 House 13",
+    "image": "",
+    "phone": "0312-7654321",
+    "area": "Clifton",
+    "block": "B",
+    "city": "Karachi",
+    "cnic": "42101-7654321-9",
+     "Status": "Active"
+  }
+]
