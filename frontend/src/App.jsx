@@ -3,7 +3,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import UserDashboard from './pages/residents/UserDashboard';
-import Test from './pages/admin/Test';
+
 import Admindb from './pages/admin/Admindb';
 import RequestedUser from './pages/admin/RequestedUser';
 import RequestedReports from './pages/admin/RequestedReports';
@@ -20,7 +20,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/residents/dashboard" element={<UserDashboard />} />
-        <Route path="/admin/test" element={<Test />} />
+       
         <Route path="/admindb" element={<Admindb />} />
         <Route path="/requestedusers" element={<RequestedUser />} />
         <Route path="/requestedreports" element={<RequestedReports />} />

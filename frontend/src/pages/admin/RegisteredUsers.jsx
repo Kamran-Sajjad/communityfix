@@ -16,7 +16,7 @@ const RegisteredUsers = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen bg-gray-50">
+    <div className="flex min-h-screen w-full bg-gray-50 relative">
       {/* Mobile Sidebar Toggle Button */}
       <button
         onClick={toggleMobileSidebar}
@@ -35,20 +35,20 @@ const RegisteredUsers = () => {
 
       {/* Sidebar */}
       <div
-        className={`fixed md:relative z-40 transition-all duration-300 ease-in-out bg-black ${
+        className={`fixed top-0 left-0 h-screen bg-black z-40 transition-all duration-300 ${
           isSidebarExpanded ? "w-64" : "w-16"
         } ${isMobileSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
       >
-        <AdSideBare 
-          isExpanded={isSidebarExpanded} 
-          toggleSidebar={toggleSidebar} 
+        <AdSideBare
+          isExpanded={isSidebarExpanded}
+          toggleSidebar={toggleSidebar}
           onMobileClose={() => setIsMobileSidebarOpen(false)}
         />
       </div>
 
-      {/* Overlay for mobile sidebar */}
+      {/* Mobile overlay */}
       {isMobileSidebarOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black bg-opacity-50 z-30 md:hidden"
           onClick={() => setIsMobileSidebarOpen(false)}
         />
@@ -56,21 +56,19 @@ const RegisteredUsers = () => {
 
       {/* Main Content */}
       <div
-        className={`flex-1 transition-all duration-300 ease-in-out min-h-screen ${
-          isSidebarExpanded ? "md:ml-64" : "md:ml-16"
+        className={`flex flex-col flex-1 w-full transition-all duration-300 ${
+          isSidebarExpanded ? "ml-64" : "ml-16"
         }`}
       >
-        {/* Header Section */}
-        <div className="sticky top-0 z-20 bg-white shadow-sm">
+        {/* Header */}
+        <div className="sticky top-0 z-20 bg-white shadow-sm w-full">
           <AdHeader title="Registered Users" />
         </div>
 
-        {/* User List Section */}
-        <div className="bg-white rounded-lg shadow-md p-6 mx-2 md:mx-5">
-          
-            <RegUList isSidebarExpanded={isSidebarExpanded} />
-          </div>
-        
+        {/* Registered User List */}
+        <div className="bg-white rounded-lg shadow-md p-6 mx-2 md:mx-5 mt-6">
+          <RegUList isSidebarExpanded={isSidebarExpanded} />
+        </div>
       </div>
     </div>
   );
