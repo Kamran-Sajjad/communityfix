@@ -9,7 +9,6 @@ import {
   FaChevronRight,
   FaChevronLeft,
   FaHome,
-  FaUsers,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
@@ -23,10 +22,12 @@ const AdSideBare = () => {
   };
 
   const closeSidebar = () => {
-    if (isExpanded || isMobileOpen) {
-      setIsExpanded(false);
-      setIsMobileOpen(false);
-    }
+    setIsExpanded(false);
+    setIsMobileOpen(false);
+  };
+
+  const toggleMobileMenu = () => {
+    setIsMobileOpen(!isMobileOpen);
   };
 
   const navItems = [
@@ -64,19 +65,23 @@ const AdSideBare = () => {
 
   return (
     <>
-      {/* Mobile menu button */}
+      {/* Mobile menu button - Higher z-index than sidebar */}
       <button
-        onClick={() => setIsMobileOpen(true)}
-        className="md:hidden fixed top-4 left-4 z-30 bg-gray-800 text-white p-2 rounded-md shadow-lg"
+        onClick={toggleMobileMenu}
+        className={`md:hidden fixed top-4 left-4 z-40 bg-gray-800 text-white p-2 rounded-md shadow-lg transition-all ${
+          isMobileOpen ? "opacity-0 pointer-events-none" : "opacity-100"
+        }`}
       >
         ☰
       </button>
 
       <OutsideClickHandler onOutsideClick={closeSidebar}>
         <div
-          className={`fixed left-0 top-0 h-screen bg-gray-900 text-white shadow-lg transition-all duration-300 ease-in-out z-20 ${
+          className={`fixed left-0 top-0 h-full bg-gray-900 text-white shadow-lg transition-all duration-300 ease-in-out ${
             isExpanded ? "w-60" : "w-16"
-          } ${isMobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
+          } ${
+            isMobileOpen ? "translate-x-0 z-30" : "-translate-x-full md:translate-x-0 z-20"
+          }`}
         >
           {/* Logo Section */}
           <div className="flex justify-center items-center py-6">
@@ -90,7 +95,7 @@ const AdSideBare = () => {
           {/* Toggle Button */}
           <button
             onClick={toggleSidebar}
-            className="absolute top-6 -right-4 bg-gray-800 text-white p-2 rounded-full shadow-md hover:bg-blue-600 transition hidden md:block"
+            className="absolute top-6 -right-4 bg-gray-800 text-white p-2 rounded-full shadow-md hover:bg-blue-600 transition hidden md:block z-10"
           >
             {isExpanded ? (
               <FaChevronLeft className="w-4 h-4" />
@@ -102,7 +107,7 @@ const AdSideBare = () => {
           {/* Close button for mobile */}
           <button
             onClick={closeSidebar}
-            className="md:hidden absolute top-2 right-2 text-white p-2"
+            className="md:hidden absolute top-2 right-2 text-white p-2 z-10"
           >
             ✕
           </button>
@@ -117,7 +122,7 @@ const AdSideBare = () => {
                 <Link
                   to={item.path}
                   className="flex items-center w-full"
-                  onClick={() => setIsMobileOpen(false)}
+                  onClick={closeSidebar}
                 >
                   <span className="flex-shrink-0">{item.icon}</span>
                   {/* Tooltip for collapsed state */}

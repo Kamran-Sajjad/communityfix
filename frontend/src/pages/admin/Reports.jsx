@@ -25,7 +25,7 @@ const Reports = () => {
       <div className={`flex-1 transition-all duration-300 ${isSidebarExpanded ? "md:ml-64" : "md:ml-16"}`}>
         {/* Header */}
         <div className="sticky top-0 z-10 bg-white shadow-sm">
-          <AdHeader title="Reports, History" />
+          <AdHeader title="Report's  History" />
         </div>
 
         {/* Reports Section */}
