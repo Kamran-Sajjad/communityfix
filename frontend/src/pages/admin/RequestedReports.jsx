@@ -17,10 +17,10 @@ const RequestedReports = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex w-full min-h-screen bg-gray-100 relative">
       {/* Sidebar */}
       <div
-        className={`fixed md:relative transition-all duration-300 ease-in-out bg-black ${
+        className={`fixed top-0 left-0 h-screen bg-black z-40 transition-all duration-300 ${
           isSidebarExpanded ? "w-64" : "w-16"
         }`}
       >
@@ -29,17 +29,21 @@ const RequestedReports = () => {
 
       {/* Main Content */}
       <div
-        className={`flex-1 p-4 sm:p-6 md:p-8 transition-all duration-300 ${
+        className={`flex flex-col flex-1 transition-all duration-300 ${
           isSidebarExpanded ? "ml-64" : "ml-16"
         }`}
       >
         {/* Header Section */}
-        <AdHeader className="ml-2" title="Requested Reports" />
+        <div className="sticky top-0 z-20 bg-white shadow-sm w-full">
+          <AdHeader title="Requested Reports" />
+        </div>
 
         {/* Reports List */}
-        <div className="mx-auto max-w-full md:max-w-7xl space-y-4">
+        <div className="p-4 sm:p-6 md:p-8 mx-auto max-w-full md:max-w-7xl space-y-4">
           {reports.length > 0 ? (
-            reports.map((report, index) => <ReportCard key={index} report={report} />)
+            reports.map((report, index) => (
+              <ReportCard key={index} report={report} />
+            ))
           ) : (
             <p className="text-center text-gray-500">No reports available.</p>
           )}

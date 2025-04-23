@@ -28,17 +28,20 @@ import AddIssuePage from "./pages/residents/AddIssuePage";
 
 // import Home from "./pages/Home";
 // import UserDashboard from "./pages/residents/UserDashboard";
-import Test from "./pages/admin/Test";
+// import Test from "./pages/admin/Test";
 import Admindb from "./pages/admin/Admindb";
 import RequestedUser from "./pages/admin/RequestedUser";
 import RequestedReports from "./pages/admin/RequestedReports";
 import { AdHeader } from "./components/Dashboard/AdHeader";
-import Feedbackhistory from "./components/Dashboard/Feedbackhistory";
 import RegisteredUsers from "./pages/admin/RegisteredUsers";
 import { PendingReports } from "./components/Dashboard/PendingReports";
 import Analytics from "./pages/admin/Analytics";
 import IssueReports from "./components/Dashboard/IssueReports";
 import Reports from "./pages/admin/Reports";
+import Feedbackhistory from "./components/Dashboard/Feedbackhistory";
+
+
+
 
 const App = () => {
   return (
@@ -72,7 +75,8 @@ const App = () => {
 
         {/* Add more routes for admin and service team here */}
 
-        <Route path="/admin/test" element={<Test />} />
+        {/* <Route path="/admin/test" element={<Test />} /> */}
+
         <Route path="/admindb" element={<Admindb />} />
         <Route path="/requestedusers" element={<RequestedUser />} />
         <Route path="/requestedreports" element={<RequestedReports />} />

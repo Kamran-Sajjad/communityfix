@@ -39,6 +39,7 @@ const Sidebar = ({
       {mobileMenuOpen && (
         <div
           className="fixed inset-0 bg-white bg-opacity-50 z-40 md:hidden"
+           // className="fixed inset-0 bg-white bg-opacity-50 z-40 md:hidden"
           onClick={closeSidebar}
         />
       )}
@@ -47,6 +48,7 @@ const Sidebar = ({
       <OutsideClickHandler onOutsideClick={closeSidebar}>
         <div
           className={`fixed h-screen bg-black text-white shadow-lg transition-all duration-300 ease-in-out z-50 ${
+            // className={`fixed top-0 left-0 h-full bg-black text-white shadow-lg transition-all duration-300 ease-in-out z-50 
             showExpanded ? "w-48" : "w-16"
           } ${mobileMenuOpen ? "block" : "hidden md:block"}`}
         >
@@ -98,7 +100,9 @@ const Sidebar = ({
                   {item.icon}
                   {/* Tooltip for collapsed state */}
                   {!showExpanded && (
-                    <div className="absolute left-14 bg-black text-white text-sm px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
+                    <div className="absolute left-14 bg-black text-white text-sm px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
+                      {/* <div className="absolute left-14 bg-black text-white text-sm px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10"> */}
+                    
                       {item.text}
                     </div>
                   )}

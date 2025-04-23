@@ -8,7 +8,7 @@ const Home = () => {
     navigate("/residents/dashboard"); // Navigate to the dashboard page
   };
   const handleADButtonClick = () => {
-    navigate("/admin/test"); 
+    navigate("/admindb"); // Navigate to the admin dashboard page
   };
 
   const handleSTButtonClick = () => {

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import AdSideBare from "../../components/Dashboard/AdSideBare";
-import {AdHeader} from "../../components/Dashboard/AdHeader";
+import { AdHeader } from "../../components/Dashboard/AdHeader";
 import UserList from "./UserList";
 
 const RequestedUser = () => {
@@ -11,10 +11,10 @@ const RequestedUser = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen">
+    <div className="flex w-full min-h-screen bg-gray-100 relative">
       {/* Sidebar */}
       <div
-        className={`fixed md:relative transition-all duration-300 ease-in-out bg-black ${
+        className={`fixed top-0 left-0 h-screen bg-black z-40 transition-all duration-300 ${
           isSidebarExpanded ? "w-64" : "w-16"
         }`}
       >
@@ -23,15 +23,17 @@ const RequestedUser = () => {
 
       {/* Main Content */}
       <div
-        className={`flex-1 p-4 transition-all duration-300 ease-in-out md:ml-16 ${
+        className={`flex flex-col flex-1 transition-all duration-300 ${
           isSidebarExpanded ? "ml-64" : "ml-16"
         }`}
       >
-        {/* Header Section */}
-        <AdHeader className="ml-2" title="Requested Users" />
+        {/* Header */}
+        <div className="sticky top-0 z-20 bg-white shadow-sm w-full">
+          <AdHeader title="Requested Users" />
+        </div>
 
-        {/* User List Section */}
-        <div className="bg-white rounded-lg shadow-md p-6 mx-2 md:mx-5">
+        {/* User List */}
+        <div className="bg-white rounded-lg shadow-md p-6 mx-2 md:mx-5 mt-4">
           <UserList isSidebarExpanded={isSidebarExpanded} />
         </div>
       </div>

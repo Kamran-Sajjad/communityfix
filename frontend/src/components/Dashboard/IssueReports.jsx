@@ -84,7 +84,7 @@ const IssueReports = () => {
       </div>
 
       {/* Date Filters */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
         <input
           type="date"
           value={fromDate}
@@ -103,8 +103,9 @@ const IssueReports = () => {
         Showing {filteredReports.length} response(s)
       </p>
 
+      {/* Table */}
       <div className="overflow-auto rounded-lg border border-gray-200 shadow-sm">
-        <table className="w-full min-w-[640px]">
+        <table className="w-full min-w-[640px] table-auto">
           <thead className="bg-gray-100">
             <tr>
               {["Name", "Address", "Issue", "Type", "Status", ""].map((header, index) => (
@@ -157,7 +158,7 @@ const IssueReports = () => {
                 {expandedId === report.id && (
                   <tr className="bg-gray-50">
                     <td colSpan={6} className="p-0">
-                      <div className="flex flex-col md:flex-row gap-6 p-4">
+                      <div className="flex flex-col sm:flex-row gap-6 p-4">
                         {/* Details Section */}
                         <div className="flex-1 space-y-2">
                           <h3 className="text-lg font-semibold">{report.issue} Details</h3>
@@ -171,8 +172,8 @@ const IssueReports = () => {
                         </div>
 
                         {/* Image & Map */}
-                        <div className="flex-1">
-                          <div className="h-48 md:h-64 w-full rounded-lg overflow-hidden border border-gray-200">
+                        <div className="flex-1 space-y-4">
+                          <div className="h-48 sm:h-64 w-full rounded-lg overflow-hidden border border-gray-200">
                             <img
                               src={report.image || "/placeholder.svg"}
                               alt={report.issue}
