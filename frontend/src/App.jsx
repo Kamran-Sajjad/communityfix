@@ -41,7 +41,7 @@ const App = () => {
         <Route path="/serviceTeam/AssignedIssuesPage" element={<AssignedIssues  />} />
         <Route path="/serviceTeam/ReviewsPage" element={<ReviewsPage  />} />
         <Route path="/auth/SignUp" element={<SignUp  />} />
-        <Route path="/auth/Login" element={<Login  />} />
+        <Route path="/auth/Login" element={<Login  />} /> 
         {/* Add more routes for admin and service team here */}
       </Routes>
       <ToastContainer position="top-right" autoClose={3000} />
