@@ -21,6 +21,10 @@ import SignUp from "./pages/auth/SignUp";
 // import Login from './pages/auth/login';
 import AboutUs from "./pages/residents/AboutUs";
 import Login from "./pages/auth/Login";
+import ForgotPassword from "./pages/auth/ForgotPassword";
+import OtpVerification from "./pages/auth/OtpVerification";
+import NewPassword from "./pages/auth/NewPassword";
+import TermsAndConditionsPage from "./pages/auth/TermsAndConditionsPage";
 
 // import ReviewsPage from './pages/serviceTeam/ReviewsPage';
 import ListedIssuesPage from "./pages/residents/ListedIssuesPage";
@@ -64,8 +68,13 @@ const App = () => {
         />
 
         <Route path="/serviceTeam/ReviewsPage" element={<ReviewsPage />} />
+
         <Route path="/auth/SignUp" element={<SignUp />} />
         <Route path="/auth/Login" element={<Login />} />
+        <Route path="/auth/ForgotPassword" element={<ForgotPassword />} />
+        <Route path="/auth/OtpVerification" element={<OtpVerification />} />
+        <Route path="/auth/NewPassword" element={<NewPassword />} />
+        <Route path="/auth/TermsAndConditionsPage" element={<TermsAndConditionsPage />} />
 
         <Route
           path="/residents/ListedIssuesPage"

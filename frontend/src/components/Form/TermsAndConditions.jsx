@@ -1,4 +1,5 @@
 import {Link} from "react-router-dom";
+// import TermsAndConditionsPage from "../../pages/auth/TermsAndConditionsPage";
 
 export default function TermsAndConditions({ agreeToTerms, handleInputChange }) {
   return (
@@ -14,7 +15,7 @@ export default function TermsAndConditions({ agreeToTerms, handleInputChange }) 
       />
       <label htmlFor="terms" className="text-xs sm:text-sm">
         By creating an account, you agree to our{" "}
-        <Link href="/terms" className="text-gray-600 hover:underline">
+        <Link to="/auth/termsAndConditionspage" className="text-gray-600 hover:underline">
           terms and conditions
         </Link>
       </label>
