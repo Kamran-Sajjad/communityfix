@@ -126,7 +126,7 @@
 
 import React from "react";
 import OutsideClickHandler from "react-outside-click-handler";
-import { FaHome, FaBlog, FaQuestionCircle, FaExclamationCircle, FaCommentDots, FaList, FaCog, FaSignOutAlt, FaChevronRight, FaChevronLeft, FaBars } from "react-icons/fa";
+import { FaHome, FaUserFriends, FaQuestionCircle, FaExclamationCircle, FaCommentDots, FaList, FaUser, FaSignOutAlt, FaChevronRight, FaChevronLeft, FaBars } from "react-icons/fa";
 import { Link } from "react-router-dom";  // Import Link
 import logo from "../../assets/logo.png";
 
@@ -208,13 +208,13 @@ const Sidebar = ({
           <ul className="mt-6 space-y-4 px-2">
             {[ 
               { icon: <FaHome className="w-5 h-5" />, text: "Home", to: "/residents/Dashboard" },
-              { icon: <FaBlog className="w-5 h-5" />, text: "Blog", to: "/" },
-              { icon: <FaQuestionCircle className="w-5 h-5" />, text: "FAQ", to: "/residents/FAQ" },
               { icon: <FaExclamationCircle className="w-5 h-5" />, text: "Report Issue", to: "/residents/AddIssuePage" },
-              { icon: <FaCommentDots className="w-5 h-5" />, text: "Feedback", to: "/residents/FeedbackPage" },
               { icon: <FaList className="w-5 h-5" />, text: "Listed Issues", to: "/residents/ListedIssuesPage" },
-              { icon: <FaCog className="w-5 h-5" />, text: "Settings", to: "/residents/SettingsPage" },
-              { icon: <FaSignOutAlt className="w-5 h-5 text-red-500" />, text: "Logout", to: "/logout" }
+              { icon: <FaCommentDots className="w-5 h-5" />, text: "Feedback", to: "/residents/FeedbackPage" },
+              { icon: <FaUserFriends className="w-5 h-5" />, text: "About Us", to: "/residents/AboutUs" },
+              { icon: <FaQuestionCircle className="w-5 h-5" />, text: "FAQ", to: "/residents/FAQ" },
+              { icon: <FaUser className="w-5 h-5" />, text: "Profile", to: "/residents/SettingsPage" },
+              { icon: <FaSignOutAlt className="w-5 h-5 text-red-500" />, text: "Logout", to: "/auth/login" }
             ].map((item, index) => (
               <li key={index} className="group flex items-center p-2 rounded-md hover:bg-gray-700 cursor-pointer transition-colors duration-200 relative">
                 <Link to={item.to} className="flex items-center w-full">
