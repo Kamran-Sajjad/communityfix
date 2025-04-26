@@ -182,26 +182,30 @@ const AdSideBare = () => {
   const showExpanded = isExpanded || isMobileOpen;
 
   const navItems = [
-    { icon: <FaHome className="w-5 h-5" />, text: "Home", path: "/admindb" },
+    {
+      icon: <FaHome className="w-5 h-5" />,
+      text: "Home",
+      path: "/admin/admindb",
+    },
     {
       icon: <FaUser className="w-5 h-5" />,
       text: "Requested Users",
-      path: "/requestedusers",
+      path: "/admin/requestedusers",
     },
     {
       icon: <FaExclamationCircle className="w-5 h-5" />,
       text: "Requests",
-      path: "/requestedreports",
+      path: "/admin/requestedreports",
     },
     {
       icon: <FaChartLine className="w-5 h-5" />,
       text: "Analytics",
-      path: "/analytics",
+      path: "/admin/analytics",
     },
     {
       icon: <FaCog className="w-5 h-5" />,
       text: "Settings",
-      path: "/settings",
+      path: "/admin/settings",
     },
     {
       icon: <FaSignOutAlt className="w-5 h-5 text-red-500" />,
@@ -232,15 +236,9 @@ const AdSideBare = () => {
       <OutsideClickHandler onOutsideClick={closeSidebar}>
         <div
           className={`fixed top-0 left-0 h-full bg-black text-white shadow-lg z-50 
-    ${
-      isMobileOpen
-        ? showExpanded
-          ? "w-48"
-          : "w-16"
-        : "w-0 hidden"
-    }
-    transition-all duration-300 ease-in-out overflow-visible
-    md:block md:${showExpanded ? "w-48" : "w-16"}`}
+          ${isMobileOpen ? (showExpanded ? "w-48" : "w-16") : "w-0 hidden"}
+          transition-all duration-300 ease-in-out overflow-visible
+          md:block md:${showExpanded ? "w-48" : "w-16"}`}
         >
           {/* Logo */}
           <div className="flex justify-center items-center py-6 mt-2 md:mt-0">
@@ -297,4 +295,3 @@ const AdSideBare = () => {
 };
 
 export default AdSideBare;
-
