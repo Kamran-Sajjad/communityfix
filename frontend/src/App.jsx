@@ -8,6 +8,7 @@ import FeedbackPage from "./pages/residents/FeedbackPage";
 import SettingsPage from "./pages/residents/SettingsPage";
 
 import UserDashboard from "./pages/residents/Dashboard";
+import FAQ from "./pages/residents/FAQ";
 // import UserDashboard from './pages/residents/UserDashboard';
 
 // import SDashboard from './pages/serviceTeam/ServiceTeamDashboard';
@@ -29,6 +30,7 @@ import TermsAndConditionsPage from "./pages/auth/TermsAndConditionsPage";
 // import ReviewsPage from './pages/serviceTeam/ReviewsPage';
 import ListedIssuesPage from "./pages/residents/ListedIssuesPage";
 import AddIssuePage from "./pages/residents/AddIssuePage";
+import ReviewsAndComments from "./pages/residents/ReviewsAndComments";
 
 // import Home from "./pages/Home";
 // import UserDashboard from "./pages/residents/UserDashboard";
@@ -53,6 +55,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/residents/dashboard" element={<UserDashboard />} />
+        <Route path="/residents/FAQ" element={<FAQ />} />
 
         <Route path="/residents/FeedbackPage" element={<FeedbackPage />} />
         <Route path="/residents/SettingsPage" element={<SettingsPage />} />
@@ -81,6 +84,7 @@ const App = () => {
           element={<ListedIssuesPage />}
         />
         <Route path="/residents/AddIssuePage" element={<AddIssuePage />} />
+        <Route path="/residents/ReviewsAndComments" element={<ReviewsAndComments />} />
 
         {/* Add more routes for admin and service team here */}
 
