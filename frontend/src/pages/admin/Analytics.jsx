@@ -18,7 +18,7 @@ const Analytics = () => {
   return (
     <div className="flex min-h-screen w-full bg-gray-100 relative">
       {/* Sidebar - on top of everything */}
-      <div
+      {/* <div
         className={`fixed top-0 left-0 h-screen bg-white shadow-md transition-all duration-300 z-30 ${
           isSidebarExpanded ? "w-64" : "w-16"
         }`}
@@ -27,12 +27,22 @@ const Analytics = () => {
           isExpanded={isSidebarExpanded}
           toggleSidebar={() => setIsSidebarExpanded(!isSidebarExpanded)}
         />
+      </div> */}
+ <div
+        className={`fixed top-0 left-0 h-screen bg-white shadow-md transition-all duration-300 z-30`} 
+        // className={`fixed md:relative z-50 h-full
+        //  md:block`}
+      >
+        <AdSideBare
+          isExpanded={isSidebarExpanded}
+          toggleSidebar={() => setIsSidebarExpanded(!isSidebarExpanded)}
+        />
+        
       </div>
-
       {/* Main Content */}
       <div
-        className={`flex flex-col flex-1 w-full transition-all duration-300 ${
-          isSidebarExpanded ? "ml-64" : "ml-16"
+        className={`flex flex-col flex-1 w-full transition-all duration-300 md:ml-12 ${
+          isSidebarExpanded ? "ml-0" : "ml-0"
         }`}
       >
         {/* Header */}
