@@ -197,7 +197,7 @@ export default function Login() {
           case 'resident':
             navigate('/residents/dashboard');
             break;
-          case 'service':
+          case 'service Team':
             navigate('/serviceTeam/mechanicDashboard');
             break;
           case 'admin':
