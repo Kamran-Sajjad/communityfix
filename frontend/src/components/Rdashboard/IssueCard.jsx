@@ -11,7 +11,7 @@ export default function IssueCard({ issue }) {
           <img
             src={issue.image || "/placeholder-issue.jpg"}
             alt={issue.title}
-            className="h-full w-full object-contain" // Adjusted size (h-32 = 8rem, w-32 = 8rem)
+            className="h-full w-full object-contain"
           />
         </div>
 
@@ -48,7 +48,7 @@ export default function IssueCard({ issue }) {
         </div>
         
         <Link 
-          to={`/issues/${issue.id}`}
+          to="/residents/ReviewsAndComments"  
           className="text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline"
         >
           View Details →
@@ -57,3 +57,4 @@ export default function IssueCard({ issue }) {
     </div>
   );
 }
+
