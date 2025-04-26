@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import AdSideBare from "../../components/Dashboard/AdSideBare";
-// import AdSideBare from "../../components/Rdashboard/Sidebar";
-// import AdHeader  from "../../components/Rdashboard/Header";
 import { AdHeader } from "../../components/Dashboard/AdHeader";
 import { WorkProgress } from "../../components/Dashboard/WorkProgress";
 import { PendingReports } from "../../components/Dashboard/PendingReports";
