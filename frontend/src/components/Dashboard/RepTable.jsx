@@ -12,7 +12,7 @@ export const RepTable = () => {
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold">Reports</h2>
         <Link
-          to="/reports"
+          to="/admin/reports"
           className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800 transition"
         >
           History

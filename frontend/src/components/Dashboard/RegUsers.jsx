@@ -55,7 +55,7 @@ export const RegUsers = () => {
       </div>
 
       {/* Button Section */}
-      <Link to="/regUsers" className="block mt-3 sm:mt-4">
+      <Link to="/admin/regUsers" className="block mt-3 sm:mt-4">
         <button className="w-full px-3 py-2 sm:px-4 sm:py-2 bg-black text-white text-sm sm:text-base rounded hover:bg-gray-800 transition-colors duration-300">
           Check Community now
         </button>
