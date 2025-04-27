@@ -18,8 +18,18 @@ const MechanicDashboard=()=> {
     <div className="flex h-screen w-full bg-white">
       <Sidebar />
       <div className="flex-1 flex flex-col">
-        <Header />
-        <div className="flex flex-col lg:flex-row flex-1">
+        {/* <div className="pl-200"> */}
+          
+        {/* <Header /> */}
+        {/* </div> */}
+
+
+
+
+        <div className="sticky top-0 z-20 bg-white shadow-sm w-full">
+          <Header title="Welcome back Arslan" />
+        </div>
+        <div className="flex lg:ml-[250px] p-4 flex-col lg:flex-row flex-1">
           <div className="flex-1 p-4 lg:p-6 overflow-auto">
             {/* Stats Cards */}
             <div className="flex gap-4 lg:gap-6 mb-8 overflow-x-auto">
