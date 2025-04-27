@@ -10,20 +10,21 @@ const Reports = () => {
     <div className="flex w-full min-h-screen bg-gray-100 relative">
       {/* Sidebar */}
       <div
-        className={`fixed top-0 left-0 h-screen bg-black z-40 transition-all duration-300 ${
-          isSidebarExpanded ? "w-64" : "w-16"
-        }`}
+        className={`fixed top-0 left-0 h-screen bg-white shadow-md transition-all duration-300 z-30`} 
+        // className={`fixed md:relative z-50 h-full
+        //  md:block`}
       >
-        <AdSideBare 
-          isExpanded={isSidebarExpanded} 
-          toggleSidebar={() => setIsSidebarExpanded(!isSidebarExpanded)} 
+        <AdSideBare
+          isExpanded={isSidebarExpanded}
+          toggleSidebar={() => setIsSidebarExpanded(!isSidebarExpanded)}
         />
+        
       </div>
 
       {/* Main Content */}
       <div
-        className={`flex flex-col flex-1 transition-all duration-300 ${
-          isSidebarExpanded ? "ml-64" : "ml-16"
+        className={`flex flex-col flex-1 transition-all duration-300 md:ml-12 ${
+          isSidebarExpanded ? "ml-64" : "ml-0"
         }`}
       >
         {/* Header */}

@@ -34,7 +34,7 @@ const RegisteredUsers = () => {
       </button>
 
       {/* Sidebar */}
-      <div
+      {/* <div
         className={`fixed top-0 left-0 h-screen bg-black z-40 transition-all duration-300 ${
           isSidebarExpanded ? "w-64" : "w-16"
         } ${isMobileSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
@@ -44,8 +44,18 @@ const RegisteredUsers = () => {
           toggleSidebar={toggleSidebar}
           onMobileClose={() => setIsMobileSidebarOpen(false)}
         />
+      </div> */}
+ <div
+        className={`fixed top-0 left-0 h-screen bg-white shadow-md transition-all duration-300 z-30`} 
+        // className={`fixed md:relative z-50 h-full
+        //  md:block`}
+      >
+        <AdSideBare
+          isExpanded={isSidebarExpanded}
+          toggleSidebar={() => setIsSidebarExpanded(!isSidebarExpanded)}
+        />
+        
       </div>
-
       {/* Mobile overlay */}
       {isMobileSidebarOpen && (
         <div
@@ -56,8 +66,8 @@ const RegisteredUsers = () => {
 
       {/* Main Content */}
       <div
-        className={`flex flex-col flex-1 w-full transition-all duration-300 ${
-          isSidebarExpanded ? "ml-64" : "ml-16"
+        className={`flex flex-col flex-1 w-full transition-all duration-300 md:ml-12 ${
+          isSidebarExpanded ? "ml-64" : "ml-0"
         }`}
       >
         {/* Header */}

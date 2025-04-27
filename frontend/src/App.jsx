@@ -86,20 +86,17 @@ const App = () => {
         <Route path="/residents/AddIssuePage" element={<AddIssuePage />} />
         <Route path="/residents/ReviewsAndComments" element={<ReviewsAndComments />} />
 
-        {/* Add more routes for admin and service team here */}
-
-        {/* <Route path="/admin/test" element={<Test />} /> */}
-
-        <Route path="/admindb" element={<Admindb />} />
-        <Route path="/requestedusers" element={<RequestedUser />} />
-        <Route path="/requestedreports" element={<RequestedReports />} />
-        <Route path="/adheader" element={<AdHeader />} />
-        <Route path="/Feedbackhistory" element={<Feedbackhistory />} />
-        <Route path="/regUsers" element={<RegisteredUsers />} />
-        <Route path="/pending-reports" element={<PendingReports />} />
-        <Route path="/analytics" element={<Analytics />} />
-        <Route path="/issue-reports" element={<IssueReports />} />
-        <Route path="/reports" element={<Reports />} />
+     
+        <Route path="/admin/admindb" element={<Admindb />} />
+        <Route path="/admin/requestedusers" element={<RequestedUser />} />
+        <Route path="/admin/requestedreports" element={<RequestedReports />} />
+        <Route path="/admin/adheader" element={<AdHeader />} />
+        <Route path="/admin/Feedbackhistory" element={<Feedbackhistory />} />
+        <Route path="/admin/regUsers" element={<RegisteredUsers />} />
+        <Route path="/admin/pending-reports" element={<PendingReports />} />
+        <Route path="/admin/analytics" element={<Analytics />} />
+        <Route path="/admin/issue-reports" element={<IssueReports />} />
+        <Route path="/admin/reports" element={<Reports />} />
       </Routes>
       <ToastContainer position="top-right" autoClose={3000} />
     </Router>

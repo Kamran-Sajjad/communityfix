@@ -182,26 +182,30 @@ const AdSideBare = () => {
   const showExpanded = isExpanded || isMobileOpen;
 
   const navItems = [
-    { icon: <FaHome className="w-5 h-5" />, text: "Home", path: "/admindb" },
+    {
+      icon: <FaHome className="w-5 h-5" />,
+      text: "Home",
+      path: "/admin/admindb",
+    },
     {
       icon: <FaUser className="w-5 h-5" />,
       text: "Requested Users",
-      path: "/requestedusers",
+      path: "/admin/requestedusers",
     },
     {
       icon: <FaExclamationCircle className="w-5 h-5" />,
       text: "Requests",
-      path: "/requestedreports",
+      path: "/admin/requestedreports",
     },
     {
       icon: <FaChartLine className="w-5 h-5" />,
       text: "Analytics",
-      path: "/analytics",
+      path: "/admin/analytics",
     },
     {
       icon: <FaCog className="w-5 h-5" />,
       text: "Settings",
-      path: "/settings",
+      path: "/admin/settings",
     },
     {
       icon: <FaSignOutAlt className="w-5 h-5 text-red-500" />,
@@ -215,6 +219,7 @@ const AdSideBare = () => {
       {/* Mobile Overlay */}
       {isMobileOpen && (
         <div
+          // className="fixed inset bg-white bg-opacity-5 z-40 md:hidden"
           // className="fixed inset-0 bg-white bg-opacity-50 z-40 md:hidden"
           onClick={closeSidebar}
         />
@@ -229,13 +234,12 @@ const AdSideBare = () => {
       </button>
 
       <OutsideClickHandler onOutsideClick={closeSidebar}>
-      <div
-  className={`fixed top-0 left-0 h-full bg-black text-white shadow-lg z-50 
-    ${isMobileOpen ? (showExpanded ? 'w-48' : 'w-16') : 'w-0 overflow-hidden hidden'}
-    transition-all duration-300 ease-in-out
-    md:block md:${showExpanded ? 'w-48' : 'w-16'}`}
->
-
+        <div
+          className={`fixed top-0 left-0 h-full bg-black text-white shadow-lg z-50 
+          ${isMobileOpen ? (showExpanded ? "w-48" : "w-16") : "w-0 hidden"}
+          transition-all duration-300 ease-in-out overflow-visible
+          md:block md:${showExpanded ? "w-48" : "w-16"}`}
+        >
           {/* Logo */}
           <div className="flex justify-center items-center py-6 mt-2 md:mt-0">
             {showExpanded ? (
