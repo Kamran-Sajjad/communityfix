@@ -1,3 +1,5 @@
+
+
 // "use client";
 
 // import { useState } from "react";
@@ -5,13 +7,39 @@
 // import FormActions from "../../components/Form/FormActions";
 // import ForgotPasswordLink from "../../components/Form/ForgotPasswordLink";
 // import { toast, ToastContainer } from "react-toastify";
-// import logo from "../../assets/logo.png"
+// import logo from "../../assets/logo.png";
+// // import { useRouter } from "next/navigation";
+// import { useNavigate } from "react-router-dom"
 
 // export default function Login() {
 //   const [formData, setFormData] = useState({
 //     email: "",
 //     password: "",
 //   });
+//   // const router = useRouter();
+//   const navigate = useNavigate();
+
+//   // Hardcoded user credentials
+//   const hardcodedUsers = [
+//     {
+//       email: "resident123@gmail.com",
+//       password: "Resident123",
+//       role: "resident",
+//       name: "John Resident"
+//     },
+//     {
+//       email: "serviceteam123@gmail.com",
+//       password: "Serviceteam123",
+//       role: "service Team",
+//       name: "Service Team Member"
+//     },
+//     {
+//       email: "admin123@gmail.com",
+//       password: "Admin123",
+//       role: "admin",
+//       name: "System Admin"
+//     }
+//   ];
 
 //   const handleInputChange = (e) => {
 //     const { name, value } = e.target;
@@ -23,31 +51,93 @@
 
 //   // const handleSubmit = (e) => {
 //   //   e.preventDefault();
-//   //   console.log("Login form submitted:", formData);
-//   //   // Add your login logic here
+
+//   //   // Check against hardcoded users first
+//   //   const hardcodedUser = hardcodedUsers.find(
+//   //     (u) => u.email === formData.email && u.password === formData.password
+//   //   );
+
+//   //   if (hardcodedUser) {
+//   //     toast.success(`Login successful as ${hardcodedUser.role}! Redirecting...`);
+//   //     localStorage.setItem("loggedInUser", JSON.stringify(hardcodedUser));
+
+//   //     setTimeout(() => {
+//   //       // Redirect based on role
+//   //       switch(hardcodedUser.role) {
+//   //         case 'resident':
+//   //           navigate('/residents/dashboard');
+//   //           break;
+//   //         case 'service Team':
+//   //           navigate('/serviceTeam/mechanicDashboard');
+//   //           break;
+//   //         case 'admin':
+//   //           navigate('/admin/Admindb');
+//   //           break;
+//   //         default:
+//   //           navigate('/auth/login');
+//   //       }
+//   //     }, 2000);
+//   //     return;
+//   //   }
+
+//   //   // Fallback to localStorage users
+//   //   const users = JSON.parse(localStorage.getItem("users")) || [];
+//   //   const user = users.find(
+//   //     (u) => u.email === formData.email && u.password === formData.password
+//   //   );
+
+//   //   if (user) {
+//   //     toast.success("Login successful! Redirecting...");
+//   //     localStorage.setItem("loggedInUser", JSON.stringify(user));
+//   //     setTimeout(() => {
+//   //       router.push('/');
+//   //     }, 2000);
+//   //   } else {
+//   //     toast.error("Invalid email or password!");
+//   //   }
 //   // };
-
-
-//   const handleSubmit = (e) => {
+//   const handleSubmit = async (e) => {
 //     e.preventDefault();
-
-//     const users = JSON.parse(localStorage.getItem("users")) || [];
-//     const user = users.find(
-//       (u) => u.email === formData.email && u.password === formData.password
-//     );
-
-//     if (user) {
-//       toast.success("Login successful! Redirecting...");
-//       localStorage.setItem("loggedInUser", JSON.stringify(user));
-
+  
+//     try {
+//       const response = await fetch("http://localhost:5000/api/users/login", {
+//         method: "POST",
+//         headers: { "Content-Type": "application/json" },
+//         body: JSON.stringify(formData),
+//       });
+  
+//       const data = await response.json();
+  
+//       if (!response.ok) {
+//         throw new Error(data.message || "Login failed");
+//       }
+  
+//       // Save user data and token
+//       localStorage.setItem("loggedInUser", JSON.stringify(data));
+//       toast.success(`Login successful as ${data.accountType}! Redirecting...`);
+  
+//       // Redirect based on account type
 //       setTimeout(() => {
-//         window.location.href = "/"; // or wherever your home page is
+//         switch (data.accountType) {
+//           case "resident":
+//             navigate("/residents/dashboard");
+//             break;
+//           case "serviceTeam":
+//             navigate("/serviceTeam/mechanicDashboard");
+//             break;
+//           case "admin":
+//             navigate("/admin/Admindb");
+//             break;
+//           default:
+//             navigate("/");
+//         }
 //       }, 2000);
-//     } else {
-//       toast.error("Invalid email or password!");
+  
+//     } catch (error) {
+//       toast.error(error.message || "Invalid email or password");
+//       console.error("Login Error:", error);
 //     }
 //   };
-
 
 //   return (
 //     <div className="flex flex-col md:flex-row min-h-screen w-full">
@@ -108,19 +198,10 @@
 //           pauseOnHover
 //           theme="colored"
 //         />
-
 //       </div>
 //     </div>
 //   );
 // }
-
-
-
-
-
-
-
-
 
 
 
@@ -137,39 +218,15 @@ import InputField from "../../components/Form/InputField";
 import FormActions from "../../components/Form/FormActions";
 import ForgotPasswordLink from "../../components/Form/ForgotPasswordLink";
 import { toast, ToastContainer } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 import logo from "../../assets/logo.png";
-// import { useRouter } from "next/navigation";
-import { useNavigate } from "react-router-dom"
 
 export default function Login() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  // const router = useRouter();
   const navigate = useNavigate();
-
-  // Hardcoded user credentials
-  const hardcodedUsers = [
-    {
-      email: "resident123@gmail.com",
-      password: "Resident123",
-      role: "resident",
-      name: "John Resident"
-    },
-    {
-      email: "serviceteam123@gmail.com",
-      password: "Serviceteam123",
-      role: "service Team",
-      name: "Service Team Member"
-    },
-    {
-      email: "admin123@gmail.com",
-      password: "Admin123",
-      role: "admin",
-      name: "System Admin"
-    }
-  ];
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -179,51 +236,43 @@ export default function Login() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Check against hardcoded users first
-    const hardcodedUser = hardcodedUsers.find(
-      (u) => u.email === formData.email && u.password === formData.password
-    );
+    try {
+      const response = await fetch("http://localhost:5000/api/users/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
 
-    if (hardcodedUser) {
-      toast.success(`Login successful as ${hardcodedUser.role}! Redirecting...`);
-      localStorage.setItem("loggedInUser", JSON.stringify(hardcodedUser));
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Login failed");
+      }
+
+      localStorage.setItem("loggedInUser", JSON.stringify(data));
+      toast.success(`Welcome back, ${data.fullName}! Redirecting...`);
 
       setTimeout(() => {
-        // Redirect based on role
-        switch(hardcodedUser.role) {
-          case 'resident':
-            navigate('/residents/dashboard');
+        switch (data.accountType) {
+          case "resident":
+            navigate("/residents/dashboard");
             break;
-          case 'service Team':
-            navigate('/serviceTeam/mechanicDashboard');
+          case "serviceTeam":
+            navigate("/serviceTeam/mechanicDashboard");
             break;
-          case 'admin':
-            navigate('/admin/Admindb');
+          case "admin":
+            navigate("/admin/Admindb");
             break;
           default:
-            navigate('/auth/login');
+            navigate("/");
         }
       }, 2000);
-      return;
-    }
 
-    // Fallback to localStorage users
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-    const user = users.find(
-      (u) => u.email === formData.email && u.password === formData.password
-    );
-
-    if (user) {
-      toast.success("Login successful! Redirecting...");
-      localStorage.setItem("loggedInUser", JSON.stringify(user));
-      setTimeout(() => {
-        router.push('/');
-      }, 2000);
-    } else {
-      toast.error("Invalid email or password!");
+    } catch (error) {
+      toast.error(error.message || "Invalid email or password");
     }
   };
 
@@ -243,10 +292,11 @@ export default function Login() {
       {/* Right side with form */}
       <div className="w-full md:w-[60%] lg:w-[65%] p-4 sm:p-6 md:p-8 lg:p-10 flex items-center">
         <div className="max-w-md mx-auto w-full">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 sm:mb-8 md:mb-12">Welcome back</h1>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 sm:mb-8 md:mb-12">
+            Welcome back
+          </h1>
 
           <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6 md:space-y-8">
-            {/* Email */}
             <InputField
               label="Your Email"
               type="email"
@@ -257,7 +307,6 @@ export default function Login() {
               required
             />
 
-            {/* Password */}
             <InputField
               label="Your Password"
               type="password"
@@ -268,13 +317,11 @@ export default function Login() {
               required
             />
 
-            {/* Forgot Password Link */}
             <ForgotPasswordLink />
-
-            {/* Form Actions (Login Button and Sign Up Link) */}
             <FormActions isLoginPage={true} />
           </form>
         </div>
+
         <ToastContainer
           position="top-center"
           autoClose={3000}
