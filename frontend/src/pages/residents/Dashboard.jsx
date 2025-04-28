@@ -118,6 +118,7 @@ import Chart from "../../components/Rdashboard/WorkStatisticsChart";
 // import Chart from "../../components/Rdashboard/Chart";
 // import ChatWidget from "../../components/Rdashboard/ChatWidget";
 import { complaints } from "../../components/data/complaints";
+import ContactWidget from "../../components/Rdashboard/ContactWidget";
 
 export default function Dashboard() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -215,7 +216,8 @@ export default function Dashboard() {
                 <Chart />
               {/* <ChatWidget /> */}
               </div>
-
+              
+              <ContactWidget />
             </div>
           </div>
         </div>
