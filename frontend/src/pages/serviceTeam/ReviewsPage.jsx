@@ -238,10 +238,13 @@ export default function ReviewsPage() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
         {/* Header */}
-        <Header userName="Mr. Arslan" />
+        {/* <Header userName="Mr. Arslan" /> */}
+        <div className="sticky top-0 z-20 bg-white shadow-sm w-full">
+          <Header title="Welcome back Arslan" />
+        </div>
 
         {/* Page Content */}
-        <div className="flex-1 p-6 overflow-auto">
+        <div className="flex-1 lg:ml-[250px] p-6 overflow-auto">
           {/* Page Title */}
           <div className="flex items-center mb-8">
             <MessageSquare className="w-6 h-6 mr-2" />
