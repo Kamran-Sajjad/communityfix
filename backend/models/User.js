@@ -82,7 +82,7 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   phoneNumber: { type: String, required: true },
   cnic: { type: String, required: true },
-  accountType: { type: String, enum: ['resident', 'serviceTeam'], default: 'resident' },
+  accountType: { type: String, enum: ['resident', 'serviceTeam','admin'], default: 'resident' },
   agreeToTerms: { type: Boolean, required: true }
 }, { timestamps: true });
 
