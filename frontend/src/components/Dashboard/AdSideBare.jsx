@@ -210,7 +210,7 @@ const AdSideBare = () => {
     {
       icon: <FaSignOutAlt className="w-5 h-5 text-red-500" />,
       text: "Logout",
-      path: "/logout",
+      path: "/auth/login",
     },
   ];
 
