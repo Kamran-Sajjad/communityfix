@@ -27,14 +27,24 @@
 
 
 import illustration from "../../assets/illustration.png";
-
-export default function WelcomeSection() {
+  // Get current time for dynamic greeting
+  const currentHour = new Date().getHours();
+  let greeting = "Welcome";
+  
+  if (currentHour < 12) {
+    greeting = "Good morning";
+  } else if (currentHour < 18) {
+    greeting = "Good afternoon";
+  } else {
+    greeting = "Good evening";
+  }
+export default function WelcomeSection({firstName="User"}) {
   return (
     <div className="bg-gray-100 rounded-lg p-4 md:p-6 h-full">
       <div className="flex flex-col lg:flex-row items-center justify-between h-full">
         {/* Text Content */}
         <div className="flex-1">
-          <h1 className="text-xl md:text-2xl lg:text-3xl font-bold">Welcome back, User!</h1>
+          <h1 className="text-xl md:text-2xl lg:text-3xl font-bold">{greeting}, {firstName}!</h1>
           <p className="text-sm md:text-base text-gray-600 mt-1 md:mt-2">
             Here's what's happening with your complaints today.
           </p>

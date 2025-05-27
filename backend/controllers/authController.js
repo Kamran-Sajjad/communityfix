@@ -167,6 +167,8 @@ export const loginUser = async (req, res) => {
       email: user.email,
       accountType: user.accountType,
       token: token,
+      houseNo: user.houseNo, // For residents
+      serviceCategory: user.serviceCategory
     });
   } catch (error) {
     console.error('[LOGIN ERROR] Full error:', error);

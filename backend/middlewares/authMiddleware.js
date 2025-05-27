@@ -29,3 +29,12 @@ export const adminOnly = async (req, res, next) => {
     res.status(403).json({ message: 'Admin access required' });
   }
 };
+
+export const accountTypeRequired = (accountType) => {
+  return (req, res, next) => {
+    if (req.user.accountType !== accountType) {
+      return res.status(403).json({ message: 'Access denied for this account type' });
+    }
+    next();
+  };
+};
