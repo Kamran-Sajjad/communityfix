@@ -6,6 +6,8 @@ import connectDB from './config/db.js';
 import cors from 'cors';
 import authRoutes from './routes/authRoutes.js';
 import issueRoutes from './routes/issueRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
+// const adminRoutes = require('./routes/adminRoutes');
 
 // Connect to MongoDB
 connectDB();
@@ -19,6 +21,7 @@ app.use(express.json());
 // Routes
 app.use('/api/users', authRoutes);
 app.use('/api/issues', issueRoutes);
+app.use('/api/admin', adminRoutes);
 // Root Route
 app.get('/', (req, res) => {
   res.send('CommunityFix Backend Running...');

@@ -8,8 +8,10 @@ import WorkingStatus from "../../components/STdashboard/WorkingStatus";
 import CompletionStatus from "../../components/STdashboard/CompletionStatus";
 import IssueStatusTable from "../../components/STdashboard/IssueStatusTable";
 import Contacts from "../../components/STdashboard/Contacts";
+import { useSelector } from 'react-redux';
 
 const MechanicDashboard = () => {
+  const { user } = useSelector((state) => state.auth);
   // State for all issues
   const [issues, setIssues] = useState([
     { 
@@ -58,7 +60,7 @@ const MechanicDashboard = () => {
       progress: 100
     }
   ]);
-
+  const firstName = user?.fullName.split(' ')[0] || 'Resident';
   // Calculate stats
   const totalHouseholders = issues.length;
   const completedWork = issues.filter(issue => issue.status === "completed").length;
@@ -69,7 +71,8 @@ const MechanicDashboard = () => {
       <Sidebar />
       <div className="flex-1 flex flex-col">
         <div className="sticky top-0 z-20 bg-white shadow-sm w-full">
-          <Header title="Welcome back Arslan" />
+          <Header firstName={firstName} />
+          {/* <Header title="Welcome back Arslan" /> */}
         </div>
         <div className="flex lg:ml-[250px] p-4 flex-col lg:flex-row flex-1">
           <div className="flex-1 p-4 lg:p-6 overflow-auto">

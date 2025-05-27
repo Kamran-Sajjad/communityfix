@@ -502,6 +502,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
 import axios from 'axios';
 import logo from "../../assets/logo.png";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 
 export default function NewPassword() {
   const navigate = useNavigate();
@@ -677,7 +678,7 @@ export default function NewPassword() {
                   className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500"
                   disabled={isSubmitting}
                 >
-                  {showPassword.newPassword ? "Hide" : "Show"}
+                  {showPassword.newPassword ?  <FiEyeOff /> : <FiEye />}
                 </button>
               </div>
               {errors.newPassword && (
@@ -708,7 +709,7 @@ export default function NewPassword() {
                   className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500"
                   disabled={isSubmitting}
                 >
-                  {showPassword.confirmPassword ? "Hide" : "Show"}
+                  {showPassword.confirmPassword ? <FiEyeOff /> : <FiEye />}
                 </button>
               </div>
               {errors.confirmPassword && (
