@@ -1,6 +1,8 @@
+
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom"; // Import useNavigate for redirection
 import logo from "../../assets/logo.png";
+import axios from 'axios';
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -16,32 +18,47 @@ export default function ForgotPassword() {
     return re.test(email);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setEmailError("");
-    setSuccessMessage("");
 
-    if (!email.trim()) {
-      setEmailError("Email is required");
-      return;
-    }
 
-    if (!validateEmail(email)) {
-      setEmailError("Please enter a valid email address");
-      return;
-    }
+  
 
-    setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setEmailError("");
+  setSuccessMessage("");
+
+  if (!email.trim()) {
+    setEmailError("Email is required");
+    return;
+  }
+
+  if (!validateEmail(email)) {
+    setEmailError("Please enter a valid email address");
+    return;
+  }
+
+  setIsSubmitting(true);
+  try {
+    // const response = await axios.post('/api/users/forgot-password', { email });
+    const response = await axios.post('http://localhost:5000/api/users/forgot-password', { email });
+
+    
+    if (response.data.success) {
       setSuccessMessage("Password reset code has been sent to your email");
-
-      // After displaying the success message, redirect to /auth/OtpVerification
+      // Navigate to OTP verification with email state
       setTimeout(() => {
-        navigate("/auth/OtpVerification");
-      }, 1500); // Redirect after 1.5 seconds
-    }, 1500);
-  };
+        navigate("/auth/OtpVerification", { state: { email } });
+      }, 1500);
+    } else {
+      setEmailError(response.data.message);
+    }
+  } catch (error) {
+    setEmailError(error.response?.data?.message || 'Failed to send OTP');
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen w-full">
