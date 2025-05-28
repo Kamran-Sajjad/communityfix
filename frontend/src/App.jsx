@@ -115,8 +115,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Navigate } from 'react-router-dom';
-
+import { Navigate } from "react-router-dom";
 
 // import UserDashboard from './pages/residents/UserDashboard';
 import FeedbackPage from "./pages/residents/FeedbackPage";
@@ -242,7 +241,18 @@ const App = () => {
         <Route path="/admin/issue-reports" element={<IssueReports />} />
         <Route path="/admin/reports" element={<Reports />} />
       </Routes>
-      <ToastContainer position="top-right" autoClose={3000} />
+      {/* <ToastContainer position="top-right" autoClose={3000} /> */}
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
     </Router>
   );
 };

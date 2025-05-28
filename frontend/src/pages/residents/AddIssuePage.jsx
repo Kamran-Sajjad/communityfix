@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import { useRef } from "react";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
+import { showSuccessToast, showErrorToast } from "../../../../backend/utils/toastUtils";
 import 'react-toastify/dist/ReactToastify.css';
 import Sidebar from "../../components/Rdashboard/Sidebar";
 import Header from "../../components/Rdashboard/Header";
-// import PageHeader from "../components/Rdashboard/HeaderAddIssue";
 import FormInput from "../../components/Rdashboard/FormInput";
 import FormRadioGroup from "../../components/Rdashboard/FormRadioGroup";
 import FormTextArea from "../../components/Rdashboard/FormTextArea";
@@ -14,7 +14,6 @@ import FileUpload from "../../components/Rdashboard/FileUpload";
 import useMobileMenu from "../../hooks/useMobileMenu";
 import useForm from "../../hooks/useForm";
 import { issueCategories } from "../../components/data/issueTypes";
-// import HeaderAddIssue from "../../components/Rdashboard/HeaderAddIssue";
 
 export default function AddIssuePage() {
   const fileUploadRef = useRef();
@@ -36,10 +35,10 @@ export default function AddIssuePage() {
   const formBoxColor = isSocietal ? "bg-gray-200" : "bg-gray-300";
 
   
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
   
-    const { name, address, contact, issueType, issueDetails, issueCategory } = formData;
+    const { name, address, contact, issueType, issueDetails, issueCategory, attachments } = formData;
   
     if (
       !name.trim() ||
@@ -49,39 +48,74 @@ export default function AddIssuePage() {
       !issueDetails.trim() ||
       !issueCategory
     ) {
-      toast.error("Please fill out all required fields before submitting!", {
-        position: "top-right",
-        autoClose: 3000,
-        pauseOnHover: true,
-      });
+      showErrorToast("Please fill out all required fields before submitting!");
       return;
     }
   
-    // Success message
-    toast.success("Issue has been reported successfully!", {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
+    // Validate file count
+    if (attachments.length > 3) {
+      showErrorToast("You can upload a maximum of 3 images.");
+      return;
+    }
   
-    // Reset form data
-    setFormData({
-      name: "",
-      address: "",
-      contact: "",
-      issueType: "",
-      issueDetails: "",
-      issueCategory: "",
-      attachment: null,
-    });
-    if (fileUploadRef.current) {
-      fileUploadRef.current.resetFileInput();
+    // Validate total size
+    const totalSize = attachments.reduce((acc, file) => acc + file.size, 0);
+    if (totalSize > 10 * 1024 * 1024) {
+      showErrorToast("Total size of images must not exceed 10 MB.");
+      return;
+    }
+  
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append("title", issueCategory);
+      formDataToSend.append("name", name);
+      formDataToSend.append("description", issueDetails);
+      formDataToSend.append("issueCategory", issueCategory);
+      formDataToSend.append("address", address);
+      formDataToSend.append("contact", contact);
+      formDataToSend.append("issueType", issueType);
+  
+      attachments.forEach((file, index) => {
+        formDataToSend.append("attachments", file); // Assuming backend accepts "attachments" as an array
+      });
+  
+      const token = localStorage.getItem("token");
+  
+      const response = await fetch("http://localhost:5000/api/issues/report", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formDataToSend,
+      });
+  
+      const result = await response.json();
+  
+      if (response.ok) {
+        showSuccessToast("Issue has been reported successfully!");
+  
+        setFormData({
+          name: "",
+          address: "",
+          contact: "",
+          issueType: "societal",
+          issueDetails: "",
+          issueCategory: "",
+          attachments: [],
+        });
+  
+        if (fileUploadRef.current) {
+          fileUploadRef.current.resetFileInput();
+        }
+      } else {
+        showErrorToast(result.message || "Something went wrong");
+      }
+    } catch (error) {
+      console.error("Submission error:", error);
+      showErrorToast("Server error occurred!");
     }
   };
+  
   
   
   
@@ -192,10 +226,15 @@ export default function AddIssuePage() {
             <h2 className="text-lg md:text-xl font-semibold mb-3">
               Attachments
             </h2>
-            <FileUpload
+            {/* <FileUpload
             ref={fileUploadRef}
               onChange={(file) => handleFileChange("attachment", file)}
             />
+          </div> */}
+          <FileUpload
+          ref={fileUploadRef}
+          onChange={(files) => handleFileChange("attachments", files)}
+          />
           </div>
 
           {/* Warning and Submit */}
@@ -212,8 +251,17 @@ export default function AddIssuePage() {
           </div>
         </div>
       </form>
-      <ToastContainer />
-      {/* </div> */}
+      {/* <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+        /> */}
     </div>
   );
 }
