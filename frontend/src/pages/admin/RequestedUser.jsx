@@ -15,8 +15,7 @@ const RequestedUser = () => {
       {/* Sidebar */}
       <div
         className={`fixed top-0 left-0 h-screen bg-white shadow-md transition-all duration-300 z-30`} 
-        // className={`fixed md:relative z-50 h-full
-        //  md:block`}
+      
       >
         <AdSideBare
           isExpanded={isSidebarExpanded}
