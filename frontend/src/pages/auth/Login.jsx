@@ -54,6 +54,9 @@ export default function Login() {
       if (response.ok) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
+
+          localStorage.setItem("serviceTeamToken", data.token);
+        localStorage.setItem("ServiceTeam", JSON.stringify(data.user));
         showSuccessToast(`Welcome back, ${data.fullName}! Redirecting...`);
 
         }
