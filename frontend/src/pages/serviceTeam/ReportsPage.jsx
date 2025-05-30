@@ -571,7 +571,7 @@ const ReportsPage = () => {
       toast.error("The task has been rejected");
       setReports((prev) => prev.filter((r) => r._id !== reportId));
     } catch (error) {
-      console.error("Reject error:", error?.response || error?.message);
+      console.error("Reject  error:", error?.response || error?.message);
       toast.error("Error rejecting the report");
     }
   };
