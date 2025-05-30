@@ -1,121 +1,3 @@
-// import Issue from '../models/Issue.js';
-
-// // @desc    Create a new issue
-// // @route   POST /api/issues
-// // @access  Private (logged-in users)
-// export const createIssue = async (req, res) => {
-//   const { title, description, category, location } = req.body;
-
-//   try {
-//     const issue = await Issue.create({
-//       title,
-//       description,
-//       category,
-//       location,
-//       createdBy: req.user._id, // From authMiddleware
-//     });
-//     res.status(201).json(issue);
-//   } catch (error) {
-//     res.status(500).json({ message: 'Server error' });
-//   }
-// };
-
-// // @desc    Get all issues
-// // @route   GET /api/issues
-// // @access  Private
-// export const getIssues = async (req, res) => {
-//   try {
-//     const issues = await Issue.find().populate('createdBy', 'fullName email');
-//     res.json(issues);
-//   } catch (error) {
-//     res.status(500).json({ message: 'Server error' });
-//   }
-// };
-
-
-
-
-
-
-
-
-
-
-
-
-// import Issue from "../models/Issue.js";
-// import { cloudinary, storage } from "../config/cloudinary.js";
-
-// export const createIssue = async (req, res) => {
-//   try {
-//     const {
-//       title,
-//       description,
-//       issueCategory,
-//       address,
-//       contact,
-//       issueType,
-//       createdBy,
-//     } = req.body;
-//     // const {
-//     //   name,
-//     //   address,
-//     //   contact,
-//     //   issueType,
-//     //   issueDetails,
-//     //   issueCategory,
-//     // } = req.body;
-
-//     const files = req.files;
-//     let attachments = [];
-
-//     if (files) {
-//       for (const file of files) {
-//         const uploaded = await cloudinary.uploader.upload(file.path, {
-//           folder: "communityfix/issues",
-//         });
-
-//         attachments.push({
-//           url: uploaded.secure_url,
-//           public_id: uploaded.public_id,
-//         });
-//       }
-//     }
-
-//     const newIssue = new Issue({
-//       title,
-//       description,
-//       issueCategory,
-//       address,
-//       contact,
-//       issueType,
-//       createdBy,
-//       attachments
-//     });
-//     // const issue = new Issue({
-//     //   name,
-//     //   address,
-//     //   contact,
-//     //   issueType,
-//     //   issueDetails,
-//     //   issueCategory,
-//     //   attachments,
-//     // });
-
-//     await newIssue.save();
-
-//     res.status(201).json({ success: true, message: "Issue reported", issue });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ success: false, message: "Server error" });
-//   }
-// };
-
-
-
-
-
-
 
 
 import Issue from "../models/Issue.js";
@@ -167,5 +49,63 @@ export const createIssue = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+
+
+
+
+
+
+// Get all issues
+export const getAllIssues = async (req, res) => {
+  try {
+    const issues = await Issue.find().sort({ createdAt: -1 });
+    res.status(200).json({ success: true, issues });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Failed to fetch issues" });
+  }
+};
+
+// Upvote issue
+export const upvoteIssue = async (req, res) => {
+  try {
+    const issue = await Issue.findById(req.params.id);
+    if (!issue) return res.status(404).json({ message: "Issue not found" });
+
+    // Check if already voted
+    if (issue.voters.includes(req.user._id)) {
+      return res.status(400).json({ message: "You already upvoted" });
+    }
+
+    issue.upvotes += 1;
+    issue.voters.push(req.user._id);
+    await issue.save();
+
+    res.status(200).json({ success: true, message: "Upvoted", issue });
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Failed to upvote" });
+  }
+};
+
+// Add comment
+export const commentOnIssue = async (req, res) => {
+  try {
+    const { text } = req.body;
+    const issue = await Issue.findById(req.params.id);
+
+    if (!issue) return res.status(404).json({ message: "Issue not found" });
+
+    issue.comments.push({
+      user: req.user._id,
+      text,
+    });
+
+    await issue.save();
+    res.status(201).json({ success: true, message: "Comment added", issue });
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Failed to add comment" });
   }
 };
