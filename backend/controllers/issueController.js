@@ -1,19 +1,57 @@
+// // backend/controllers/issueController.js
+
+// export const commentOnIssue = async (req, res) => {
+//   try {
+//     const { text } = req.body;  // Get the comment text
+//     const { issueId } = req.params; // Get the issueId from the URL params
+
+//     // Ensure the text is not empty
+//     if (!text || text.trim().length === 0) {
+//       return res.status(400).json({ message: "Comment text cannot be empty" });
+//     }
+
+//     // Find the issue by ID
+//     const issue = await Issue.findById(issueId).populate('comments.user', 'fullName avatar');
+
+//     if (!issue) {
+//       return res.status(404).json({ message: "Issue not found" });
+//     }
+
+//     // Add the new comment to the issue
+//     issue.comments.push({
+//       user: req.user._id,  // Assuming you have a user object on the request (via authentication middleware)
+//       text,
+//       createdAt: new Date(),
+//     });
+
+//     // Save the updated issue with the new comment
+//     await issue.save();
+
+//     // Return the updated issue with the new comment
+//     res.status(201).json({ success: true, issue });  // Send the updated issue back
+//   } catch (error) {
+//     console.error("Failed to post comment:", error);
+//     res.status(500).json({ success: false, message: "Failed to post comment" });
+//   }
+// };
 
 
+
+import { JSDOM } from "jsdom";
+import createDOMPurify from "dompurify";
+const window = new JSDOM("").window;
+const DOMPurify = createDOMPurify(window);
 import Issue from "../models/Issue.js";
 import { cloudinary, storage } from "../config/cloudinary.js";
 
+// Create a new issue
 export const createIssue = async (req, res) => {
   try {
     const {
-      title,
-      name,
-      description,
-      issueCategory,
-      address,
-      contact,
-      issueType,
-    } = req.body;
+      title,name,description,issueCategory,address,contact,issueType,} = req.body;
+
+    // Sanitize the description before saving it
+    const sanitizedDescription = DOMPurify.sanitize(description);
 
     const files = req.files;
     let attachments = [];
@@ -34,7 +72,7 @@ export const createIssue = async (req, res) => {
     const newIssue = new Issue({
       title,
       name,
-      description,
+      description: sanitizedDescription, // Save the sanitized description
       issueCategory,
       address,
       contact,
@@ -43,20 +81,16 @@ export const createIssue = async (req, res) => {
       createdBy: req.user._id,
     });
 
-    await newIssue.save(); // ✅ Make sure you're using newIssue here
+    await newIssue.save();
 
-    res.status(201).json({ success: true, message: "Issue reported", issue: newIssue });
+    res
+      .status(201)
+      .json({ success: true, message: "Issue reported", issue: newIssue });
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
-
-
-
-
-
-
 
 // Get all issues
 export const getAllIssues = async (req, res) => {
@@ -80,8 +114,8 @@ export const upvoteIssue = async (req, res) => {
       return res.status(400).json({ message: "You already upvoted" });
     }
 
-    issue.upvotes += 1;
     issue.voters.push(req.user._id);
+    issue.upvotes += 1;
     await issue.save();
 
     res.status(200).json({ success: true, message: "Upvoted", issue });
@@ -90,22 +124,57 @@ export const upvoteIssue = async (req, res) => {
   }
 };
 
-// Add comment
+// backend/controllers/issueController.js
+
 export const commentOnIssue = async (req, res) => {
   try {
-    const { text } = req.body;
-    const issue = await Issue.findById(req.params.id);
+    const { text } = req.body; // Get the comment text
+    const { issueId } = req.params; // Get the issueId from the URL params
 
-    if (!issue) return res.status(404).json({ message: "Issue not found" });
+    // Ensure the text is not empty
+    if (!text || text.trim().length === 0) {
+      return res.status(400).json({ message: "Comment text cannot be empty" });
+    }
+    const sanitizedText = DOMPurify.sanitize(text);
 
+    // Find the issue by ID
+    const issue = await Issue.findById(issueId).populate(
+      "comments.user",
+      "fullName avatar"
+    );
+
+    if (!issue) {
+      return res.status(404).json({ message: "Issue not found" });
+    }
+
+    // Add the new comment to the issue
     issue.comments.push({
-      user: req.user._id,
-      text,
+      user: req.user._id, // Assuming you have a user object on the request (via authentication middleware)
+      text: sanitizedText,
+      createdAt: new Date(),
     });
 
+    // Save the updated issue with the new comment
     await issue.save();
-    res.status(201).json({ success: true, message: "Comment added", issue });
+
+    // Return the updated issue with the new comment
+    res.status(201).json({ success: true, issue }); // Send the updated issue back
+  } catch (error) {
+    console.error("Failed to post comment:", error);
+    res.status(500).json({ success: false, message: "Failed to post comment" });
+  }
+};
+
+// Get issue by ID
+export const getIssueById = async (req, res) => {
+  try {
+    const issue = await Issue.findById(req.params.id)
+      .populate("comments.user", "fullName avatar")
+      .populate("voters", "user");
+    if (!issue) return res.status(404).json({ message: "Issue not found" });
+
+    res.status(200).json({ success: true, issue });
   } catch (err) {
-    res.status(500).json({ success: false, message: "Failed to add comment" });
+    res.status(500).json({ success: false, message: "Failed to get issue" });
   }
 };

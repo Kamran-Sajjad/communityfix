@@ -62,10 +62,6 @@
 
 
 
-
-
-
-
 import { Flame, MessageCircle, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import IssueStatusBadge from "./IssueStatusBadge";
@@ -77,9 +73,15 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 
 export default function IssueCard({ issue }) {
+  // console.log(issue);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const toggleDescription = () => {
+    setIsExpanded(!isExpanded);
+  };
+
   const hasImages = issue.attachments && issue.attachments.length > 0;
   const images = hasImages ? issue.attachments : [];
 
@@ -120,8 +122,7 @@ export default function IssueCard({ issue }) {
                   </SwiperSlide>
                 ))}
               </Swiper>
-
-             </>
+            </>
           ) : (
             <div className="flex flex-col items-center justify-center h-full text-gray-400 text-sm">
               <Users className="w-10 h-10 mb-1" />
@@ -136,7 +137,17 @@ export default function IssueCard({ issue }) {
             <h2 className="text-xl font-bold text-gray-800">{issue.title}</h2>
             <IssueStatusBadge status={issue.status} />
           </div>
-          <p className="text-gray-600 mb-4 line-clamp-3">{issue.description}</p>
+          <p className={`text-gray-600 mb-4 ${!isExpanded && "line-clamp-3"}`}>
+            {issue.description}
+          </p>
+          {issue.description.length > 100 && (
+            <button
+              onClick={toggleDescription}
+              className="text-blue-500 text-sm"
+            >
+              {isExpanded ? "Read Less" : "Read More"}
+            </button>
+          )}
         </div>
       </div>
 
@@ -149,12 +160,14 @@ export default function IssueCard({ issue }) {
           </div>
           <div className="flex items-center text-gray-600">
             <MessageCircle className="w-4 h-4 mr-1 text-blue-500" />
-            <span className="text-sm">{issue.comments?.length || 0} comments</span>
+            <span className="text-sm">
+              {issue.comments?.length || 0} comments
+            </span>
           </div>
         </div>
 
         <Link
-          to="/residents/ReviewsAndComments"
+          to={`/residents/ReviewsAndComments/${issue._id}`}
           className="text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline"
         >
           View Details →

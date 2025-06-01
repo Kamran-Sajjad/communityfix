@@ -18,6 +18,8 @@ export default function ListedIssuesPage() {
   const { mobileMenuOpen, setMobileMenuOpen } = useMobileMenu();
   const [isExpanded, setIsExpanded] = useState(false);
   const [issues, setIssues] = useState([]);
+  const [filteredIssues, setFilteredIssues] = useState([]);
+  const [filterStatus, setFilterStatus] = useState('All Issues');
 
 useEffect(() => {
   const fetchIssues = async () => {
@@ -28,6 +30,7 @@ useEffect(() => {
         }
       });
       setIssues(res.data.issues);
+      setFilteredIssues(res.data.issues);
     } catch (error) {
       console.error("Error fetching issues", error);
     }
@@ -35,6 +38,13 @@ useEffect(() => {
 
   fetchIssues();
 }, []);
+useEffect(() => {
+  if (filterStatus === 'All Issues') {
+    setFilteredIssues(issues);
+  } else {
+    setFilteredIssues(issues.filter(issue => issue.status === filterStatus));
+  }
+}, [filterStatus, issues]);
 
  
   return (
@@ -63,13 +73,14 @@ useEffect(() => {
             {/* Filters/Search (can be expanded later) */}
             <div className="flex justify-between items-center mb-4">
               <div className="text-sm text-gray-500">
-                Showing {issues.length} issues
+                Showing {filteredIssues.length} issues
               </div>
               <div>
                 {/* Placeholder for filter dropdown */}
-                <select className="border border-gray-300 rounded-md px-3 py-1 text-sm">
+                <select className="border border-gray-300 rounded-md px-3 py-1 text-sm" onChange={(e) => setFilterStatus(e.target.value)}
+                  value={filterStatus}>
                   <option>All Issues</option>
-                  <option>Open</option>
+                  <option>Pending</option>
                   <option>In Progress</option>
                   <option>Resolved</option>
                 </select>
@@ -78,7 +89,7 @@ useEffect(() => {
 
             {/* Issues List */}
             <div className="space-y-4">
-              {issues.map((issue) => (
+              {filteredIssues.map((issue) => (
                 <IssueCard 
                   key={issue._id}
                   issue={issue}

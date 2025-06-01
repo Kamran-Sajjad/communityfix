@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 
-// Protect routes (check if user is logged in)
+
 export const protect = async (req, res, next) => {
   try {
     // 1. Get token from header
