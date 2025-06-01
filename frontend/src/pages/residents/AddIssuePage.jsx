@@ -14,9 +14,11 @@ import FileUpload from "../../components/Rdashboard/FileUpload";
 import useMobileMenu from "../../hooks/useMobileMenu";
 import useForm from "../../hooks/useForm";
 import { issueCategories } from "../../components/data/issueTypes";
+// import useAuthApi from "../../hooks/useAuthApi";
 
 export default function AddIssuePage() {
   const fileUploadRef = useRef();
+  // const { fetchWithAuth } = useAuthApi();
   const { mobileMenuOpen, setMobileMenuOpen } = useMobileMenu();
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -81,6 +83,7 @@ export default function AddIssuePage() {
   
       const token = localStorage.getItem("token");
   
+      // const response = await fetchWithAuth("/api/issues/report", {
       const response = await fetch("http://localhost:5000/api/issues/report", {
         method: "POST",
         headers: {
@@ -226,11 +229,7 @@ export default function AddIssuePage() {
             <h2 className="text-lg md:text-xl font-semibold mb-3">
               Attachments
             </h2>
-            {/* <FileUpload
-            ref={fileUploadRef}
-              onChange={(file) => handleFileChange("attachment", file)}
-            />
-          </div> */}
+      
           <FileUpload
           ref={fileUploadRef}
           onChange={(files) => handleFileChange("attachments", files)}
@@ -251,17 +250,7 @@ export default function AddIssuePage() {
           </div>
         </div>
       </form>
-      {/* <ToastContainer
-          position="top-right"
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="colored"
-        /> */}
+     
     </div>
   );
 }

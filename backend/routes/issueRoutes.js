@@ -16,15 +16,42 @@
 
 
 
+// import express from "express";
+// import { createIssue } from "../controllers/issueController.js";
+// import upload from "../middlewares/upload.js";
+// import { protect } from "../middlewares/authMiddleware.js"; // ✅ import protect
+// const router = express.Router();
+
+// router.post("/report", protect, upload.array("attachments", 3), createIssue);
+
+
+// export default router;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import express from "express";
-import { createIssue } from "../controllers/issueController.js";
+import { createIssue ,  getAllIssues, upvoteIssue, commentOnIssue,getIssueById} from "../controllers/issueController.js";
 import upload from "../middlewares/upload.js";
-// import upload from "../middlewares/multer.js";
 import { protect } from "../middlewares/authMiddleware.js"; // ✅ import protect
 const router = express.Router();
 
 router.post("/report", protect, upload.array("attachments", 3), createIssue);
-// router.post("/report", createIssue);
+router.get("/list", protect, getAllIssues);
+router.post("/:id/upvote", protect, upvoteIssue);
+router.post("/:issueId/comment", protect, commentOnIssue);
+// router.post("/:id/comment", protect, commentOnIssue);
+router.get("/:id", protect, getIssueById);
 
 
 export default router;

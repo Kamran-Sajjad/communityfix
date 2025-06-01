@@ -6,12 +6,12 @@ export default function CommentItem({ comment }) {
       <div className="mr-3 flex-shrink-0">
         <img
           src={comment.user.avatar || logo}
-          alt={comment.user.name}
+          alt={comment.user.fullName}
           className="w-8 h-8 rounded-full"
         />
       </div>
       <div>
-        <div className="text-sm font-medium">{comment.user.name}</div>
+        <div className="text-sm font-medium">{comment.user?.fullName || "Anonymous"}</div>
         <p className="text-sm md:text-base">{comment.text}</p>
       </div>
     </div>

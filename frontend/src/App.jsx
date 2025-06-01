@@ -117,7 +117,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 
-// import UserDashboard from './pages/residents/UserDashboard';
 import FeedbackPage from "./pages/residents/FeedbackPage";
 import SettingsPage from "./pages/residents/SettingsPage";
 
@@ -159,101 +158,111 @@ import Analytics from "./pages/admin/Analytics";
 import IssueReports from "./components/Dashboard/IssueReports";
 import Reports from "./pages/admin/Reports";
 import Feedbackhistory from "./components/Dashboard/Feedbackhistory";
+import { AuthProvider } from "./context/AuthContext";
+// import { AuthProvider } from "./context/AuthContext";
 
 const App = () => {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
 
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/auth/SignUp" element={<SignUp />} />
-        <Route path="/auth/Login" element={<Login />} />
-        <Route path="/auth/ForgotPassword" element={<ForgotPassword />} />
-        <Route path="/auth/OtpVerification" element={<OtpVerification />} />
-        <Route path="/auth/NewPassword" element={<NewPassword />} />
-        <Route
-          path="/auth/TermsAndConditionsPage"
-          element={<TermsAndConditionsPage />}
-        />
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/auth/SignUp" element={<SignUp />} />
+          <Route path="/auth/Login" element={<Login />} />
+          <Route path="/auth/ForgotPassword" element={<ForgotPassword />} />
+          <Route path="/auth/OtpVerification" element={<OtpVerification />} />
+          <Route path="/auth/NewPassword" element={<NewPassword />} />
+          <Route
+            path="/auth/TermsAndConditionsPage"
+            element={<TermsAndConditionsPage />}
+          />
 
-        <Route
-          path="/residents/dashboard"
-          element={
-            isAuthenticated && user?.accountType === "resident" ? (
-              <UserDashboard />
-            ) : (
-              <Navigate to="/auth/Login" />
-            )
-          }
-        />
+          <Route
+            path="/residents/dashboard"
+            element={
+              isAuthenticated && user?.accountType === "resident" ? (
+                <UserDashboard />
+              ) : (
+                <Navigate to="/auth/Login" />
+              )
+            }
+          />
 
-        <Route path="/residents/FAQ" element={<FAQ />} />
+          <Route path="/residents/FAQ" element={<FAQ />} />
 
-        <Route path="/residents/FeedbackPage" element={<FeedbackPage />} />
-        <Route path="/residents/SettingsPage" element={<SettingsPage />} />
-        <Route path="/residents/AboutUs" element={<AboutUs />} />
-        <Route
-          path="/serviceTeam/MechanicDashboard"
-          element={
-            isAuthenticated && user?.accountType === "serviceTeam" ? (
-              <STDashboard />
-            ) : (
-              <Navigate to="/auth/Login" />
-            )
-          }
-        />
-        <Route path="/serviceTeam/ReportsPage" element={<ReportsPage />} />
-        <Route
-          path="/serviceTeam/AssignedIssuesPage"
-          element={<AssignedIssues />}
-        />
-
-        <Route path="/serviceTeam/ReviewsPage" element={<ReviewsPage />} />
-
-        <Route
-          path="/residents/ListedIssuesPage"
-          element={<ListedIssuesPage />}
-        />
-        <Route path="/residents/AddIssuePage" element={<AddIssuePage />} />
-        <Route
+          <Route path="/residents/FeedbackPage" element={<FeedbackPage />} />
+          <Route path="/residents/SettingsPage" element={<SettingsPage />} />
+          <Route path="/residents/AboutUs" element={<AboutUs />} />
+          <Route
+            path="/residents/ReviewsAndComments/:issueId"
+            element={<ReviewsAndComments />}
+          />
+          <Route
+            path="/residents/ListedIssuesPage"
+            element={<ListedIssuesPage />}
+          />
+          <Route path="/residents/AddIssuePage" element={<AddIssuePage />} />
+          {/* <Route
           path="/residents/ReviewsAndComments"
           element={<ReviewsAndComments />}
-        />
+        /> */}
 
-        <Route
-          path="/admin/admindb"
-          element={
-            isAuthenticated && user?.accountType === "admin" ? (
-              <Admindb />
-            ) : (
-              <Navigate to="/auth/Login" />
-            )
-          }
+          <Route
+            path="/serviceTeam/MechanicDashboard"
+            element={
+              isAuthenticated && user?.accountType === "serviceTeam" ? (
+                <STDashboard />
+              ) : (
+                <Navigate to="/auth/Login" />
+              )
+            }
+          />
+          <Route path="/serviceTeam/ReportsPage" element={<ReportsPage />} />
+          <Route
+            path="/serviceTeam/AssignedIssuesPage"
+            element={<AssignedIssues />}
+          />
+
+          <Route path="/serviceTeam/ReviewsPage" element={<ReviewsPage />} />
+
+          <Route
+            path="/admin/admindb"
+            element={
+              isAuthenticated && user?.accountType === "admin" ? (
+                <Admindb />
+              ) : (
+                <Navigate to="/auth/Login" />
+              )
+            }
+          />
+          <Route path="/admin/requestedusers" element={<RequestedUser />} />
+          <Route
+            path="/admin/requestedreports"
+            element={<RequestedReports />}
+          />
+          <Route path="/admin/adheader" element={<AdHeader />} />
+          <Route path="/admin/Feedbackhistory" element={<Feedbackhistory />} />
+          <Route path="/admin/regUsers" element={<RegisteredUsers />} />
+          <Route path="/admin/pending-reports" element={<PendingReports />} />
+          <Route path="/admin/analytics" element={<Analytics />} />
+          <Route path="/admin/issue-reports" element={<IssueReports />} />
+          <Route path="/admin/reports" element={<Reports />} />
+        </Routes>
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
         />
-        <Route path="/admin/requestedusers" element={<RequestedUser />} />
-        <Route path="/admin/requestedreports" element={<RequestedReports />} />
-        <Route path="/admin/adheader" element={<AdHeader />} />
-        <Route path="/admin/Feedbackhistory" element={<Feedbackhistory />} />
-        <Route path="/admin/regUsers" element={<RegisteredUsers />} />
-        <Route path="/admin/pending-reports" element={<PendingReports />} />
-        <Route path="/admin/analytics" element={<Analytics />} />
-        <Route path="/admin/issue-reports" element={<IssueReports />} />
-        <Route path="/admin/reports" element={<Reports />} />
-      </Routes>
-      {/* <ToastContainer position="top-right" autoClose={3000} /> */}
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-      />
-    </Router>
+      </Router>
+    </AuthProvider>
   );
 };
 
