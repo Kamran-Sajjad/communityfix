@@ -1,39 +1,3 @@
-// // backend/controllers/issueController.js
-
-// export const commentOnIssue = async (req, res) => {
-//   try {
-//     const { text } = req.body;  // Get the comment text
-//     const { issueId } = req.params; // Get the issueId from the URL params
-
-//     // Ensure the text is not empty
-//     if (!text || text.trim().length === 0) {
-//       return res.status(400).json({ message: "Comment text cannot be empty" });
-//     }
-
-//     // Find the issue by ID
-//     const issue = await Issue.findById(issueId).populate('comments.user', 'fullName avatar');
-
-//     if (!issue) {
-//       return res.status(404).json({ message: "Issue not found" });
-//     }
-
-//     // Add the new comment to the issue
-//     issue.comments.push({
-//       user: req.user._id,  // Assuming you have a user object on the request (via authentication middleware)
-//       text,
-//       createdAt: new Date(),
-//     });
-
-//     // Save the updated issue with the new comment
-//     await issue.save();
-
-//     // Return the updated issue with the new comment
-//     res.status(201).json({ success: true, issue });  // Send the updated issue back
-//   } catch (error) {
-//     console.error("Failed to post comment:", error);
-//     res.status(500).json({ success: false, message: "Failed to post comment" });
-//   }
-// };
 
 
 

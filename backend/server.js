@@ -7,19 +7,24 @@ import cors from 'cors';
 import authRoutes from './routes/authRoutes.js';
 import issueRoutes from './routes/issueRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
-
+import userRoutes from './routes/userRoutes.js';
+import path from 'path';
 // Connect to MongoDB
 connectDB();
 
 const app = express();
 
+const __dirname = path.resolve();
+
+
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
 // Routes
 app.use('/api/users', authRoutes);
-// app.use('/api/', issueRoutes);
+app.use('/api/users', userRoutes);
 app.use('/api/issues', issueRoutes);
 app.use('/api/admin', adminRoutes);
 // Root Route
