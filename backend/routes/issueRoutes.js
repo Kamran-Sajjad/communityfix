@@ -41,7 +41,7 @@
 
 
 import express from "express";
-import { createIssue ,  getAllIssues, upvoteIssue, commentOnIssue,getIssueById} from "../controllers/issueController.js";
+import { createIssue ,  getAllIssues, upvoteIssue, commentOnIssue,getIssueById,getUserIssues} from "../controllers/issueController.js";
 import upload from "../middlewares/upload.js";
 import { protect } from "../middlewares/authMiddleware.js"; // ✅ import protect
 const router = express.Router();
@@ -51,7 +51,7 @@ router.get("/list", protect, getAllIssues);
 router.post("/:id/upvote", protect, upvoteIssue);
 router.post("/:issueId/comment", protect, commentOnIssue);
 // router.post("/:id/comment", protect, commentOnIssue);
+router.get("/myissues", protect, getUserIssues);
 router.get("/:id", protect, getIssueById);
-
 
 export default router;
