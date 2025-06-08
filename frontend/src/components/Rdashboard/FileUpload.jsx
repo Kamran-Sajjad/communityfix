@@ -77,6 +77,55 @@
 //   );
 // }
 
+// ----------------------------------------
+
+
+// import { useRef, forwardRef, useImperativeHandle } from "react";
+
+// const FileUpload = forwardRef(({ onChange }, ref) => {
+//   const fileInputRef = useRef();
+
+//   const handleFileChange = (e) => {
+//     const file = e.target.files[0];
+//     onChange(file);
+//   };
+
+//   // Expose resetFileInput method to parent using forwarded ref
+//   useImperativeHandle(ref, () => ({
+//     resetFileInput: () => {
+//       if (fileInputRef.current) {
+//         fileInputRef.current.value = "";
+//       }
+//     }
+//   }));
+
+//   return (
+//     <div>
+//       <input
+//         ref={fileInputRef}
+//         type="file"
+//         onChange={handleFileChange}
+//         className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-black file:text-white hover:file:bg-gray-800"
+//       />
+//     </div>
+//   );
+// });
+
+// export default FileUpload;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 import { useRef, forwardRef, useImperativeHandle } from "react";
 
@@ -84,8 +133,8 @@ const FileUpload = forwardRef(({ onChange }, ref) => {
   const fileInputRef = useRef();
 
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    onChange(file);
+    const files = Array.from(e.target.files);
+    onChange(files);
   };
 
   // Expose resetFileInput method to parent using forwarded ref
@@ -102,6 +151,8 @@ const FileUpload = forwardRef(({ onChange }, ref) => {
       <input
         ref={fileInputRef}
         type="file"
+        multiple
+        accept="image/*"
         onChange={handleFileChange}
         className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-black file:text-white hover:file:bg-gray-800"
       />

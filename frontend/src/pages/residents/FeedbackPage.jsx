@@ -1,39 +1,4 @@
 
-// "use client";
-// import { useState } from "react";
-// import Header from "../../components/Dashboard/Header";
-// import Sidebar from "../../components/Dashboard/Sidebar";
-// import FeedbackForm from "../../components/Dashboard/FeedbackForm";
-
-// export default function FeedbackPage() {
-//   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-//   return (
-//     <div className="flex flex-col h-screen w-full bg-white overflow-hidden">
-//       {/* Header */}
-//       <Sidebar
-//         mobileMenuOpen={mobileMenuOpen}
-//         onClose={() => setMobileMenuOpen(false)}
-//       />
-//       <Header onMenuToggle={() => setMobileMenuOpen(!mobileMenuOpen)} />
-
-
-//       <div className="flex flex-1 overflow-hidden">
-
-
-//         {/* Main Content */}
-//         <div className="ml-12 flex-1 flex flex-col overflow-hidden">
-//           {/* Feedback Form */}
-//           <div className="flex-1 p-4 md:p-6 overflow-auto">
-//             <h1 className="text-2xl md:text-3xl font-bold mb-6">Feedback Form</h1>
-//             <FeedbackForm />
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
 
 
 
