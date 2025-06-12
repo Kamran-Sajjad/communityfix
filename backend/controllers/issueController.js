@@ -7,6 +7,7 @@ const window = new JSDOM("").window;
 const DOMPurify = createDOMPurify(window);
 import Issue from "../models/Issue.js";
 import { cloudinary, storage } from "../config/cloudinary.js";
+// import issueSchema from "../models/Issue.js";
 
 // Create a new issue
 export const createIssue = async (req, res) => {
@@ -142,3 +143,104 @@ export const getIssueById = async (req, res) => {
     res.status(500).json({ success: false, message: "Failed to get issue" });
   }
 };
+
+
+
+// import Issue from '../models/Issue.js';
+
+export const getUserIssues = async (req, res) => {
+  try {
+    // console.log("Inside getUserIssues controller");
+
+    // console.log(req.user);
+    const userId = req.user?._id;
+    if (!userId) {
+      console.log("No user ID found in req.user");
+      return res.status(400).json({ success: false, message: 'User not authenticated' });
+    }
+
+    // console.log("Looking for issues created by user:", userId);
+    // console.log(typeof Issue.find);
+    const issues = await Issue.find({ createdBy: userId }).select('title');
+
+    // console.log("Found issues:", issues);
+
+    return res.status(200).json({ success: true, issues });
+  } catch (error) {
+    console.error("Error in getUserIssues:", error);
+    return res.status(500).json({ success: false, message: 'Failed to get issue' });
+  }
+};
+
+
+
+
+
+// // Get issues reported by the currently logged-in user
+// export const getUserIssues = async (req, res) => {
+//   try {
+//     const userId = req.user._id;
+//     const createdBy= req.user._id;
+//     const issues = await Issue.find({ createdBy: userId }).select("title");
+//     // const issues = await Issue.find({ reportedBy: userId }).select("title");
+//     res.status(200).json(issues);
+//   } catch (err) {
+//     res.status(500).json({ message: "Failed to fetch user issues", error: err.message });
+//   }
+// };
+
+
+
+
+// export const getUserIssues = async (req, res) => {
+//   try {
+//     const userId = req.user._id; // Ensure `req.user` is set by `protect` middleware
+//     const issues = await Issue.find({ user: userId }).sort({ createdAt: -1 });
+//     res.status(200).json(issues);
+//   } catch (error) {
+//     console.error("Error in getUserIssues:", error); // 👈 LOG THE ERROR
+//     res.status(500).json({ message: "Server Error" });
+//   }
+// };
+
+
+// export const getUserIssues = async (req, res) => {
+//   try {
+//     if (!req.user) {
+//       console.log("No user in request");
+//       return res.status(401).json({ message: "Unauthorized" });
+//     }
+
+//     const userId = req.user._id;
+//     console.log("Looking for issues created by user:", userId);
+
+//     const issues = await issueSchema.find({ createdBy: userId }).sort({ createdAt: -1 });
+//     res.status(200).json(issues);
+//   } catch (error) {
+//     console.error("Error in getUserIssues:", error);
+//     res.status(500).json({ message: "Server Error" });
+//   }
+// };
+
+
+// export const getUserIssues = async (req, res) => {
+//   try {
+//     const userId = req.user._id; // assuming you have user attached to req via middleware
+
+//     console.log("Looking for issues created by user:", userId);
+//     // console.log("Issue model:", Issue);
+
+//     const issues = await Issue.find({ createdBy: userId }).select('title');
+
+//     return res.status(200).json(issues);
+//   } catch (error) {
+//     console.error("Error in getUserIssues:", error);
+//     return res.status(500).json({ message: 'Failed to get user issues.' });
+//   }
+// };
+
+
+
+
+
+
