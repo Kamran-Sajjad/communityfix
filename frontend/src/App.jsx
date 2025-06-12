@@ -166,6 +166,26 @@ const App = () => {
 
   return (
     <AuthProvider>
+      {/* <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/residents/dashboard" element={<UserDashboard />} />
+          <Route path="/residents/FeedbackPage" element={<FeedbackPage />} />
+          <Route path="/residents/SettingsPage" element={<SettingsPage />} />
+          <Route path="/residents/AboutUs" element={<AboutUs />} />
+          <Route path="/serviceTeam/MechanicDashboard" element={<STDashboard />} />
+          <Route path="/serviceTeam/ReportsPage" element={<ReportsPage />} />
+          <Route path="/serviceTeam/AssignedIssuesPage" element={<AssignedIssues />} />
+          <Route path="/serviceTeam/ReviewsPage" element={<ReviewsPage />} />
+          <Route path="/auth/SignUp" element={<SignUp />} />
+          <Route path="/auth/Login" element={<Login />} /> */}
+      {/* Add more routes for admin and service team here */}
+      {/* </Routes> */}
+      {/* <ToastContainer position="top-right" autoClose={3000} /> */}
+      {/* </Router> */}
+
+
+      {/* <AuthProvider> */}
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -263,6 +283,7 @@ const App = () => {
         />
       </Router>
     </AuthProvider>
+
   );
 };
 
