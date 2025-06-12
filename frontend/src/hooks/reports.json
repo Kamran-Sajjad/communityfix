@@ -1,0 +1,27 @@
+[
+    {
+      "name": "Nizam",
+      "age": 22,
+      "location": "Airline near Quetta cafe 107",
+      "issueTitle": "Solar Installation",
+      "issueDescription": "Set up eco-friendly solar panels to reduce energy costs.",
+      "recommendations": ["Kami Electronics", "Green Energy Solutions"]
+    },
+    {
+      "name": "Kamran",
+      "age": 45,
+      "location": "Airline opp. Masjid 346",
+      "issueTitle": "Kitchen Plumbing",
+      "issueDescription": "Fix leaks or install new pipes for a functional kitchen.",
+      "recommendations": ["Saad Pipes", "Plumbing Experts"]
+    },
+    {
+      "name": "Basit",
+      "age": 18,
+      "location": "Airline, Basharat Chowk 003",
+      "issueTitle": "Garbage Cleaning",
+      "issueDescription": "Remove waste efficiently to ensure a clean environment.",
+      "recommendations": ["Admin Department", "City Clean Services"]
+    }
+  ]
+  
