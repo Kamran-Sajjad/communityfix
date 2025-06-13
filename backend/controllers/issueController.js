@@ -156,7 +156,8 @@ export const getUserIssues = async (req, res) => {
       return res.status(400).json({ success: false, message: 'User not authenticated' });
     }
 
-    const issues = await Issue.find({ createdBy: userId }).select('title');
+    const issues = await Issue.find({ createdBy: userId }).select('title description issueType status upvotes createdAt attachments');
+    // const issues = await Issue.find({ createdBy: userId }).select('title');
 
     return res.status(200).json({ success: true, issues });
   } catch (error) {
