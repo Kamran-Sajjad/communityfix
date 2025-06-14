@@ -8,7 +8,7 @@ const FeedbackCard = ({ feedback }) => {
     issue = "No Issue Specified",
     comment = "No comment available.",
     rating = 0,
-    imageUrl = "",
+    image = "",
     createdAt = new Date().toISOString(),
   } = feedback;
 
@@ -71,7 +71,7 @@ const FeedbackCard = ({ feedback }) => {
       </div>
 
       {/* Right side: Image */}
-      {imageUrl ? (
+      {image? (
         <div
           className="ml-auto rounded-[20%] overflow-hidden shadow"
           style={{
@@ -83,8 +83,8 @@ const FeedbackCard = ({ feedback }) => {
             flexShrink: 0,
           }}
         >
-          <img
-            src={`/uploads/${imageUrl}`}
+         <img
+  src={`http://localhost:5000/backend/uploads/${image}`} // Replace with your backend base URL
             alt="Feedback"
             className="w-full h-full object-cover"
             onError={(e) => {
@@ -109,7 +109,6 @@ const FeedbackCard = ({ feedback }) => {
             flexShrink: 0,
           }}
         >
-          No image uploaded
         </div>
       )}
     </div>

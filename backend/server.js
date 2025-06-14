@@ -33,6 +33,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/admin', userReviewRoutes);
 app.use('/api/feedback', feedbackRoutes);
 
+
 // Root Route
 app.get('/', (req, res) => {
   res.send('CommunityFix Backend Running...');
@@ -43,3 +44,5 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+
