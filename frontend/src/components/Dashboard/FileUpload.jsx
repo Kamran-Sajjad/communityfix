@@ -1,6 +1,9 @@
 "use client";
 
 const FileUpload = ({ selectedFile, onFileChange }) => {
+  const handleChange = (e) => {
+    onFileChange(e.target.files[0]);
+  };
   return (
     <div>
       <label className="block text-lg font-semibold mb-2">
@@ -12,11 +15,14 @@ const FileUpload = ({ selectedFile, onFileChange }) => {
           <input
             type="file"
             className="hidden"
-            onChange={(e) => onFileChange(e.target.files[0]?.name)}
+            accept="image/*" 
+            // onChange={handleChange}
+            onChange={(e) => onFileChange(e.target.files[0])}
           />
+          {/* <input type="file" accept="image/*" onChange={handleChange} /> */}
         </label>
         <span className="text-sm text-gray-500">
-          {selectedFile ? selectedFile : "No file chosen..."}
+          {selectedFile ? selectedFile.name : "No file chosen..."}
         </span>
       </div>
     </div>

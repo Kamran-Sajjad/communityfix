@@ -157,7 +157,8 @@
 import React from "react";
 import Notification from "./Notification"; // Adjust the import path as needed
 
-const Header = ({ title = "Welcome back" }) => {
+// const Header = ({ title = "Welcome back" }) => {
+const Header = ({ firstName= "Welcome back" }) => {
   const initialNotifications = [
     {
       id: 1,
@@ -178,12 +179,22 @@ const Header = ({ title = "Welcome back" }) => {
       read: false,
     },
   ];
-
+ // Get current time for dynamic greeting
+ const currentHour = new Date().getHours();
+ let greeting = "Welcome";
+ 
+ if (currentHour < 12) {
+   greeting = "Good morning";
+ } else if (currentHour < 18) {
+   greeting = "Good afternoon";
+ } else {
+   greeting = "Good evening";
+ }
   return (
     <header className="mb-2 p-2 px-2 flex flex-col sm:flex-row items-center justify-between gap-2">
       {/* Title */}
       <h1 className="w-full text-center sm:text-left sm:pl-25 md:pl-72 lg:pl-80 font-bold text-xl sm:text-2xl md:text-3xl">
-        {title}
+       {greeting}, {firstName}!
       </h1>
 
       {/* Notification + Profile */}
@@ -197,7 +208,7 @@ const Header = ({ title = "Welcome back" }) => {
             <span className="text-sm sm:text-lg font-bold">A</span>
           </div>
           <div className="hidden sm:block">
-            <h2 className="font-bold text-sm md:text-base">Arslan</h2>
+            <h2 className="font-bold text-sm md:text-base">{firstName}</h2>
             <p className="text-xs md:text-sm text-gray-600">Painter</p>
           </div>
         </div>

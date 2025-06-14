@@ -13,6 +13,7 @@ export default function InputField({ label, type, name, value, onChange, placeho
           className="w-full p-2 sm:p-3 text-sm sm:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black"
           required={required}
         />
+       
       </div>
     );
   }
