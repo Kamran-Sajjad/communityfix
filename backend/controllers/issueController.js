@@ -187,3 +187,410 @@ export const getIssuesByStatus = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
+// // Get issue statistics for dashboard
+// export const getIssueStatistics = async (req, res) => {
+//   try {
+//     const { year, timeRange } = req.query;
+    
+//     // Parse the year as a number
+//     const yearNum = parseInt(year) || new Date().getFullYear();
+    
+//     if (timeRange === 'monthly') {
+//       // Get monthly data
+//       const monthlyStats = await Issue.aggregate([
+//         {
+//           $match: {
+//             createdAt: {
+//               $gte: new Date(yearNum, 0, 1),
+//               $lt: new Date(yearNum + 1, 0, 1)
+//             }
+//           }
+//         },
+//         {
+//           $group: {
+//             _id: { $month: "$createdAt" },
+//             totalIssues: { $sum: 1 },
+//             pendingIssues: {
+//               $sum: {
+//                 $cond: [{ $eq: ["$status", "pending"] }, 1, 0]
+//               }
+//             }
+//           }
+//         },
+//         {
+//           $sort: { "_id": 1 }
+//         }
+//       ]);
+
+//       // Format the data to match the expected structure
+//       const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+//       const formattedData = {
+//         labels: [],
+//         totalIssues: Array(12).fill(0),
+//         pendingIssues: Array(12).fill(0)
+//       };
+
+//       monthlyStats.forEach(stat => {
+//         const monthIndex = stat._id - 1;
+//         formattedData.labels = monthNames;
+//         formattedData.totalIssues[monthIndex] = stat.totalIssues;
+//         formattedData.pendingIssues[monthIndex] = stat.pendingIssues;
+//       });
+
+//       return res.status(200).json({ success: true, data: formattedData });
+//     } else {
+//       // Get daily data for current month
+//       const currentDate = new Date();
+//       const currentMonth = currentDate.getMonth() + 1;
+//       const currentYear = currentDate.getFullYear();
+//       const daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
+
+//       const dailyStats = await Issue.aggregate([
+//         {
+//           $match: {
+//             createdAt: {
+//               $gte: new Date(currentYear, currentMonth - 1, 1),
+//               $lt: new Date(currentYear, currentMonth, 1)
+//             }
+//           }
+//         },
+//         {
+//           $group: {
+//             _id: { $dayOfMonth: "$createdAt" },
+//             totalIssues: { $sum: 1 },
+//             pendingIssues: {
+//               $sum: {
+//                 $cond: [{ $eq: ["$status", "pending"] }, 1, 0]
+//               }
+//             }
+//           }
+//         },
+//         {
+//           $sort: { "_id": 1 }
+//         }
+//       ]);
+
+//       // Format the data to match the expected structure
+//       const formattedData = {
+//         labels: Array.from({length: daysInMonth}, (_, i) => (i + 1).toString()),
+//         totalIssues: Array(daysInMonth).fill(0),
+//         pendingIssues: Array(daysInMonth).fill(0)
+//       };
+
+//       dailyStats.forEach(stat => {
+//         const dayIndex = stat._id - 1;
+//         formattedData.totalIssues[dayIndex] = stat.totalIssues;
+//         formattedData.pendingIssues[dayIndex] = stat.pendingIssues;
+//       });
+
+//       return res.status(200).json({ success: true, data: formattedData });
+//     }
+//   } catch (err) {
+//     console.error("Failed to fetch issue statistics:", err);
+//     res.status(500).json({ success: false, message: "Failed to fetch statistics" });
+//   }
+// };
+// export const getIssueStatistics = async (req, res) => {
+//   try {
+//     const { year, timeRange } = req.query;
+//     const yearNum = parseInt(year) || new Date().getFullYear();
+
+//     if (timeRange === 'monthly') {
+//       const stats = await Issue.aggregate([
+//         {
+//           $match: {
+//             createdAt: {
+//               $gte: new Date(yearNum, 0, 1),
+//               $lt: new Date(yearNum + 1, 0, 1)
+//             }
+//           }
+//         },
+//         {
+//           $group: {
+//             _id: { $month: "$createdAt" },
+//             total: { $sum: 1 },
+//             pending: {
+//               $sum: { $cond: [{ $eq: ["$status", "pending"] }, 1, 0] }
+//             }
+//           }
+//         },
+//         { $sort: { "_id": 1 } }
+//       ]);
+
+//       // Format data for Chart.js
+//       const result = {
+//         labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+//         totalIssues: Array(12).fill(0),
+//         pendingIssues: Array(12).fill(0)
+//       };
+
+//       stats.forEach(stat => {
+//         const monthIndex = stat._id - 1;
+//         result.totalIssues[monthIndex] = stat.total;
+//         result.pendingIssues[monthIndex] = stat.pending;
+//       });
+
+//       return res.json({ success: true, data: result });
+//     } else {
+//       // Daily stats implementation similar to monthly
+//       // ...
+//     }
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ success: false, message: "Server error" });
+//   }
+// };
+// export const getIssueStatistics = async (req, res) => {
+//   try {
+//     const { year, timeRange } = req.query;
+//     const yearNum = parseInt(year) || new Date().getFullYear();
+
+//     if (timeRange === 'monthly') {
+//       // Create default result structure with all months set to 0
+//       const result = {
+//         labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+//         totalIssues: Array(12).fill(0),
+//         pendingIssues: Array(12).fill(0)
+//       };
+
+//       // Try to get data from database
+//       const stats = await Issue.aggregate([
+//         {
+//           $match: {
+//             createdAt: {
+//               $gte: new Date(yearNum, 0, 1),
+//               $lt: new Date(yearNum + 1, 0, 1)
+//             }
+//           }
+//         },
+//         {
+//           $group: {
+//             _id: { $month: "$createdAt" },
+//             total: { $sum: 1 },
+//             pending: {
+//               $sum: { $cond: [{ $eq: ["$status", "pending"] }, 1, 0] }
+//             }
+//           }
+//         },
+//         { $sort: { "_id": 1 } }
+//       ]);
+
+//       // If we got data, merge it with our default structure
+//       if (stats && stats.length > 0) {
+//         stats.forEach(stat => {
+//           const monthIndex = stat._id - 1;
+//           if (monthIndex >= 0 && monthIndex < 12) {
+//             result.totalIssues[monthIndex] = stat.total || 0;
+//             result.pendingIssues[monthIndex] = stat.pending || 0;
+//           }
+//         });
+//       }
+
+//       return res.json({ success: true, data: result });
+
+//     } else {
+//       // Handle daily data
+//       const currentDate = new Date();
+//       const currentMonth = currentDate.getMonth() + 1;
+//       const currentYear = currentDate.getFullYear();
+//       const daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
+
+//       // Create default result structure with all days set to 0
+//       const result = {
+//         labels: Array.from({length: daysInMonth}, (_, i) => (i + 1).toString()),
+//         totalIssues: Array(daysInMonth).fill(0),
+//         pendingIssues: Array(daysInMonth).fill(0)
+//       };
+
+//       // Try to get data from database
+//       const stats = await Issue.aggregate([
+//         {
+//           $match: {
+//             createdAt: {
+//               $gte: new Date(currentYear, currentMonth - 1, 1),
+//               $lt: new Date(currentYear, currentMonth, 1)
+//             }
+//           }
+//         },
+//         {
+//           $group: {
+//             _id: { $dayOfMonth: "$createdAt" },
+//             total: { $sum: 1 },
+//             pending: {
+//               $sum: { $cond: [{ $eq: ["$status", "pending"] }, 1, 0] }
+//             }
+//           }
+//         },
+//         { $sort: { "_id": 1 } }
+//       ]);
+
+//       // If we got data, merge it with our default structure
+//       if (stats && stats.length > 0) {
+//         stats.forEach(stat => {
+//           const dayIndex = stat._id - 1;
+//           if (dayIndex >= 0 && dayIndex < daysInMonth) {
+//             result.totalIssues[dayIndex] = stat.total || 0;
+//             result.pendingIssues[dayIndex] = stat.pending || 0;
+//           }
+//         });
+//       }
+
+//       return res.json({ success: true, data: result });
+//     }
+
+//   } catch (err) {
+//     console.error("Error in getIssueStatistics:", err);
+//     // Return empty data structure even on error to prevent frontend crashes
+//     const emptyData = timeRange === 'monthly' 
+//       ? { labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"], totalIssues: Array(12).fill(0), pendingIssues: Array(12).fill(0) }
+//       : { 
+//           labels: Array.from({length: new Date().getDate()}, (_, i) => (i + 1).toString()),
+//           totalIssues: Array(new Date().getDate()).fill(0),
+//           pendingIssues: Array(new Date().getDate()).fill(0)
+//         };
+    
+//     return res.status(500).json({ 
+//       success: false, 
+//       message: "Error fetching statistics",
+//       data: emptyData // Provide empty data structure for graceful fallback
+//     });
+//   }
+// };
+export const getIssueStatistics = async (req, res) => {
+  try {
+    const { year, month, timeRange } = req.query;
+    const yearNum = parseInt(year) || new Date().getFullYear();
+    const monthNum = month ? parseInt(month) : new Date().getMonth() + 1;
+
+    if (timeRange === 'monthly') {
+      // Monthly statistics logic (same as before)
+      const result = {
+        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+        totalIssues: Array(12).fill(0),
+        pendingIssues: Array(12).fill(0)
+      };
+
+      const stats = await Issue.aggregate([
+        {
+          $match: {
+            createdAt: {
+              $gte: new Date(yearNum, 0, 1),
+              $lt: new Date(yearNum + 1, 0, 1)
+            }
+          }
+        },
+        {
+          $group: {
+            _id: { $month: "$createdAt" },
+            total: { $sum: 1 },
+            pending: {
+              $sum: { $cond: [{ $eq: ["$status", "pending"] }, 1, 0] }
+            }
+          }
+        },
+        { $sort: { "_id": 1 } }
+      ]);
+
+      stats.forEach(stat => {
+        const monthIndex = stat._id - 1;
+        if (monthIndex >= 0 && monthIndex < 12) {
+          result.totalIssues[monthIndex] = stat.total || 0;
+          result.pendingIssues[monthIndex] = stat.pending || 0;
+        }
+      });
+
+      return res.json({ success: true, data: result });
+
+    } else {
+      // DAILY STATISTICS - IMPROVED VERSION
+      const daysInMonth = new Date(yearNum, monthNum, 0).getDate();
+      
+      // Create complete days array for the selected month
+      const result = {
+        labels: Array.from({length: daysInMonth}, (_, i) => {
+          const day = i + 1;
+          return `${monthNum}/${day}/${yearNum}`; // Format: MM/DD/YYYY
+        }),
+        totalIssues: Array(daysInMonth).fill(0),
+        pendingIssues: Array(daysInMonth).fill(0),
+        resolvedIssues: Array(daysInMonth).fill(0) // Added resolved issues count
+      };
+
+      // Get daily statistics for the selected month
+      const stats = await Issue.aggregate([
+        {
+          $match: {
+            createdAt: {
+              $gte: new Date(yearNum, monthNum - 1, 1),
+              $lt: new Date(yearNum, monthNum, 1)
+            }
+          }
+        },
+        {
+          $project: {
+            day: { $dayOfMonth: "$createdAt" },
+            status: 1,
+            createdAt: 1
+          }
+        },
+        {
+          $group: {
+            _id: "$day",
+            total: { $sum: 1 },
+            pending: {
+              $sum: { $cond: [{ $eq: ["$status", "pending"] }, 1, 0] }
+            },
+            resolved: {
+              $sum: { $cond: [{ $eq: ["$status", "resolved"] }, 1, 0] }
+            }
+          }
+        },
+        { $sort: { "_id": 1 } }
+      ]);
+
+      // Merge database results with our complete days structure
+      stats.forEach(stat => {
+        const dayIndex = stat._id - 1;
+        if (dayIndex >= 0 && dayIndex < daysInMonth) {
+          result.totalIssues[dayIndex] = stat.total || 0;
+          result.pendingIssues[dayIndex] = stat.pending || 0;
+          result.resolvedIssues[dayIndex] = stat.resolved || 0;
+        }
+      });
+
+      return res.json({ 
+        success: true, 
+        data: result,
+        meta: {
+          timeRange: 'daily',
+          month: monthNum,
+          year: yearNum,
+          daysInMonth: daysInMonth
+        }
+      });
+    }
+
+  } catch (err) {
+    console.error("Error in getIssueStatistics:", err);
+    
+    // Create appropriate empty response based on timeRange
+    const emptyData = timeRange === 'monthly' 
+      ? { 
+          labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"], 
+          totalIssues: Array(12).fill(0), 
+          pendingIssues: Array(12).fill(0) 
+        }
+      : { 
+          labels: Array.from({length: new Date().getDate()}, (_, i) => (i + 1).toString()),
+          totalIssues: Array(new Date().getDate()).fill(0),
+          pendingIssues: Array(new Date().getDate()).fill(0),
+          resolvedIssues: Array(new Date().getDate()).fill(0)
+        };
+    
+    return res.status(500).json({ 
+      success: false, 
+      message: "Error fetching statistics",
+      data: emptyData
+    });
+  }
+};

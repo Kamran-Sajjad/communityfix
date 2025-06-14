@@ -9,7 +9,9 @@ import { createIssue ,  getAllIssues, upvoteIssue, commentOnIssue,getIssueById,g
 import upload from "../middlewares/upload.js";
 import { protect } from "../middlewares/authMiddleware.js"; // ✅ import protect
 const router = express.Router();
+import { getIssueStatistics } from "../controllers/issueController.js";
 
+router.get('/statistics', protect, getIssueStatistics);
 router.post("/report", protect, upload.array("attachments", 3), createIssue);
 router.get("/list", protect, getAllIssues);
 router.post("/:id/upvote", protect, upvoteIssue);
