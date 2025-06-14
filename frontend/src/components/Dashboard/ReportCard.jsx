@@ -2,7 +2,6 @@ import React from "react";
 
 const ReportCard = ({ report }) => (
   <div className="w-full bg-white p-6 rounded-lg shadow-sm mb-4 border border-gray-100 flex flex-col md:flex-row gap-6 hover:shadow-md transition-shadow">
-    {/* Image Section */}
     {report.image && (
       <div className="w-full md:w-1/4 h-48 md:h-auto rounded-lg overflow-hidden bg-gray-50 border border-gray-200">
         <img 
