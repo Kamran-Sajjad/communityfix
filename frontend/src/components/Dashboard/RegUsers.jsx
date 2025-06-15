@@ -40,22 +40,23 @@ export const RegUsers = () => {
       <div className="mt-3 sm:mt-4 flex items-center">
         <div className="flex -space-x-2">
           <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-gray-300 flex items-center justify-center border-2 border-white">
-            <span className="text-xs sm:text-sm">U</span>
+            <span className="text-xs sm:text-sm">B</span>
+          </div>
+          <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-gray-300 flex items-center justify-center border-2 border-white">
+            <span className="text-xs sm:text-sm">N</span>
           </div>
           <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-gray-300 flex items-center justify-center border-2 border-white">
             <span className="text-xs sm:text-sm">K</span>
           </div>
-          <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-gray-300 flex items-center justify-center border-2 border-white">
-            <span className="text-xs sm:text-sm">J</span>
-          </div>
         </div>
         <span className="ml-2 text-xs sm:text-sm font-medium">
-          17 guests · kamran.jani · 1 more...
+          Basit, Nizam, kam...
         </span>
       </div>
 
       {/* Button Section */}
-      <Link to="/admin/regUsers" className="block mt-3 sm:mt-4">
+      <Link to="../admin/requestedusers" className="block mt-3 sm:mt-4">
+      {/* <Link to="/admin/regUsers" className="block mt-3 sm:mt-4"> */}
         <button className="w-full px-3 py-2 sm:px-4 sm:py-2 bg-black text-white text-sm sm:text-base rounded hover:bg-gray-800 transition-colors duration-300">
           Check Community now
         </button>

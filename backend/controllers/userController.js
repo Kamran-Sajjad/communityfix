@@ -97,6 +97,64 @@ export const getUserProfile = async (req, res) => {
   }
 };
 
+
+
+
+// Suspend user account
+export const suspendUser = async (req, res) => {
+  const { userId } = req.body;
+  try {
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    user.status = 'suspended';
+    await user.save();
+
+    res.status(200).json({ message: 'User suspended successfully', status: user.status });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error suspending user' });
+  }
+};
+
+// Deactivate user account
+export const deactivateUser = async (req, res) => {
+  const { userId } = req.body;
+  try {
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    user.status = 'deactivated';
+    await user.save();
+
+    res.status(200).json({ message: 'User deactivated successfully', status: user.status });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error deactivating user' });
+  }
+};
+
+// Activate user account
+export const activateUser = async (req, res) => {
+  const { userId } = req.body;
+  try {
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    user.status = 'active';
+    await user.save();
+
+    res.status(200).json({ message: 'User activated successfully', status: user.status });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error activating user' });
+  }
+};
+
+
+
+
+
 // export const updateProfileImage = async (req, res) => {
 //   try {
 //     // Get the image path from cloudinary (via multer)

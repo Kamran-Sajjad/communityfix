@@ -77,12 +77,19 @@ export const loginUser = async (req, res) => {
     console.log('[LOGIN] Finding user...');
     const user = await User.findOne({ email });
     if (!user) {
-      console.log('[LOGIN] User not found:', email);
+      // console.log('[LOGIN] User not found:', email);
       return res.status(401).json({ message: 'Invalid email or password' });
     }
+// 🚫 Block suspended or deactivated users
+    if (user.status === 'deactivated') {
+      return res.status(403).json({
+        message: `Your account is currently ${user.status}. Please contact the service center.`,
+      });
+    }
+  
 
     // 2. Check password
-    console.log('[LOGIN] Comparing passwords...');
+    // console.log('[LOGIN] Comparing passwords...');
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       console.log('[LOGIN] Password mismatch for:', email);
@@ -90,18 +97,19 @@ export const loginUser = async (req, res) => {
     }
 
     // 3. Generate token
-    console.log('[LOGIN] Generating token...');
+    // console.log('[LOGIN] Generating token...');
     const token = generateToken(user._id);
     console.log('[LOGIN] Generated token:', token ? 'Success' : 'Failed');
 
     // 4. Return user + token
-    console.log('[LOGIN] Login successful:', user._id);
+    // console.log('[LOGIN] Login successful:', user._id);
     res.json({
       _id: user._id,
       fullName: user.fullName,
       email: user.email,
       accountType: user.accountType,
       token: token,
+      status: user.status,
       houseNo: user.houseNo, // For residents
       serviceCategory: user.serviceCategory
     });

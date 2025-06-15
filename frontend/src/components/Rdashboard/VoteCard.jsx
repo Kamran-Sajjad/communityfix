@@ -4,6 +4,7 @@ import SuccessMessage from "./SuccessMessage";
 import PriorityRadioGroup from "./PriorityRadioGroup";
 import useAuthApi from "../../hooks/useAuthApi";
 import { useNavigate } from "react-router-dom";
+import { showSuccessToast,showWarningToast, showErrorToast } from "../../../../backend/utils/toastUtils";
 
 export default function VoteCard({
   title = "Road Maintenance",
@@ -61,7 +62,13 @@ export default function VoteCard({
     }
 
     setLoading(true);
+    const userStatus = localStorage.getItem("status");
 
+    if (userStatus === "suspended") {
+      showWarningToast("Your account is suspended. You cannot perform any action.");
+      return;
+    }
+    
     try {
       // Assuming the backend expects 'priority' in the body
       const data = await fetchWithAuth(

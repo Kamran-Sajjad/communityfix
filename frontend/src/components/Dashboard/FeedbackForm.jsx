@@ -304,6 +304,8 @@ import RatingStars from "./RatingStars";
 import FileUpload from "./FileUpload";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
+import { showSuccessToast,showWarningToast, showErrorToast } from "../../../../backend/utils/toastUtils";
+
 import "react-toastify/dist/ReactToastify.css";
 
 const FeedbackForm = () => {
@@ -377,6 +379,12 @@ const FeedbackForm = () => {
       data.append("rating", rating);
       if (selectedFile) {
         data.append("file", selectedFile);
+      }
+      const userStatus = localStorage.getItem("status");
+
+      if (userStatus === "suspended") {
+        showWarningToast("Your account is suspended. You cannot perform this action.");
+        return;
       }
 
       const res = await fetch("http://localhost:5000/api/feedback/submit", {

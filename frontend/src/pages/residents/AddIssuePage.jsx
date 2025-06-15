@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRef } from "react";
 import { toast } from 'react-toastify';
-import { showSuccessToast, showErrorToast } from "../../../../backend/utils/toastUtils";
+import { showSuccessToast,showWarningToast, showErrorToast } from "../../../../backend/utils/toastUtils";
 import 'react-toastify/dist/ReactToastify.css';
 import Sidebar from "../../components/Rdashboard/Sidebar";
 import Header from "../../components/Rdashboard/Header";
@@ -82,7 +82,13 @@ export default function AddIssuePage() {
       });
   
       const token = localStorage.getItem("token");
-  
+      const userStatus = localStorage.getItem("status");
+
+      if (userStatus === "suspended") {
+        showWarningToast("Your account is suspended. You cannot perform this action.");
+        return;
+      }
+      
       // const response = await fetchWithAuth("/api/issues/report", {
       const response = await fetch("http://localhost:5000/api/issues/report", {
         method: "POST",
