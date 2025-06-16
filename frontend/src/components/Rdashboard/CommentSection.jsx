@@ -143,6 +143,7 @@
 import { useState, useRef, useEffect } from "react";
 import SuccessMessage from "./SuccessMessage";
 import CommentItem from "./CommentItem";
+import { showSuccessToast,showWarningToast, showErrorToast } from "../../../../backend/utils/toastUtils";
 import logo from "../../assets/logo.png";
 import { MessageCircle, Send } from "lucide-react";
 import axios from "axios";
@@ -163,6 +164,13 @@ export default function CommentSection({
     e.preventDefault();
     if (!comment.trim()) return;
     try {
+      const userStatus = localStorage.getItem("status");
+
+if (userStatus === "suspended") {
+  showWarningToast("Your account is suspended. You cannot perform this action.");
+  return;
+}
+
         const res = await axios.post(
         `/api/issues/${issueId}/comment`,
         { text: comment },

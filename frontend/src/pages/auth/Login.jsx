@@ -7,9 +7,8 @@ import { loginSuccess } from "../../features/auth/authSlice";
 import { useNavigate } from "react-router-dom";
 import {  toast } from "react-toastify";
 // import { showSuccessToast, showErrorToast } from "../../utils/toastUtils";
-import { showSuccessToast, showErrorToast } from "../../../../backend/utils/toastUtils";
+import { showSuccessToast, showErrorToast,showWarningToast } from "../../../../backend/utils/toastUtils";
 
-// import { ToastContainer, toast } from "react-toastify";
 import InputField from "../../components/Form/InputField";
 import FormActions from "../../components/Form/FormActions";
 import ForgotPasswordLink from "../../components/Form/ForgotPasswordLink";
@@ -54,8 +53,16 @@ export default function Login() {
       if (response.ok) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
-        showSuccessToast(`Welcome back, ${data.fullName}! Redirecting...`);
+        localStorage.setItem("status", data.status);
 
+        showSuccessToast(`Welcome back, ${data.fullName}! Redirecting...`);
+        // const userStatus = localStorage.getItem("status");
+
+        if (data.status === "suspended") {
+          showWarningToast("Your account is suspended. You cannot perform any action.");
+          
+        }
+        
         }
       else {
         throw new Error(data.message || "Login failed");
