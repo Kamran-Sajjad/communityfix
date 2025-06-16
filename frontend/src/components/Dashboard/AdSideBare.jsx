@@ -184,17 +184,17 @@ const AdSideBare = () => {
   const navItems = [
     {
       icon: <FaHome className="w-5 h-5" />,
-      text: "Home",
+      text: "Dashboard",
       path: "/admin/admindb",
     },
     {
       icon: <FaUser className="w-5 h-5" />,
-      text: "Requested Users",
+      text: "Registered Users",
       path: "/admin/requestedusers",
     },
     {
       icon: <FaExclamationCircle className="w-5 h-5" />,
-      text: "Requests",
+      text: "Issues Requests",
       path: "/admin/requestedreports",
     },
     {

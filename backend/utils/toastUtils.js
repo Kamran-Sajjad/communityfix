@@ -7,3 +7,7 @@ export const showSuccessToast = (message) => {
 export const showErrorToast = (message) => {
   toast.error(message, { autoClose: 3000 });
 };
+
+export const showWarningToast = (message) => {
+  toast.warning(message, { autoClose: 3000 });
+};
