@@ -97,29 +97,65 @@ export const getUserProfile = async (req, res) => {
   }
 };
 
-// export const updateProfileImage = async (req, res) => {
+// export const getUserStatistics = async (req, res) => {
 //   try {
-//     // Get the image path from cloudinary (via multer)
-//     if (!req.file || !req.file.path) {
-//       return res.status(400).json({ message: "No image file uploaded" });
-//     }
+//     const stats = await User.aggregate([
+//       {
+//         $group: {
+//           _id: "$accountType",
+//           count: { $sum: 1 }
+//         }
+//       },
+//       {
+//         $project: {
+//           accountType: "$_id",
+//           count: 1,
+//           _id: 0
+//         }
+//       }
+//     ]);
 
-//     const user = await User.findById(req.user._id);
-//     if (!user) {
-//       return res.status(404).json({ message: "User not found" });
-//     }
+//     // Format the data for the frontend
+//     const formattedStats = {
+//       labels: stats.map(item => {
+//         // Capitalize first letter and add space before capital letters
+//         return item.accountType
+//           .replace(/([A-Z])/g, ' $1')
+//           .replace(/^./, str => str.toUpperCase())
+//           .trim();
+//       }),
+//       data: stats.map(item => item.count),
+//       colors: ['#4f46e5', '#e11d48', '#10b981'] // Colors for each segment
+//     };
 
-//     user.profileImage = req.file.path; // Cloudinary secure_url
-//     await user.save();
-
-//     return res.status(200).json({
-//       success: true,
-//       message: "Profile image updated successfully",
-//       profileImage: user.profileImage,
-//     });
-//   } catch (error) {
-//     console.error("Error updating profile image:", error);
-//     return res.status(500).json({ message: "Server error" });
+//     res.status(200).json({ success: true, data: formattedStats });
+//   } catch (err) {
+//     console.error("Error fetching user statistics:", err);
+//     res.status(500).json({ success: false, message: "Server error" });
 //   }
 // };
+export const getUserStatistics = async (req, res) => {
+  try {
+    const stats = await User.aggregate([
+      {
+        $group: {
+          _id: "$accountType",
+          count: { $sum: 1 }
+        }
+      }
+    ]);
 
+    const formattedStats = {
+      labels: stats.map(item => {
+        // Format account type names
+        return item._id.charAt(0).toUpperCase() + item._id.slice(1);
+      }),
+      data: stats.map(item => item.count)
+    };
+
+    res.status(200).json({ success: true, data: formattedStats });
+  } catch (err) {
+    console.error("Error fetching user statistics:", err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
