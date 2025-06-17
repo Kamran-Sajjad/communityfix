@@ -5,10 +5,10 @@ const FeedbackCard = ({ feedback }) => {
   const {
     name = "Anonymous",
     address = "Not Provided",
-    issue = "No Issue Specified",
+    issueType:issue = "No Issue Specified",
     comment = "No comment available.",
     rating = 0,
-    image = "",
+    imageUrl = "",
     createdAt = new Date().toISOString(),
   } = feedback;
 
@@ -60,9 +60,10 @@ const FeedbackCard = ({ feedback }) => {
         <div className="text-gray-800 mt-2">{comment}</div>
 
         {/* Rating */}
+       
         <div className="flex mt-1">
-          {Array.from({ length: rating }, (_, i) => (
-            <FaStar key={i} className="text-yellow-500" />
+          {Array.from({ length: 5 }, (_, i) => (
+            <FaStar key={i} className={i < rating ? "text-yellow-500" : "text-gray-400"} />
           ))}
           {rating === 0 && (
             <span className="text-sm text-gray-400">Not rated</span>
@@ -70,47 +71,44 @@ const FeedbackCard = ({ feedback }) => {
         </div>
       </div>
 
-      {/* Right side: Image */}
-      {image? (
-        <div
-          className="ml-auto rounded-[20%] overflow-hidden shadow"
-          style={{
-            width: imageHeight,
-            height: imageHeight,
-            minWidth: 100,
-            minHeight: 100,
-            backgroundColor: "#f0f0f0",
-            flexShrink: 0,
-          }}
-        >
-         <img
-  src={`http://localhost:5000/backend/uploads/${image}`} // Replace with your backend base URL
-            alt="Feedback"
-            className="w-full h-full object-cover"
-            onError={(e) => {
-              e.target.onerror = null; // prevent infinite loop
-              e.target.style.display = "none";
-              const fallback = document.createElement("div");
-              fallback.textContent = "No image uploaded";
-              fallback.className = "text-gray-500 italic mt-1 p-2";
-              e.target.parentNode.appendChild(fallback);
-            }}
-          />
-        </div>
-      ) : (
-        <div
-          className="ml-auto text-gray-500 italic rounded-[20%] flex items-center justify-center"
-          style={{
-            width: imageHeight,
-            height: imageHeight,
-            minWidth: 100,
-            minHeight: 100,
-            backgroundColor: "#f9fafb",
-            flexShrink: 0,
-          }}
-        >
-        </div>
-      )}
+      {imageUrl ? (
+  <div
+    className="ml-auto rounded-[20%] overflow-hidden shadow"
+    style={{
+      width: imageHeight,
+      height: imageHeight,
+      minWidth: 100,
+      minHeight: 100,
+      backgroundColor: "#f0f0f0",
+      flexShrink: 0,
+    }}
+  >
+    <img
+      src={imageUrl}
+      alt="Feedback"
+      className="w-full h-full object-cover"
+      onError={(e) => {
+        e.target.onerror = null;
+        e.target.src = "/default-placeholder.jpg";
+      }}
+    />
+  </div>
+) : (
+  <div
+    className="ml-auto text-gray-500 italic rounded-[20%] flex items-center justify-center"
+    style={{
+      width: imageHeight,
+      height: imageHeight,
+      minWidth: 100,
+      minHeight: 100,
+      backgroundColor: "#f9fafb",
+      flexShrink: 0,
+    }}
+  >
+    No image
+  </div>
+)}
+
     </div>
   );
 };
