@@ -378,7 +378,7 @@ const FeedbackForm = () => {
       data.append("comment", comment);
       data.append("rating", rating);
       if (selectedFile) {
-        data.append("file", selectedFile);
+        data.append("attachment", selectedFile);
       }
       const userStatus = localStorage.getItem("status");
 
@@ -386,9 +386,12 @@ const FeedbackForm = () => {
         showWarningToast("Your account is suspended. You cannot perform this action.");
         return;
       }
-
-      const res = await fetch("http://localhost:5000/api/feedback/submit", {
+        const token = localStorage.getItem("token");
+      const res = await fetch("http://localhost:5000/api/feedback", {
         method: "POST",
+          headers: {
+    Authorization: `Bearer ${token}`, // ✅ required for protected route
+  },
         body: data,
       });
 

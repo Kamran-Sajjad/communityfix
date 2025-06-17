@@ -29,25 +29,37 @@ const FeedbackHistory = () => {
   return (
     <div className="flex min-h-screen bg-gray-100">
       <div
-        className={`fixed md:relative transition-all duration-300 bg-black ${
-          isSidebarExpanded ? "w-64" : "w-16"
-        }`}
+        className={`fixed md:relative transition-all duration-300 bg-black ${isSidebarExpanded ? "w-64" : "w-16"
+          }`}
       >
         <AdSideBare isExpanded={isSidebarExpanded} toggleSidebar={toggleSidebar} />
       </div>
 
       <div
-        className={`flex-1 p-4 sm:p-6 md:p-8 transition-all duration-300 ${
-          isSidebarExpanded ? "ml-14" : "ml-6"
-        }`}
+        className={`flex-1 p-4 sm:p-6 md:p-8 transition-all duration-300 ${isSidebarExpanded ? "ml-14" : "ml-6"
+          }`}
       >
         <AdHeader title="Feedback History" />
         <div className="space-y-4 max-w-full md:max-w-5xl mx-auto">
           {feedback.length > 0 ? (
-            feedback.map((item) => <FeedbackCard key={item._id} feedback={item} />)
+            feedback.map((item) => (
+              <FeedbackCard
+                key={item._id}
+                feedback={{
+                  ...item,
+                  imageUrl: item.imageUrl?.startsWith("http")
+                    ? item.imageUrl
+                    : item.imageUrl
+                      ? `http://localhost:5000/uploads/${item.imageUrl}`
+                      : "",
+                }}
+              />
+            ))
           ) : (
             <p className="text-center text-gray-500">No feedback submitted yet.</p>
           )}
+
+         
         </div>
       </div>
     </div>

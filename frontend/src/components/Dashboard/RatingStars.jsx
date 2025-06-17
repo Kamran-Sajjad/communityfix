@@ -10,6 +10,7 @@ const RatingStars = ({ rating, onRatingChange }) => {
       <div className="flex space-x-2">
         {[1, 2, 3, 4, 5].map((star) => (
           <button
+          type="button"
             key={star}
             onClick={() => onRatingChange(star)}
             className="focus:outline-none"
