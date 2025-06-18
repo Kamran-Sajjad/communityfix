@@ -40,7 +40,10 @@ import Analytics from "./pages/admin/Analytics";
 import IssueReports from "./components/Dashboard/IssueReports";
 import Reports from "./pages/admin/Reports";
 import Feedbackhistory from "./components/Dashboard/Feedbackhistory";
+// <<<<<<< resident/backend
 import { AuthProvider } from "./context/AuthContext";
+// =======
+// >>>>>>> admin/kamran
 
 const App = () => {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
