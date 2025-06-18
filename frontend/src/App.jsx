@@ -19,7 +19,6 @@ import AssignedIssues from "./pages/serviceTeam/AssignedIssuesPage";
 
 import ReviewsPage from "./pages/serviceTeam/ReviewsPage";
 import SignUp from "./pages/auth/SignUp";
-// import Login from './pages/auth/login';
 import AboutUs from "./pages/residents/AboutUs";
 import Login from "./pages/auth/Login";
 import ForgotPassword from "./pages/auth/ForgotPassword";
@@ -45,9 +44,6 @@ import Analytics from "./pages/admin/Analytics";
 import IssueReports from "./components/Dashboard/IssueReports";
 import Reports from "./pages/admin/Reports";
 import Feedbackhistory from "./components/Dashboard/Feedbackhistory";
-
-
-
 
 const App = () => {
   return (
