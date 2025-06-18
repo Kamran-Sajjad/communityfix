@@ -55,6 +55,7 @@
 
 // Cleaned userRoutes.js using controller logic only
 import express from 'express';
+import { getUserStats } from '../controllers/userController.js';
 import {
   updateProfile,
   changePassword,
@@ -75,5 +76,6 @@ router.get("/profile", protect, getUserProfile);
 router.post("/suspended", suspendUser);
 router.post("/deactivated", deactivateUser);
 router.post("/active", activateUser);
+router.get("/stats", getUserStats);
 
 export default router;

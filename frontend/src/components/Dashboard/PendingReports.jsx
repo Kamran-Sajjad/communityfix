@@ -1,40 +1,36 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 export const PendingReports = () => {
+  const [stats, setStats] = useState({
+    totalUsers: 0,
+    acceptedUsers: 0,
+    pendingUsers: 0,
+    pendingPercentage: 0,
+  });
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/users/stats");
+        if (response.data.success) {
+          setStats(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching stats:", error);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
   return (
     <div className="bg-black text-white p-4 sm:p-6 rounded-lg shadow-lg shadow-cyan-200/50 hover:shadow-cyan-200/70 transition-shadow duration-300">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex-1">
-          <h3 className="text-base sm:text-lg font-medium">Pending requests</h3>
+          <h3 className="text-base sm:text-lg font-medium">Pending Requests</h3>
           <div className="flex items-center gap-3 sm:gap-4 mt-2">
-            {/* Progress Circle */}
-            <div className="relative h-12 w-12 sm:h-16 sm:w-16">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-xs sm:text-sm font-bold">20%</span>
-              </div>
-              <svg className="h-full w-full" viewBox="0 0 36 36">
-                <circle 
-                  cx="18" 
-                  cy="18" 
-                  r="16" 
-                  fill="none" 
-                  stroke="#333" 
-                  strokeWidth="1" 
-                />
-                <circle
-                  cx="18"
-                  cy="18"
-                  r="16"
-                  fill="none"
-                  stroke="#a3e635"
-                  strokeWidth="2"
-                  strokeDasharray="100"
-                  strokeDashoffset="80"
-                  strokeLinecap="round"
-                  transform="rotate(-90 18 18)"
-                />
-              </svg>
-            </div>
+  
 
             {/* User Icon */}
             <div className="h-10 w-10 sm:h-12 sm:w-12">
@@ -68,24 +64,19 @@ export const PendingReports = () => {
               </svg>
             </div>
 
-            {/* Additional Info (optional) */}
+            {/* Info */}
             <div className="hidden sm:block ml-2">
-              <p className="text-xs text-gray-300">5 new today</p>
-              <p className="text-sm font-medium">12 total pending</p>
+              <p className="text-xs text-gray-300">{stats.pendingUsers} pending</p>
+              <p className="text-sm font-medium">{stats.totalUsers} total users</p>
             </div>
           </div>
         </div>
-
-        {/* Action Button (optional) */}
-        {/* <button className="w-full sm:w-auto bg-cyan-500 hover:bg-cyan-600 text-white text-sm font-medium py-2 px-4 rounded-md transition-colors duration-300">
-          View All
-        </button> */}
       </div>
 
-      {/* Mobile-only additional info */}
+      {/* Mobile view */}
       <div className="sm:hidden mt-3 flex justify-between items-center">
-        <p className="text-xs text-gray-300">5 new today</p>
-        <p className="text-sm font-medium">12 total pending</p>
+        <p className="text-xs text-gray-300">{stats.pendingUsers} pending</p>
+        <p className="text-sm font-medium">{stats.totalUsers} total</p>
       </div>
     </div>
   );

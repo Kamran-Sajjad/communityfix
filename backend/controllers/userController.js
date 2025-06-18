@@ -151,33 +151,26 @@ export const activateUser = async (req, res) => {
   }
 };
 
+// @desc Get total and pending user stats
+export const getUserStats = async (req, res) => {
+  try {
+    const totalUsers = await User.countDocuments(); // all users in the collection
+    const acceptedUsers = await User.countDocuments({ access: true }); // users accepted by admin
+    const pendingUsers = totalUsers - acceptedUsers;
 
+    const pendingPercentage = totalUsers > 0 
+      ? Math.round((pendingUsers / totalUsers) * 100) 
+      : 0;
 
-
-
-// export const updateProfileImage = async (req, res) => {
-//   try {
-//     // Get the image path from cloudinary (via multer)
-//     if (!req.file || !req.file.path) {
-//       return res.status(400).json({ message: "No image file uploaded" });
-//     }
-
-//     const user = await User.findById(req.user._id);
-//     if (!user) {
-//       return res.status(404).json({ message: "User not found" });
-//     }
-
-//     user.profileImage = req.file.path; // Cloudinary secure_url
-//     await user.save();
-
-//     return res.status(200).json({
-//       success: true,
-//       message: "Profile image updated successfully",
-//       profileImage: user.profileImage,
-//     });
-//   } catch (error) {
-//     console.error("Error updating profile image:", error);
-//     return res.status(500).json({ message: "Server error" });
-//   }
-// };
-
+    res.status(200).json({
+      success: true,
+      totalUsers,
+      acceptedUsers,
+      pendingUsers,
+      pendingPercentage,
+    });
+  } catch (error) {
+    console.error("Error fetching user stats:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
