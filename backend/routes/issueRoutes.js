@@ -47,6 +47,7 @@
 
 import express from "express";
 import { getWorkProgress } from "../controllers/issueController.js";
+
 import {
   createIssue,
   getAllIssues,
@@ -81,6 +82,5 @@ router.get("/:id", protect, getIssueById);
 
 // GET - issues by status (pending, in_progress, resolved)
 router.get("/status/:status", protect, getIssuesByStatus);
-router.get("/progress", getWorkProgress);
 
 export default router;
