@@ -57,6 +57,7 @@ const App = () => {
           <Route path="/auth/Login" element={<Login />} />
           <Route path="/auth/ForgotPassword" element={<ForgotPassword />} />
           <Route path="/auth/OtpVerification" element={<OtpVerification />} />
+          <Route path="/auth/verify-otp" element={<OtpVerification />} />
           <Route path="/auth/NewPassword" element={<NewPassword />} />
           <Route
             path="/auth/TermsAndConditionsPage"
