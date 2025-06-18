@@ -32,6 +32,8 @@ app.use('/api/issues', issueRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/admin', userReviewRoutes);
 app.use('/api/feedback', feedbackRoutes);
+app.use("/api/auth", authRoutes);
+
 
 
 // Root Route
