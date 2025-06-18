@@ -1,51 +1,79 @@
 import React from "react";
 
-const ReportCard = ({ report }) => {
-  return (
-    <div className="w-full bg-gray-200 p-6 rounded-lg shadow-md mb-4 border border-gray-300 flex flex-wrap md:flex-nowrap justify-between items-start gap-4">
-      {/* Left Section: Address, Name, Age, Issue Details */}
-      <div className="flex-1 min-w-[200px]">
-        {/* Name and Address in the same line */}
-        <div className="flex flex-wrap items-center gap-2">
-          <h3 className="text-lg font-bold text-gray-700">{report.name}</h3>
-          <p className="text-sm text-gray-600">{report.location}</p>
-        </div>
+const ReportCard = ({ report }) => (
+  <div className="w-full bg-white p-6 rounded-lg shadow-sm mb-4 border border-gray-100 flex flex-col md:flex-row gap-6 hover:shadow-md transition-shadow">
+    {report.image && (
+      <div className="w-full md:w-1/4 h-48 md:h-auto rounded-lg overflow-hidden bg-gray-50 border border-gray-200">
+        <img 
+          src={report.image} 
+          alt={report.issueTitle || "Report image"}
+          className="w-full h-full object-cover"
+          onError={(e) => {
+            e.target.src = "/placeholder-image.svg";
+            e.target.className = "w-full h-full object-contain p-4";
+          }}
+        />
+      </div>
+    )}
 
-        {/* Age */}
-        <p className="text-sm text-gray-600 mt-1">
-          {report.age} {report.age === 1 ? "hour" : "hours"} or days old
-        </p>
+    {/* Content Section */}
+    <div className="flex-1 flex flex-col">
+      <div className="flex flex-wrap items-center gap-2">
+        <h3 className="text-lg font-bold text-gray-800">{report.name}</h3>
+        <span className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">
+          {report.type === "societal" ? "Community" : "Household"}
+        </span>
+      </div>
+      
+      <div className="flex items-center gap-2 mt-1 text-sm text-gray-600">
+        <span>📍 {report.address}</span>
+        <span>•</span>
+        <span>🕒 {report.age} {report.age === 1 ? "hour" : "hours"} ago</span>
+      </div>
 
-        {/* Issue Title and Description */}
-        <p className="text-sm text-gray-700 mt-2 font-semibold">{report.issueTitle}</p>
+      <div className="mt-4">
+        <h4 className="text-md font-semibold text-gray-800">{report.issueTitle}</h4>
         <p className="text-sm text-gray-600 mt-1">{report.issueDescription}</p>
+      </div>
 
-        {/* Recommended Dropdown */}
-        <div className="mt-4">
-          <p className="text-sm text-gray-700 font-semibold">
-            Recommended:
-            <select className="border border-gray-400 rounded px-2 py-1 ml-2 text-sm text-gray-700 bg-gray-100 focus:ring focus:ring-gray-300 transition">
-              {report.recommendations.map((rec, index) => (
-                <option key={index} value={rec}>
-                  {rec}
-                </option>
+      {/* Bottom Section - Status, Recommendations and Buttons */}
+      <div className="mt-auto pt-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        {/* Status and Recommendations */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full sm:w-auto">
+          <div>
+            <span className={`text-xs px-2 py-1 rounded-full ${
+              report.status === "completed" 
+                ? "bg-green-100 text-green-800" 
+                : "bg-yellow-100 text-yellow-800"
+            }`}>
+              {report.status === "completed" ? "Resolved" : "Pending"}
+            </span>
+          </div>
+          
+          <div className="flex-1 sm:flex-initial min-w-[200px]">
+            <label className="text-xs text-gray-500 mb-1 block">Recommended Action</label>
+            <select className="w-full border border-gray-200 rounded px-3 py-2 text-sm text-gray-700 bg-white focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition">
+              {report.recommendations?.map((rec, i) => (
+                <option key={i} value={rec}>{rec}</option>
               ))}
             </select>
-          </p>
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex flex-row sm:flex-col gap-2 sm:self-end">
+          <button className="px-4 py-2 bg-white text-gray-800 border border-gray-300 rounded hover:bg-gray-50 transition flex items-center justify-center">
+            <span className="font-bold">✕</span>
+            <span className="ml-2 text-xs hidden sm:inline">Reject</span>
+          </button>
+          <button className="px-4 py-2 bg-white text-gray-800 border border-gray-300 rounded hover:bg-gray-50 transition flex items-center justify-center">
+            <span className="font-bold">✓</span>
+            <span className="ml-2 text-xs hidden sm:inline">Approve</span>
+          </button>
         </div>
       </div>
-
-      {/* Right Section: Buttons */}
-      <div className="flex items-center gap-2 md:gap-4 mt-4 md:mt-0">
-        <button className="px-4 py-2 bg-black-50 text-white rounded hover:bg-red-700 transition duration-200 border border-red-500">
-          X
-        </button>
-        <button className="px-4 py-2 bg-grey-600 text-green-600 rounded hover:bg-green-700 transition duration-200 border border-green-500">
-          ✓
-        </button>
-      </div>
     </div>
-  );
-};
+  </div>
+);
 
 export default ReportCard;

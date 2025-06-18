@@ -1,11 +1,22 @@
+
 export default function ComplaintCard({ title, subTitle, icon, time, count, onViewProgress }) {
     return (
       <div className="bg-gray-100 rounded-lg p-3 md:p-4">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
           <div className="flex items-center">
-            <div className="w-10 h-10 md:w-12 md:h-12 bg-gray-200 rounded-lg flex items-center justify-center mr-3 md:mr-4 flex-shrink-0">
-              {icon}
-            </div>
+          <div className="w-10 h-10 md:w-12 md:h-12 bg-gray-200 rounded-lg flex items-center justify-center mr-3 md:mr-4 flex-shrink-0 overflow-hidden">
+            {Array.isArray(icon) && icon[0]?.url ? (
+              <img
+                src={icon[0].url}
+                alt="issue"
+                className="object-cover w-full h-full"
+              />
+            ) : (
+              <span className="text-2xl md:text-3xl">{icon[0]}</span>
+            )}
+          </div>
+
+
             <div>
               <div className="font-bold text-sm md:text-base">{title}</div>
               <div className="text-xs md:text-sm text-gray-600">{subTitle}</div>

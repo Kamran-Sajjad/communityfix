@@ -1,8 +1,39 @@
+
+
+
+
+
 import { useState } from "react";
 import ComplaintCard from "./ComplaintCard";
 
 export default function ComplaintsSection({ complaints, onViewProgress }) {
   const [activeTab, setActiveTab] = useState("all");
+  const [page, setPage] = useState(0);
+
+  // Filter based on tab
+  const filtered = complaints.filter(complaint => {
+    if (activeTab === "Societal") return complaint.issueType === "societal";
+    if (activeTab === "HouseHold") return complaint.issueType === "household";
+    return true;
+  });
+
+  // Pagination logic
+  const complaintsPerPage = 5;
+  const totalPages = Math.ceil(filtered.length / complaintsPerPage);
+  const paginatedComplaints = filtered.slice(page * complaintsPerPage, (page + 1) * complaintsPerPage);
+
+  const handlePrev = () => {
+    if (page > 0) setPage(prev => prev - 1);
+  };
+
+  const handleNext = () => {
+    if ((page + 1) < totalPages) setPage(prev => prev + 1);
+  };
+
+  const setTab = (tab) => {
+    setActiveTab(tab);
+    setPage(0); // Reset to first page when tab changes
+  };
 
   return (
     <div>
@@ -11,26 +42,26 @@ export default function ComplaintsSection({ complaints, onViewProgress }) {
       <div className="flex border-b mb-4 md:mb-6 overflow-x-auto">
         <button
           className={`pb-2 px-3 md:px-4 whitespace-nowrap text-sm md:text-base ${activeTab === "all" ? "border-b-2 border-black font-bold" : "text-gray-400"}`}
-          onClick={() => setActiveTab("all")}
+          onClick={() => setTab("all")}
         >
           All complaints
         </button>
         <button
-          className={`pb-2 px-3 md:px-4 whitespace-nowrap text-sm md:text-base ${activeTab === "departments" ? "border-b-2 border-black font-bold" : "text-gray-400"}`}
-          onClick={() => setActiveTab("departments")}
+          className={`pb-2 px-3 md:px-4 whitespace-nowrap text-sm md:text-base ${activeTab === "Societal" ? "border-b-2 border-black font-bold" : "text-gray-400"}`}
+          onClick={() => setTab("Societal")}
         >
-          Departments
+          Societal
         </button>
         <button
-          className={`pb-2 px-3 md:px-4 whitespace-nowrap text-sm md:text-base ${activeTab === "admin" ? "border-b-2 border-black font-bold" : "text-gray-400"}`}
-          onClick={() => setActiveTab("admin")}
+          className={`pb-2 px-3 md:px-4 whitespace-nowrap text-sm md:text-base ${activeTab === "HouseHold" ? "border-b-2 border-black font-bold" : "text-gray-400"}`}
+          onClick={() => setTab("HouseHold")}
         >
-          Admin reports
+          HouseHold
         </button>
       </div>
 
       <div className="space-y-3 md:space-y-4">
-        {complaints.map((complaint) => (
+        {paginatedComplaints.map((complaint) => (
           <ComplaintCard
             key={complaint.id}
             title={complaint.title}
@@ -42,6 +73,25 @@ export default function ComplaintsSection({ complaints, onViewProgress }) {
           />
         ))}
       </div>
+
+      {filtered.length > complaintsPerPage && (
+        <div className="flex justify-end space-x-4 mt-4">
+          <button
+            onClick={handlePrev}
+            disabled={page === 0}
+            className={`px-4 py-2 border rounded-md ${page === 0 ? "opacity-40 cursor-not-allowed" : "hover:bg-gray-200"}`}
+          >
+            ← Prev
+          </button>
+          <button
+            onClick={handleNext}
+            disabled={page + 1 >= totalPages}
+            className={`px-4 py-2 border rounded-md ${page + 1 >= totalPages ? "opacity-40 cursor-not-allowed" : "hover:bg-gray-200"}`}
+          >
+            Next →
+          </button>
+        </div>
+      )}
     </div>
   );
 }
