@@ -3,23 +3,26 @@ import axios from "axios";
 
 export const WorkProgress = () => {
   const [progress, setProgress] = useState(0);
+useEffect(() => {
+  const fetchProgress = async () => {
+    try {
+      const token = localStorage.getItem("token"); // Get token from localStorage
+      const { data } = await axios.get("http://localhost:5000/api/issues/progress", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-  useEffect(() => {
-    const fetchProgress = async () => {
-      try {
-        const { data } = await axios.get("http://localhost:5000/api/issues/progress");
-        if (data.success) {
-          setProgress(data.progress);
-        }
-      } catch (error) {
-        console.error("Failed to fetch progress:", error);
+      if (data.success) {
+        setProgress(data.progress);
       }
-    };
+    } catch (error) {
+      console.error("Failed to fetch progress:", error);
+    }
+  };
 
-    fetchProgress();
-  }, []);
-
-  // Circle config
+  fetchProgress();
+}, []);  // Circle config
   const radius = 16;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (progress / 100) * circumference;

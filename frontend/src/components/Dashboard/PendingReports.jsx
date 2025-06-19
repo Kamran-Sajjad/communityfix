@@ -66,7 +66,6 @@ export const PendingReports = () => {
 
             {/* Info */}
             <div className="hidden sm:block ml-2">
-              <p className="text-xs text-gray-300">{stats.pendingUsers} pending</p>
               <p className="text-sm font-medium">{stats.totalUsers} total users</p>
             </div>
           </div>
