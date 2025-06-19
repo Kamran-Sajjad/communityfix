@@ -174,3 +174,34 @@ export const getUserStats = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+// Get admin or user profile
+export const getAdminProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const profileData = {
+      fullName: user.fullName,
+      email: user.email,
+      accountType: user.accountType,
+    };
+
+    // Special handling for admin@communityfix.com
+    if (user.email === "admin@communityfix.com") {
+      profileData.isAdmin = true; // Tell frontend to use local image
+    } else {
+      profileData.firstLetter = user.fullName?.charAt(0)?.toUpperCase() || "U";
+      if (user.profileImage) {
+        profileData.profileImage = user.profileImage;
+      }
+    }
+
+    return res.status(200).json(profileData);
+  } catch (error) {
+    console.error("Error fetching profile:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};

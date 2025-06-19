@@ -75,7 +75,6 @@ export const PendingReports = () => {
 
       {/* Mobile view */}
       <div className="sm:hidden mt-3 flex justify-between items-center">
-        <p className="text-xs text-gray-300">{stats.pendingUsers} pending</p>
         <p className="text-sm font-medium">{stats.totalUsers} total</p>
       </div>
     </div>
