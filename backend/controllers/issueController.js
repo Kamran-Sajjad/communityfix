@@ -57,6 +57,9 @@ export const createIssue = async (req, res) => {
   }
 };
 
+
+
+
 // Get all issues
 export const getAllIssues = async (req, res) => {
   try {
@@ -67,6 +70,37 @@ export const getAllIssues = async (req, res) => {
     res.status(500).json({ success: false, message: "Failed to fetch issues" });
   }
 };
+
+
+
+
+
+// // Get all issues including comments count and upvotes
+// export const getAllIssues = async (req, res) => {
+//   try {
+//     const issues = await Issue.find().sort({ createdAt: -1 })
+//       .select('title name description upvotes comments createdAt')  // Select necessary fields including upvotes and comments
+//       .populate('comments.user', 'fullName avatar')  // If you want user details for comments, populate the user field
+
+//     // Add additional fields like the number of comments and upvotes
+//     const issuesWithExtraInfo = issues.map(issue => ({
+//       ...issue.toObject(),
+//       commentsCount: issue.comments.length,  // Add comments count
+//       upvotes: issue.upvotes,  // Add upvotes
+//     }));
+
+//     res.status(200).json({ success: true, issues: issuesWithExtraInfo });
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ success: false, message: "Failed to fetch issues" });
+//   }
+// };
+
+
+
+
+
+
 
 // Upvote issue
 export const upvoteIssue = async (req, res) => {

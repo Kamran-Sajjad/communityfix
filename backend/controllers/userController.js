@@ -44,6 +44,16 @@ export const updateProfile = async (req, res) => {
 };
 
 
+
+
+
+
+
+
+
+
+
+
 // Change user password
 export const changePassword = async (req, res) => {
     try {
@@ -78,6 +88,14 @@ export const changePassword = async (req, res) => {
       return res.status(500).json({ message: 'Server error' });
     }
   };
+
+
+
+
+
+
+
+
   
 // @desc    Get logged-in user profile
 // @route   GET /api/users/profile
@@ -97,44 +115,14 @@ export const getUserProfile = async (req, res) => {
   }
 };
 
-// <<<<<<< Graph/dv
-// export const getUserStatistics = async (req, res) => {
-//   try {
-//     const stats = await User.aggregate([
-//       {
-//         $group: {
-//           _id: "$accountType",
-//           count: { $sum: 1 }
-//         }
-//       },
-//       {
-//         $project: {
-//           accountType: "$_id",
-//           count: 1,
-//           _id: 0
-//         }
-//       }
-//     ]);
 
-//     // Format the data for the frontend
-//     const formattedStats = {
-//       labels: stats.map(item => {
-//         // Capitalize first letter and add space before capital letters
-//         return item.accountType
-//           .replace(/([A-Z])/g, ' $1')
-//           .replace(/^./, str => str.toUpperCase())
-//           .trim();
-//       }),
-//       data: stats.map(item => item.count),
-//       colors: ['#4f46e5', '#e11d48', '#10b981'] // Colors for each segment
-//     };
 
-//     res.status(200).json({ success: true, data: formattedStats });
-//   } catch (err) {
-//     console.error("Error fetching user statistics:", err);
-//     res.status(500).json({ success: false, message: "Server error" });
-//   }
-// };
+
+
+
+
+
+
 export const getUserStatistics = async (req, res) => {
   try {
     const stats = await User.aggregate([
@@ -160,7 +148,12 @@ export const getUserStatistics = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
-// =======
+
+
+
+
+
+
 
 
 
@@ -181,6 +174,13 @@ export const suspendUser = async (req, res) => {
   }
 };
 
+
+
+
+
+
+
+
 // Deactivate user account
 export const deactivateUser = async (req, res) => {
   const { userId } = req.body;
@@ -198,6 +198,11 @@ export const deactivateUser = async (req, res) => {
   }
 };
 
+
+
+
+
+
 // Activate user account
 export const activateUser = async (req, res) => {
   const { userId } = req.body;
@@ -214,6 +219,13 @@ export const activateUser = async (req, res) => {
     res.status(500).json({ message: 'Error activating user' });
   }
 };
+
+
+
+
+
+
+
 
 // @desc Get total and pending user stats
 export const getUserStats = async (req, res) => {
@@ -238,6 +250,13 @@ export const getUserStats = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+
+
+
+
+
+
 // Get admin or user profile
 export const getAdminProfile = async (req, res) => {
   try {
