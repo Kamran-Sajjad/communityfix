@@ -12,6 +12,7 @@ import adminRoutes from './routes/adminRoutes.js';
 import userReviewRoutes from "./routes/admin/userReviewRoutes.js";
 import userRoutes from './routes/userRoutes.js';
 import feedbackRoutes from './routes/feedback.js';
+import aiRoutes from './routes/aiRoutes.js';
 
 // Connect to MongoDB
 connectDB();
@@ -32,7 +33,7 @@ app.use('/api/issues', issueRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/admin', userReviewRoutes);
 app.use('/api/feedback', feedbackRoutes);
-
+app.use('/api/ai', aiRoutes);
 
 // Root Route
 app.get('/', (req, res) => {
