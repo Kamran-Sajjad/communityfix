@@ -97,6 +97,7 @@ export const getUserProfile = async (req, res) => {
   }
 };
 
+// <<<<<<< Graph/dv
 // export const getUserStatistics = async (req, res) => {
 //   try {
 //     const stats = await User.aggregate([
@@ -159,3 +160,113 @@ export const getUserStatistics = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
+// =======
+
+
+
+// Suspend user account
+export const suspendUser = async (req, res) => {
+  const { userId } = req.body;
+  try {
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    user.status = 'suspended';
+    await user.save();
+
+    res.status(200).json({ message: 'User suspended successfully', status: user.status });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error suspending user' });
+  }
+};
+
+// Deactivate user account
+export const deactivateUser = async (req, res) => {
+  const { userId } = req.body;
+  try {
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    user.status = 'deactivated';
+    await user.save();
+
+    res.status(200).json({ message: 'User deactivated successfully', status: user.status });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error deactivating user' });
+  }
+};
+
+// Activate user account
+export const activateUser = async (req, res) => {
+  const { userId } = req.body;
+  try {
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    user.status = 'active';
+    await user.save();
+
+    res.status(200).json({ message: 'User activated successfully', status: user.status });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error activating user' });
+  }
+};
+
+// @desc Get total and pending user stats
+export const getUserStats = async (req, res) => {
+  try {
+    const totalUsers = await User.countDocuments(); // all users in the collection
+    const acceptedUsers = await User.countDocuments({ access: true }); // users accepted by admin
+    const pendingUsers = totalUsers - acceptedUsers;
+
+    const pendingPercentage = totalUsers > 0 
+      ? Math.round((pendingUsers / totalUsers) * 100) 
+      : 0;
+
+    res.status(200).json({
+      success: true,
+      totalUsers,
+      acceptedUsers,
+      pendingUsers,
+      pendingPercentage,
+    });
+  } catch (error) {
+    console.error("Error fetching user stats:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+// Get admin or user profile
+export const getAdminProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const profileData = {
+      fullName: user.fullName,
+      email: user.email,
+      accountType: user.accountType,
+    };
+
+    // Special handling for admin@communityfix.com
+    if (user.email === "admin@communityfix.com") {
+      profileData.isAdmin = true; // Tell frontend to use local image
+    } else {
+      profileData.firstLetter = user.fullName?.charAt(0)?.toUpperCase() || "U";
+      if (user.profileImage) {
+        profileData.profileImage = user.profileImage;
+      }
+    }
+
+    return res.status(200).json(profileData);
+  } catch (error) {
+    console.error("Error fetching profile:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+// >>>>>>> resident/backend

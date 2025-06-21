@@ -187,6 +187,7 @@ export const getIssuesByStatus = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
+// <<<<<<< Graph/dv
 export const getIssueStatistics = async (req, res) => {
   try {
     const { year, month, timeRange } = req.query;
@@ -325,3 +326,25 @@ export const getIssueStatistics = async (req, res) => {
     });
   }
 };
+// =======
+// @desc    Get work progress percentage
+export const getWorkProgress = async (req, res) => {
+  try {
+    const totalIssues = await Issue.countDocuments();
+    const resolvedIssues = await Issue.countDocuments({ status: "resolved" });
+
+    const progress = totalIssues > 0 ? (resolvedIssues / totalIssues) * 100 : 0;
+
+    res.status(200).json({
+      success: true,
+      totalIssues,
+      resolvedIssues,
+      progress: Math.round(progress), // Rounded to nearest whole number
+    });
+  } catch (error) {
+    console.error("Error fetching work progress:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+// >>>>>>> resident/backend

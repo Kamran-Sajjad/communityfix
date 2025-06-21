@@ -1,94 +1,114 @@
-import React from "react";
+import React, { useRef, useEffect, useState } from "react";
+import { FaStar } from "react-icons/fa";
 
 const FeedbackCard = ({ feedback }) => {
-  // Fallback for missing user avatar
-  const renderUserAvatar = () => {
-    if (feedback.userAvatar) {
-      return (
-        <img
-          className="h-10 w-10 rounded-full object-cover"
-          src={feedback.userAvatar}
-          alt={feedback.userName}
-          onError={(e) => {
-            e.target.style.display = "none"; // Hide the broken image
-          }}
-        />
-      );
-    } else {
-      // Display initials if no avatar is found
-      const initials = feedback.userName
-        ? feedback.userName
-            .split(" ")
-            .map((name) => name[0])
-            .join("")
-            .toUpperCase()
-        : "U";
-      return (
-        <div className="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
-          <span className="text-lg font-bold">{initials}</span>
-        </div>
-      );
+  const {
+    name = "Anonymous",
+    address = "Not Provided",
+    issueType:issue = "No Issue Specified",
+    comment = "No comment available.",
+    rating = 0,
+    imageUrl = "",
+    createdAt = new Date().toISOString(),
+  } = feedback;
+
+  const initials = name?.charAt(0).toUpperCase();
+
+  // Ref to get the card height
+  const cardRef = useRef(null);
+  const [imageHeight, setImageHeight] = useState(0);
+
+  useEffect(() => {
+    if (cardRef.current) {
+      // Set image height to card height - 10px margin
+      setImageHeight(cardRef.current.clientHeight - 10);
     }
-  };
+  }, []);
 
   return (
-    <div className="bg-white shadow-md rounded-lg p-4 md:p-6 flex flex-col lg:flex-row gap-4 w-full transition-all duration-200 hover:shadow-lg">
-      {/* Left Section: User Details, Feedback Message, and Rating */}
-      <div className="flex-1 space-y-4 min-w-0">
-        {/* User Details */}
-        <div className="flex items-center gap-3">
-          <div className="flex-shrink-0">{renderUserAvatar()}</div>
-          <div className="min-w-0">
-            <h3 className="text-base md:text-lg font-semibold text-gray-800 truncate">
-              {feedback.userName || "Anonymous User"}
-            </h3>
-            <p className="text-xs md:text-sm text-gray-500">
-              {feedback.date || "No date provided"}
-            </p>
+    <div
+      ref={cardRef}
+      className="p-4 m-2 bg-white rounded-xl shadow-md flex flex-row gap-4"
+      style={{ alignItems: "flex-start" }}
+    >
+      {/* Left side: User info and feedback details */}
+      <div className="flex flex-col flex-1 gap-2">
+        {/* User info */}
+        <div className="flex items-center gap-4">
+          <div className="w-10 h-10 rounded-full bg-blue-200 flex items-center justify-center font-bold text-xl">
+            {initials}
+          </div>
+          <div>
+            <div className="font-semibold text-lg">{name}</div>
+            <div className="text-sm text-gray-500">
+              {new Date(createdAt).toLocaleDateString()}
+            </div>
           </div>
         </div>
 
-        {/* Feedback Message - Scrollable if content is too long */}
-        <div className="max-h-32 overflow-y-auto pr-2">
-          <p className="text-gray-700 text-sm md:text-base break-words">
-            {feedback.message || "No feedback message provided"}
-          </p>
+        {/* Address */}
+        <div className="text-sm text-gray-600">
+          <strong>Address:</strong> {address}
         </div>
 
+        {/* Issue */}
+        <div className="text-sm">
+          <strong>Issue:</strong> {issue}
+        </div>
+
+        {/* Comment */}
+        <div className="text-gray-800 mt-2">{comment}</div>
+
         {/* Rating */}
-        <div className="flex items-center gap-2">
-          <span className="text-xs md:text-sm text-gray-500">Rating:</span>
-          <span className="text-yellow-500 font-medium">
-            {feedback.rating ? `${feedback.rating}/5` : "Not rated"}
-          </span>
+       
+        <div className="flex mt-1">
+          {Array.from({ length: 5 }, (_, i) => (
+            <FaStar key={i} className={i < rating ? "text-yellow-500" : "text-gray-400"} />
+          ))}
+          {rating === 0 && (
+            <span className="text-sm text-gray-400">Not rated</span>
+          )}
         </div>
       </div>
 
-      {/* Right Section: Issue Image and Name - Only shows if issue exists */}
-      {(feedback.issue || feedback.issueImage) && (
-        <div className="lg:w-[200px] xl:w-[250px] flex flex-col gap-2 lg:border-l lg:pl-4 lg:ml-2">
-          <div className="aspect-video w-full rounded-lg bg-gray-100 flex items-center justify-center overflow-hidden">
-            {feedback.issueImage ? (
-              <img
-                src={feedback.issueImage}
-                alt={feedback.issue || "Issue image"}
-                className="h-full w-full object-cover"
-                onError={(e) => {
-                  e.target.style.display = "none"; // Hide the broken image
-                }}
-              />
-            ) : (
-              <span className="text-xs md:text-sm text-gray-500">No Image Available</span>
-            )}
-          </div>
-          <div className="text-center">
-            <h2 className="text-sm md:text-base font-semibold truncate">
-              {feedback.issue || "No issue specified"}
-            </h2>
-            <p className="text-xs text-gray-500">Issue</p>
-          </div>
-        </div>
-      )}
+      {imageUrl ? (
+  <div
+    className="ml-auto rounded-[20%] overflow-hidden shadow"
+    style={{
+      width: imageHeight,
+      height: imageHeight,
+      minWidth: 100,
+      minHeight: 100,
+      backgroundColor: "#f0f0f0",
+      flexShrink: 0,
+    }}
+  >
+    <img
+      src={imageUrl}
+      alt="Feedback"
+      className="w-full h-full object-cover"
+      onError={(e) => {
+        e.target.onerror = null;
+        e.target.src = "/default-placeholder.jpg";
+      }}
+    />
+  </div>
+) : (
+  <div
+    className="ml-auto text-gray-500 italic rounded-[20%] flex items-center justify-center"
+    style={{
+      width: imageHeight,
+      height: imageHeight,
+      minWidth: 100,
+      minHeight: 100,
+      backgroundColor: "#f9fafb",
+      flexShrink: 0,
+    }}
+  >
+    No image
+  </div>
+)}
+
     </div>
   );
 };

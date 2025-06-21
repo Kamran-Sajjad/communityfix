@@ -1,8 +1,4 @@
 
-
-
-
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -14,6 +10,7 @@ import EditableField from "../../components/Dashboard/EditableField";
 import SaveButton from "../../components/Dashboard/SaveButton";
 import { SettingsIcon } from "lucide-react";
 import axios from "axios";
+import { showSuccessToast,showWarningToast, showErrorToast } from "../../../../backend/utils/toastUtils";
 
 export default function SettingsPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -92,6 +89,12 @@ export default function SettingsPage() {
 
 
   const togglePasswordForm = () => {
+    const userStatus = localStorage.getItem("status");
+
+    if (userStatus === "suspended") {
+      showWarningToast("Your account is suspended. You cannot perform this action.");
+      return;
+    }
     setIsPasswordFormVisible((prev) => !prev);
     if (!isPasswordFormVisible) {
       // Auto-scroll to the password form when it is shown
@@ -112,6 +115,12 @@ export default function SettingsPage() {
   
     setLoading(true);
     try {
+      const userStatus = localStorage.getItem("status");
+
+      if (userStatus === "suspended") {
+        showWarningToast("Your account is suspended. You cannot perform this action.");
+        return;
+      }
       const response = await axios.put("/api/users/profile", formData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -145,6 +154,12 @@ export default function SettingsPage() {
 
     setLoading(true);
     try {
+      const userStatus = localStorage.getItem("status");
+
+      if (userStatus === "suspended") {
+        showWarningToast("Your account is suspended. You cannot perform this action.");
+        return;
+      }
       // Make API call to change password
       const response = await axios.put(
         "/api/users/password", // Assume backend route for password change
