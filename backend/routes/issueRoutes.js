@@ -61,8 +61,13 @@ import upload from "../middlewares/upload.js";
 import { protect } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
+import { getIssueStatistics } from "../controllers/issueController.js";
 
+// <<<<<<< Graph/dv
+router.get('/statistics', protect, getIssueStatistics);
+// =======
 // POST - create an issue
+// >>>>>>> resident/backend
 router.post("/report", protect, upload.array("attachments", 3), createIssue);
 
 // GET - all issues (for admin)

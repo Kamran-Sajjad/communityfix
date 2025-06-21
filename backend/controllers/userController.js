@@ -97,6 +97,70 @@ export const getUserProfile = async (req, res) => {
   }
 };
 
+// <<<<<<< Graph/dv
+// export const getUserStatistics = async (req, res) => {
+//   try {
+//     const stats = await User.aggregate([
+//       {
+//         $group: {
+//           _id: "$accountType",
+//           count: { $sum: 1 }
+//         }
+//       },
+//       {
+//         $project: {
+//           accountType: "$_id",
+//           count: 1,
+//           _id: 0
+//         }
+//       }
+//     ]);
+
+//     // Format the data for the frontend
+//     const formattedStats = {
+//       labels: stats.map(item => {
+//         // Capitalize first letter and add space before capital letters
+//         return item.accountType
+//           .replace(/([A-Z])/g, ' $1')
+//           .replace(/^./, str => str.toUpperCase())
+//           .trim();
+//       }),
+//       data: stats.map(item => item.count),
+//       colors: ['#4f46e5', '#e11d48', '#10b981'] // Colors for each segment
+//     };
+
+//     res.status(200).json({ success: true, data: formattedStats });
+//   } catch (err) {
+//     console.error("Error fetching user statistics:", err);
+//     res.status(500).json({ success: false, message: "Server error" });
+//   }
+// };
+export const getUserStatistics = async (req, res) => {
+  try {
+    const stats = await User.aggregate([
+      {
+        $group: {
+          _id: "$accountType",
+          count: { $sum: 1 }
+        }
+      }
+    ]);
+
+    const formattedStats = {
+      labels: stats.map(item => {
+        // Format account type names
+        return item._id.charAt(0).toUpperCase() + item._id.slice(1);
+      }),
+      data: stats.map(item => item.count)
+    };
+
+    res.status(200).json({ success: true, data: formattedStats });
+  } catch (err) {
+    console.error("Error fetching user statistics:", err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+// =======
 
 
 
@@ -205,3 +269,4 @@ export const getAdminProfile = async (req, res) => {
     return res.status(500).json({ message: "Server error" });
   }
 };
+// >>>>>>> resident/backend

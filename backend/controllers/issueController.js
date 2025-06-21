@@ -187,6 +187,146 @@ export const getIssuesByStatus = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
+// <<<<<<< Graph/dv
+export const getIssueStatistics = async (req, res) => {
+  try {
+    const { year, month, timeRange } = req.query;
+    const yearNum = parseInt(year) || new Date().getFullYear();
+    const monthNum = month ? parseInt(month) : new Date().getMonth() + 1;
+
+    if (timeRange === 'monthly') {
+      // Monthly statistics logic (same as before)
+      const result = {
+        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+        totalIssues: Array(12).fill(0),
+        pendingIssues: Array(12).fill(0)
+      };
+
+      const stats = await Issue.aggregate([
+        {
+          $match: {
+            createdAt: {
+              $gte: new Date(yearNum, 0, 1),
+              $lt: new Date(yearNum + 1, 0, 1)
+            }
+          }
+        },
+        {
+          $group: {
+            _id: { $month: "$createdAt" },
+            total: { $sum: 1 },
+            pending: {
+              $sum: { $cond: [{ $eq: ["$status", "pending"] }, 1, 0] }
+            }
+          }
+        },
+        { $sort: { "_id": 1 } }
+      ]);
+
+      stats.forEach(stat => {
+        const monthIndex = stat._id - 1;
+        if (monthIndex >= 0 && monthIndex < 12) {
+          result.totalIssues[monthIndex] = stat.total || 0;
+          result.pendingIssues[monthIndex] = stat.pending || 0;
+        }
+      });
+
+      return res.json({ success: true, data: result });
+
+    } else {
+      // DAILY STATISTICS - IMPROVED VERSION
+      const daysInMonth = new Date(yearNum, monthNum, 0).getDate();
+      
+      // Create complete days array for the selected month
+      const result = {
+        labels: Array.from({length: daysInMonth}, (_, i) => {
+          const day = i + 1;
+          return `${monthNum}/${day}/${yearNum}`; // Format: MM/DD/YYYY
+        }),
+        totalIssues: Array(daysInMonth).fill(0),
+        pendingIssues: Array(daysInMonth).fill(0),
+        resolvedIssues: Array(daysInMonth).fill(0) // Added resolved issues count
+      };
+
+      // Get daily statistics for the selected month
+      const stats = await Issue.aggregate([
+        {
+          $match: {
+            createdAt: {
+              $gte: new Date(yearNum, monthNum - 1, 1),
+              $lt: new Date(yearNum, monthNum, 1)
+            }
+          }
+        },
+        {
+          $project: {
+            day: { $dayOfMonth: "$createdAt" },
+            status: 1,
+            createdAt: 1
+          }
+        },
+        {
+          $group: {
+            _id: "$day",
+            total: { $sum: 1 },
+            pending: {
+              $sum: { $cond: [{ $eq: ["$status", "pending"] }, 1, 0] }
+            },
+            resolved: {
+              $sum: { $cond: [{ $eq: ["$status", "resolved"] }, 1, 0] }
+            }
+          }
+        },
+        { $sort: { "_id": 1 } }
+      ]);
+
+      // Merge database results with our complete days structure
+      stats.forEach(stat => {
+        const dayIndex = stat._id - 1;
+        if (dayIndex >= 0 && dayIndex < daysInMonth) {
+          result.totalIssues[dayIndex] = stat.total || 0;
+          result.pendingIssues[dayIndex] = stat.pending || 0;
+          result.resolvedIssues[dayIndex] = stat.resolved || 0;
+        }
+      });
+
+      return res.json({ 
+        success: true, 
+        data: result,
+        meta: {
+          timeRange: 'daily',
+          month: monthNum,
+          year: yearNum,
+          daysInMonth: daysInMonth
+        }
+      });
+    }
+
+  } catch (err) {
+    console.error("Error in getIssueStatistics:", err);
+    
+    // Create appropriate empty response based on timeRange
+    const emptyData = timeRange === 'monthly' 
+      ? { 
+          labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"], 
+          totalIssues: Array(12).fill(0), 
+          pendingIssues: Array(12).fill(0) 
+        }
+      : { 
+          labels: Array.from({length: new Date().getDate()}, (_, i) => (i + 1).toString()),
+          totalIssues: Array(new Date().getDate()).fill(0),
+          pendingIssues: Array(new Date().getDate()).fill(0),
+          resolvedIssues: Array(new Date().getDate()).fill(0)
+        };
+    
+    return res.status(500).json({ 
+      success: false, 
+      message: "Error fetching statistics",
+      data: emptyData
+    });
+  }
+};
+// =======
 // @desc    Get work progress percentage
 export const getWorkProgress = async (req, res) => {
   try {
@@ -207,3 +347,4 @@ export const getWorkProgress = async (req, res) => {
   }
 };
 
+// >>>>>>> resident/backend
