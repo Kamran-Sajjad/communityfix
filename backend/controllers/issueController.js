@@ -7,6 +7,7 @@ const window = new JSDOM("").window;
 const DOMPurify = createDOMPurify(window);
 import Issue from "../models/Issue.js";
 import { cloudinary, storage } from "../config/cloudinary.js";
+import mongoose from "mongoose";
 // import issueSchema from "../models/Issue.js";
 
 // Create a new issue
@@ -61,22 +62,6 @@ export const createIssue = async (req, res) => {
 
 
 // Get all issues
-// export const getAllIssues = async (req, res) => {
-//   try {
-//     const issues = await Issue.find().sort({ createdAt: -1 });
-//     res.status(200).json({ success: true, issues });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ success: false, message: "Failed to fetch issues" });
-//   }
-// };
-
-
-
-
-// backend/controllers/issueController.js
-
-// Get all issues with optional filtering
 export const getAllIssues = async (req, res) => {
   try {
     const { issueType, issueCategory } = req.query;
@@ -198,14 +183,42 @@ export const commentOnIssue = async (req, res) => {
 
 
 
+// export const getIssueById = async (req, res) => {
+//   try {
+//     const issue = await Issue.findById(req.params.id)
+//       .populate("comments.user", "fullName avatar") // Populate user info in comments
+//       .populate("voters.userId", "fullName") // Populate user info in voters with fullName
+
+//     if (!issue) return res.status(404).json({ message: "Issue not found" });
+
+
+//     res.status(200).json({ success: true, issue });
+//   } catch (err) {
+//     console.error("Failed to get issue:", err);
+//     res.status(500).json({ success: false, message: "Failed to get issue" });
+//   }
+// };
+
+
+
+
+
+
 export const getIssueById = async (req, res) => {
   try {
-    const issue = await Issue.findById(req.params.id)
-      .populate("comments.user", "fullName avatar") // Populate user info in comments
-      .populate("voters.userId", "fullName") // Populate user info in voters with fullName
+    const issueId = req.params.id;
+    // Ensure the id is a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(issueId)) {
+      return res.status(400).json({ success: false, message: "Invalid issue ID" });
+    }
 
-    if (!issue) return res.status(404).json({ message: "Issue not found" });
+    const issue = await Issue.findById(issueId)
+      .populate("comments.user", "fullName avatar")
+      .populate("voters.userId", "fullName");
 
+    if (!issue) {
+      return res.status(404).json({ message: "Issue not found" });
+    }
 
     res.status(200).json({ success: true, issue });
   } catch (err) {
@@ -213,8 +226,6 @@ export const getIssueById = async (req, res) => {
     res.status(500).json({ success: false, message: "Failed to get issue" });
   }
 };
-
-
 
 
 
@@ -431,3 +442,63 @@ export const getWorkProgress = async (req, res) => {
 
 
 
+
+
+// Accept issue (Admin acceptance)
+export const acceptIssue = async (req, res) => {
+  try {
+    const { issueId } = req.params;
+
+    // Find the issue by ID
+    const issue = await Issue.findById(issueId);
+
+    if (!issue) {
+      return res.status(404).json({ message: "Issue not found" });
+    }
+
+    // Mark the issue as accepted by admin
+    issue.adminAccepted = true;
+
+    // You could assign it to a service team member here if needed
+    // For now, it will remain unassigned (null)
+
+    await issue.save();
+
+    res.status(200).json({ success: true, message: "Issue accepted", issue });
+  } catch (err) {
+    console.error("Failed to accept issue:", err);
+    res.status(500).json({ success: false, message: "Failed to accept issue" });
+  }
+};
+
+
+
+
+
+
+
+
+
+// Reject issue (Admin reject)
+export const rejectIssue = async (req, res) => {
+  try {
+    const { issueId } = req.params;
+
+    // Find the issue by ID
+    const issue = await Issue.findById(issueId);
+
+    if (!issue) {
+      return res.status(404).json({ message: "Issue not found" });
+    }
+
+    // Delete the issue from the database
+    // await issue.remove();
+
+     await Issue.deleteOne({ _id: issueId });
+
+    res.status(200).json({ success: true, message: "Issue rejected and deleted" });
+  } catch (err) {
+    console.error("Failed to reject issue:", err);
+    res.status(500).json({ success: false, message: "Failed to reject issue" });
+  }
+};

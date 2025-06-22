@@ -3,11 +3,15 @@
 
 
 
-// import React, { useState, useEffect } from "react";
+
+
+
 // import axios from "axios";
 // import AdSideBare from "../../components/Dashboard/AdSideBare";
 // import ReportCard from "../../components/Dashboard/ReportCard";
 // import { AdHeader } from "../../components/Dashboard/AdHeader";
+// import { useState, useEffect } from "react";
+// import { showSuccessToast, showErrorToast, showWarningToast } from "../../../../backend/utils/toastUtils"; // import toast functions
 
 // const RequestedReports = () => {
 //   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
@@ -19,6 +23,7 @@
 //     issueCategory: "",
 //   });
 
+//   // Fetch reports with applied filters
 //   const fetchReports = async () => {
 //     try {
 //       setLoading(true);
@@ -46,49 +51,75 @@
 //       console.error("Failed to load reports:", err);
 //       setError("Failed to load reports. Please try again later.");
 //       setReports([]);
+//       showErrorToast("Failed to load reports. Please try again later."); // Use toast for error
 //     } finally {
 //       setLoading(false);
 //     }
 //   };
 
 //   useEffect(() => {
-//     fetchReports();
-//   }, [filters]); // Fetch reports whenever the filters change
+//     fetchReports(); // Fetch reports when component mounts or filters change
+//   }, [filters]);
+
+//   // Handle Accept action (for admin)
+//   const handleAccept = async (issueId) => {
+//     try {
+//       const token = localStorage.getItem("token");
+//       await axios.post(`http://localhost:5000/api/issues/${issueId}/accept`, {}, {
+//         headers: { Authorization: `Bearer ${token}` }
+//       });
+//       fetchReports(); // Re-fetch reports after action
+//       showSuccessToast("Issue accepted and sent to service team"); // Success toast
+//     } catch (err) {
+//       console.error("Failed to accept issue:", err);
+//       showErrorToast("Failed to accept issue"); // Error toast
+//     }
+//   };
+
+//   // Handle Reject action (for admin)
+//   const handleReject = async (issueId) => {
+//     try {
+//       const token = localStorage.getItem("token");
+//       await axios.post(`http://localhost:5000/api/issues/${issueId}/reject`, {}, {
+//         headers: { Authorization: `Bearer ${token}` }
+//       });
+//       fetchReports(); // Re-fetch reports after action
+//       showSuccessToast("Issue rejected and removed"); // Success toast
+//     } catch (err) {
+//       console.error("Failed to reject issue:", err);
+//       showErrorToast("Failed to reject issue"); // Error toast
+//     }
+//   };
 
 //   const toggleSidebar = () => {
 //     setIsSidebarExpanded(!isSidebarExpanded);
 //   };
 
-//   // Handle filter change
 //   const handleFilterChange = (e) => {
+//     const { name, value } = e.target;
 //     setFilters((prevFilters) => ({
 //       ...prevFilters,
-//       [e.target.name]: e.target.value,
+//       [name]: value,
 //     }));
 //   };
 
 //   return (
 //     <div className="flex w-full min-h-screen bg-gray-100 relative">
-//       <div
-//         className={`fixed top-0 left-0 h-screen bg-white shadow-md transition-all duration-300 z-30`}
-//       >
+//       <div className={`fixed top-0 left-0 h-screen bg-white shadow-md transition-all duration-300 z-30`}>
 //         <AdSideBare isExpanded={isSidebarExpanded} toggleSidebar={toggleSidebar} />
 //       </div>
 
-//       <div
-//         className={`flex flex-col flex-1 transition-all duration-300 md:ml-12 ${isSidebarExpanded ? "ml-64" : "ml-0"}`}
-//       >
+//       <div className={`flex flex-col flex-1 transition-all duration-300 md:ml-12 ${isSidebarExpanded ? "ml-64" : "ml-0"}`}>
 //         <div className="sticky top-0 z-20 bg-white shadow-sm w-full">
 //           <AdHeader title="Requested Reports" />
 //         </div>
 
-//         {/* Filters Dropdown */}
-//         <div className="absolute top-4 right-4 flex gap-4">
+//         <div className="flex justify-end p-4 gap-4 mt-2">
 //           <select
 //             name="issueType"
 //             value={filters.issueType}
 //             onChange={handleFilterChange}
-//             className="px-4 py-2 border border-gray-300 rounded"
+//             className="px-4 py-2 border border-gray-300 rounded shadow-md"
 //           >
 //             <option value="">Issue Type</option>
 //             <option value="societal">Societal</option>
@@ -99,16 +130,23 @@
 //             name="issueCategory"
 //             value={filters.issueCategory}
 //             onChange={handleFilterChange}
-//             className="px-4 py-2 border border-gray-300 rounded"
+//             className="px-4 py-2 border border-gray-300 rounded shadow-md"
 //           >
 //             <option value="">Issue Category</option>
+//             <option value="renovation">Renovation</option>
+//             <option value="repair">Repair</option>
 //             <option value="plumbing">Plumbing</option>
+//             <option value="water_supply">Water Supply</option>
 //             <option value="electrical">Electrical</option>
+//             <option value="waste_management">Waste Management</option>
 //             <option value="gardening">Gardening</option>
+//             <option value="security">Security</option>
+//             <option value="maintenance">Maintenance</option>
+//             <option value="other">Other</option>
 //           </select>
 //         </div>
 
-//         <div className="p-4 sm:p-6 md:p-8 mx-auto max-w-full md:max-w-7xl space-y-4">
+//         <div className="p-2 sm:p-6 md:p-8 mx-auto max-w-full md:max-w-7xl space-y-4">
 //           {loading ? (
 //             <div className="text-center py-8">
 //               <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
@@ -118,7 +156,12 @@
 //             <div className="text-center py-8 text-red-500">{error}</div>
 //           ) : reports.length > 0 ? (
 //             reports.map((report) => (
-//               <ReportCard key={report._id || report.id} report={report} />
+//               <ReportCard
+//                 key={report._id || report.id}
+//                 report={report}
+//                 onApprove={handleAccept}
+//                 onReject={handleReject}
+//               />
 //             ))
 //           ) : (
 //             <p className="text-center text-gray-500">No reports available.</p>
@@ -140,11 +183,13 @@
 
 
 
-import React, { useState, useEffect } from "react";
+
 import axios from "axios";
 import AdSideBare from "../../components/Dashboard/AdSideBare";
 import ReportCard from "../../components/Dashboard/ReportCard";
 import { AdHeader } from "../../components/Dashboard/AdHeader";
+import { useState, useEffect } from "react";
+import { showSuccessToast, showErrorToast, showWarningToast } from "../../../../backend/utils/toastUtils"; // import toast functions
 
 const RequestedReports = () => {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
@@ -170,10 +215,6 @@ const RequestedReports = () => {
         params: filters, // Pass filters to the request
       });
 
-      // Log the request URL and the response data for debugging
-      // console.log("API request URL:", `http://localhost:5000/api/issues?${new URLSearchParams(filters).toString()}`);
-      
-
       const transformedReports = data.issues.map((issue) => ({
         ...issue,
         issueTitle: issue.title,
@@ -188,6 +229,7 @@ const RequestedReports = () => {
       console.error("Failed to load reports:", err);
       setError("Failed to load reports. Please try again later.");
       setReports([]);
+      showErrorToast("Failed to load reports. Please try again later."); // Use toast for error
     } finally {
       setLoading(false);
     }
@@ -195,38 +237,61 @@ const RequestedReports = () => {
 
   useEffect(() => {
     fetchReports(); // Fetch reports when component mounts or filters change
-  }, [filters]); // Dependency array includes filters so it runs when filters change
+  }, [filters]);
+
+  // Handle Accept action (for admin)
+  const handleAccept = async (issueId) => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.post(`http://localhost:5000/api/issues/${issueId}/accept`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      fetchReports(); // Re-fetch reports after action
+      showSuccessToast("Issue accepted and sent to service team"); // Success toast
+    } catch (err) {
+      console.error("Failed to accept issue:", err);
+      showErrorToast("Failed to accept issue"); // Error toast
+    }
+  };
+
+  // Handle Reject action (for admin)
+  const handleReject = async (issueId) => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.post(`http://localhost:5000/api/issues/${issueId}/reject`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      fetchReports(); // Re-fetch reports after action
+      showSuccessToast("Issue rejected and removed"); // Success toast
+    } catch (err) {
+      console.error("Failed to reject issue:", err);
+      showErrorToast("Failed to reject issue"); // Error toast
+    }
+  };
 
   const toggleSidebar = () => {
     setIsSidebarExpanded(!isSidebarExpanded);
   };
 
-  // Handle filter change
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
- 
     setFilters((prevFilters) => ({
       ...prevFilters,
-      [name]: value, // Dynamically update filter based on user selection
+      [name]: value,
     }));
   };
 
   return (
     <div className="flex w-full min-h-screen bg-gray-100 relative">
-      <div
-        className={`fixed top-0 left-0 h-screen bg-white shadow-md transition-all duration-300 z-30`}
-      >
+      <div className={`fixed top-0 left-0 h-screen bg-white shadow-md transition-all duration-300 z-30`}>
         <AdSideBare isExpanded={isSidebarExpanded} toggleSidebar={toggleSidebar} />
       </div>
 
-      <div
-        className={`flex flex-col flex-1 transition-all duration-300 md:ml-12 ${isSidebarExpanded ? "ml-64" : "ml-0"}`}
-      >
+      <div className={`flex flex-col flex-1 transition-all duration-300 md:ml-12 ${isSidebarExpanded ? "ml-64" : "ml-0"}`}>
         <div className="sticky top-0 z-20 bg-white shadow-sm w-full">
           <AdHeader title="Requested Reports" />
         </div>
 
-        {/* Filters Dropdown */}
         <div className="flex justify-end p-4 gap-4 mt-2">
           <select
             name="issueType"
@@ -246,12 +311,12 @@ const RequestedReports = () => {
             className="px-4 py-2 border border-gray-300 rounded shadow-md"
           >
             <option value="">Issue Category</option>
-            <option value="renovation">renovation</option>
-            <option value="repair">repair</option>
+            <option value="renovation">Renovation</option>
+            <option value="repair">Repair</option>
             <option value="plumbing">Plumbing</option>
-            <option value="water_supply">water supply</option>
+            <option value="water_supply">Water Supply</option>
             <option value="electrical">Electrical</option>
-            <option value="waste_management">waste Management</option>
+            <option value="waste_management">Waste Management</option>
             <option value="gardening">Gardening</option>
             <option value="security">Security</option>
             <option value="maintenance">Maintenance</option>
@@ -269,7 +334,12 @@ const RequestedReports = () => {
             <div className="text-center py-8 text-red-500">{error}</div>
           ) : reports.length > 0 ? (
             reports.map((report) => (
-              <ReportCard key={report._id || report.id} report={report} />
+              <ReportCard
+                key={report._id || report.id}
+                report={report}
+                onApprove={handleAccept}
+                onReject={handleReject}
+              />
             ))
           ) : (
             <p className="text-center text-gray-500">No reports available.</p>
@@ -281,15 +351,3 @@ const RequestedReports = () => {
 };
 
 export default RequestedReports;
-
-
-
-
-
-
-
-
-
-
-
-

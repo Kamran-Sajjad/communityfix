@@ -69,6 +69,8 @@ import {
   getIssueById,
   getUserIssues,
   getIssuesByStatus,
+   acceptIssue,  
+  rejectIssue 
 } from "../controllers/issueController.js";
 import upload from "../middlewares/upload.js";
 import { protect } from "../middlewares/authMiddleware.js";
@@ -96,15 +98,16 @@ router.post("/:issueId/comment", protect, commentOnIssue);
 
 router.get("/myissues", protect, getUserIssues);
 
+// router.post("/:id/accept", protect, acceptIssue);  
+
+// router.post("/:id/reject", protect, rejectIssue); 
+router.post("/:issueId/accept", protect, acceptIssue);  
+
+router.post("/:issueId/reject", protect, rejectIssue); 
 
 router.get("/:id", protect, getIssueById);
 
-
 router.get("/status/:status", protect, getIssuesByStatus);
-
-
-
-
 // Fetch the list of voters and their priorities
 router.get("/:issueId/voters", protect, async (req, res) => {
   const { issueId } = req.params;
