@@ -40,6 +40,9 @@ import Analytics from "./pages/admin/Analytics";
 import IssueReports from "./components/Dashboard/IssueReports";
 import Reports from "./pages/admin/Reports";
 import Feedbackhistory from "./components/Dashboard/Feedbackhistory";
+import IssueDetailsPage from "./pages/admin/IssueDetailsPage";
+
+
 // <<<<<<< resident/backend
 import { AuthProvider } from "./context/AuthContext";
 // =======
@@ -130,6 +133,9 @@ const App = () => {
           <Route path="/admin/analytics" element={<Analytics />} />
           <Route path="/admin/issue-reports" element={<IssueReports />} />
           <Route path="/admin/reports" element={<Reports />} />
+           <Route path="/issue-details/:issueId" element={<IssueDetailsPage />} />
+
+
         </Routes>
         <ToastContainer
           position="top-right"

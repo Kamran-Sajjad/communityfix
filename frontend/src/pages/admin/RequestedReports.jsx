@@ -1,7 +1,145 @@
 
 
 
+
+
+// import React, { useState, useEffect } from "react";
+// import axios from "axios";
+// import AdSideBare from "../../components/Dashboard/AdSideBare";
+// import ReportCard from "../../components/Dashboard/ReportCard";
+// import { AdHeader } from "../../components/Dashboard/AdHeader";
+
+// const RequestedReports = () => {
+//   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
+//   const [reports, setReports] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState(null);
+//   const [filters, setFilters] = useState({
+//     issueType: "",
+//     issueCategory: "",
+//   });
+
+//   const fetchReports = async () => {
+//     try {
+//       setLoading(true);
+//       const token = localStorage.getItem("token");
+
+//       // Fetch issues based on filters
+//       const { data } = await axios.get("http://localhost:5000/api/issues", {
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//         },
+//         params: filters, // Pass filters to the request
+//       });
+
+//       const transformedReports = data.issues.map((issue) => ({
+//         ...issue,
+//         issueTitle: issue.title,
+//         issueDescription: issue.description,
+//         age: Math.floor((Date.now() - new Date(issue.createdAt)) / 3600000),
+//         recommendations: ["Resolve", "Review", "Escalate"],
+//       }));
+
+//       setReports(transformedReports);
+//       setError(null);
+//     } catch (err) {
+//       console.error("Failed to load reports:", err);
+//       setError("Failed to load reports. Please try again later.");
+//       setReports([]);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   useEffect(() => {
+//     fetchReports();
+//   }, [filters]); // Fetch reports whenever the filters change
+
+//   const toggleSidebar = () => {
+//     setIsSidebarExpanded(!isSidebarExpanded);
+//   };
+
+//   // Handle filter change
+//   const handleFilterChange = (e) => {
+//     setFilters((prevFilters) => ({
+//       ...prevFilters,
+//       [e.target.name]: e.target.value,
+//     }));
+//   };
+
+//   return (
+//     <div className="flex w-full min-h-screen bg-gray-100 relative">
+//       <div
+//         className={`fixed top-0 left-0 h-screen bg-white shadow-md transition-all duration-300 z-30`}
+//       >
+//         <AdSideBare isExpanded={isSidebarExpanded} toggleSidebar={toggleSidebar} />
+//       </div>
+
+//       <div
+//         className={`flex flex-col flex-1 transition-all duration-300 md:ml-12 ${isSidebarExpanded ? "ml-64" : "ml-0"}`}
+//       >
+//         <div className="sticky top-0 z-20 bg-white shadow-sm w-full">
+//           <AdHeader title="Requested Reports" />
+//         </div>
+
+//         {/* Filters Dropdown */}
+//         <div className="absolute top-4 right-4 flex gap-4">
+//           <select
+//             name="issueType"
+//             value={filters.issueType}
+//             onChange={handleFilterChange}
+//             className="px-4 py-2 border border-gray-300 rounded"
+//           >
+//             <option value="">Issue Type</option>
+//             <option value="societal">Societal</option>
+//             <option value="household">Household</option>
+//           </select>
+
+//           <select
+//             name="issueCategory"
+//             value={filters.issueCategory}
+//             onChange={handleFilterChange}
+//             className="px-4 py-2 border border-gray-300 rounded"
+//           >
+//             <option value="">Issue Category</option>
+//             <option value="plumbing">Plumbing</option>
+//             <option value="electrical">Electrical</option>
+//             <option value="gardening">Gardening</option>
+//           </select>
+//         </div>
+
+//         <div className="p-4 sm:p-6 md:p-8 mx-auto max-w-full md:max-w-7xl space-y-4">
+//           {loading ? (
+//             <div className="text-center py-8">
+//               <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+//               <p className="mt-2 text-gray-600">Loading reports...</p>
+//             </div>
+//           ) : error ? (
+//             <div className="text-center py-8 text-red-500">{error}</div>
+//           ) : reports.length > 0 ? (
+//             reports.map((report) => (
+//               <ReportCard key={report._id || report.id} report={report} />
+//             ))
+//           ) : (
+//             <p className="text-center text-gray-500">No reports available.</p>
+//           )}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
 // export default RequestedReports;
+
+
+
+
+
+
+
+
+
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import AdSideBare from "../../components/Dashboard/AdSideBare";
@@ -13,60 +151,115 @@ const RequestedReports = () => {
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [filters, setFilters] = useState({
+    issueType: "",
+    issueCategory: "",
+  });
+
+  // Fetch reports with applied filters
+  const fetchReports = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+
+      // Fetch issues based on filters
+      const { data } = await axios.get("http://localhost:5000/api/issues", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: filters, // Pass filters to the request
+      });
+
+      // Log the request URL and the response data for debugging
+      // console.log("API request URL:", `http://localhost:5000/api/issues?${new URLSearchParams(filters).toString()}`);
+      
+
+      const transformedReports = data.issues.map((issue) => ({
+        ...issue,
+        issueTitle: issue.title,
+        issueDescription: issue.description,
+        age: Math.floor((Date.now() - new Date(issue.createdAt)) / 3600000),
+        recommendations: ["Resolve", "Review", "Escalate"],
+      }));
+
+      setReports(transformedReports);
+      setError(null);
+    } catch (err) {
+      console.error("Failed to load reports:", err);
+      setError("Failed to load reports. Please try again later.");
+      setReports([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchReports = async () => {
-      try {
-        setLoading(true);
-        const token = localStorage.getItem("token"); // 🔐 Assuming token is stored in localStorage
-
-        const { data } = await axios.get("http://localhost:5000/api/issues", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        const transformedReports = data.issues.map(issue => ({
-          ...issue,
-          issueTitle: issue.title,
-          issueDescription: issue.description,
-          age: Math.floor((Date.now() - new Date(issue.createdAt)) / 3600000),
-          recommendations: ["Resolve", "Review", "Escalate"]
-        }));
-
-        setReports(transformedReports);
-        setError(null);
-      } catch (err) {
-        console.error("Failed to load reports:", err);
-        setError("Failed to load reports. Please try again later.");
-        setReports([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchReports();
-  }, []);
+    fetchReports(); // Fetch reports when component mounts or filters change
+  }, [filters]); // Dependency array includes filters so it runs when filters change
 
   const toggleSidebar = () => {
     setIsSidebarExpanded(!isSidebarExpanded);
   };
 
+  // Handle filter change
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+ 
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [name]: value, // Dynamically update filter based on user selection
+    }));
+  };
+
   return (
     <div className="flex w-full min-h-screen bg-gray-100 relative">
-      <div className={`fixed top-0 left-0 h-screen bg-white shadow-md transition-all duration-300 z-30`}>
-        <AdSideBare
-          isExpanded={isSidebarExpanded}
-          toggleSidebar={toggleSidebar}
-        />
+      <div
+        className={`fixed top-0 left-0 h-screen bg-white shadow-md transition-all duration-300 z-30`}
+      >
+        <AdSideBare isExpanded={isSidebarExpanded} toggleSidebar={toggleSidebar} />
       </div>
 
-      <div className={`flex flex-col flex-1 transition-all duration-300 md:ml-12 ${isSidebarExpanded ? "ml-64" : "ml-0"}`}>
+      <div
+        className={`flex flex-col flex-1 transition-all duration-300 md:ml-12 ${isSidebarExpanded ? "ml-64" : "ml-0"}`}
+      >
         <div className="sticky top-0 z-20 bg-white shadow-sm w-full">
           <AdHeader title="Requested Reports" />
         </div>
 
-        <div className="p-4 sm:p-6 md:p-8 mx-auto max-w-full md:max-w-7xl space-y-4">
+        {/* Filters Dropdown */}
+        <div className="flex justify-end p-4 gap-4 mt-2">
+          <select
+            name="issueType"
+            value={filters.issueType}
+            onChange={handleFilterChange}
+            className="px-4 py-2 border border-gray-300 rounded shadow-md"
+          >
+            <option value="">Issue Type</option>
+            <option value="societal">Societal</option>
+            <option value="household">Household</option>
+          </select>
+
+          <select
+            name="issueCategory"
+            value={filters.issueCategory}
+            onChange={handleFilterChange}
+            className="px-4 py-2 border border-gray-300 rounded shadow-md"
+          >
+            <option value="">Issue Category</option>
+            <option value="renovation">renovation</option>
+            <option value="repair">repair</option>
+            <option value="plumbing">Plumbing</option>
+            <option value="water_supply">water supply</option>
+            <option value="electrical">Electrical</option>
+            <option value="waste_management">waste Management</option>
+            <option value="gardening">Gardening</option>
+            <option value="security">Security</option>
+            <option value="maintenance">Maintenance</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div className="p-2 sm:p-6 md:p-8 mx-auto max-w-full md:max-w-7xl space-y-4">
           {loading ? (
             <div className="text-center py-8">
               <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
@@ -76,10 +269,7 @@ const RequestedReports = () => {
             <div className="text-center py-8 text-red-500">{error}</div>
           ) : reports.length > 0 ? (
             reports.map((report) => (
-              <ReportCard
-                key={report._id || report.id}
-                report={report}
-              />
+              <ReportCard key={report._id || report.id} report={report} />
             ))
           ) : (
             <p className="text-center text-gray-500">No reports available.</p>
@@ -91,3 +281,15 @@ const RequestedReports = () => {
 };
 
 export default RequestedReports;
+
+
+
+
+
+
+
+
+
+
+
+

@@ -104,11 +104,9 @@ import {
 } from '../controllers/userController.js';
 import { protect } from '../middlewares/authMiddleware.js';
 import upload from '../middlewares/upload.js';
-// <<<<<<< Graph/dv
 import { getUserStatistics } from "../controllers/userController.js";
 // import { updateProfileImage } from '../controllers/userController.js';
-// =======
-// >>>>>>> resident/backend
+
 
 const router = express.Router();
 
@@ -119,7 +117,7 @@ router.get("/profile", protect, getUserProfile);
 router.get('/statistics', protect, getUserStatistics);
 // Route to upload/update profile image
 // router.put("/profile/image", protect, upload.single("image"), updateProfileImage);
-// =======
+
 router.get("/profile", protect, getAdminProfile); 
 router.get("/profile", protect, getUserProfile,
 ); 
@@ -127,6 +125,6 @@ router.post("/suspended", suspendUser);
 router.post("/deactivated", deactivateUser);
 router.post("/active", activateUser);
 router.get("/stats", getUserStats);
-// >>>>>>> resident/backend
+
 
 export default router;
