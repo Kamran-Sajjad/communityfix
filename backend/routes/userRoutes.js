@@ -99,12 +99,21 @@ import {
   deactivateUser,
   activateUser,
   getUserStats,
+// <<<<<<< feature/nizam
+  getAdminProfile, // ✅ renamed here
+  getUserProfile,
+  getUserStatistics
+} from '../controllers/userController.js';
+import { protect } from '../middlewares/authMiddleware.js';
+import upload from '../middlewares/upload.js';
+// =======
   getUserProfile,
   getAdminProfile // ✅ renamed here
 } from '../controllers/userController.js';
 import { protect } from '../middlewares/authMiddleware.js';
 import upload from '../middlewares/upload.js';
 import { getUserStatistics } from "../controllers/userController.js";
+// >>>>>>> resident/backend
 // import { updateProfileImage } from '../controllers/userController.js';
 
 
@@ -112,7 +121,7 @@ const router = express.Router();
 
 router.put('/profile', protect, upload.single("profileImage"), updateProfile);
 router.put('/password', protect, changePassword);
-// <<<<<<< Graph/dv
+
 router.get("/profile", protect, getUserProfile);
 router.get('/statistics', protect, getUserStatistics);
 // Route to upload/update profile image
