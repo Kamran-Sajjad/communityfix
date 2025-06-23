@@ -90,6 +90,7 @@ router.get("/list", getAllIssues);
 router.get("/", protect, getAllIssues);
 
 
+// router.post("/:issueId/upvote", protect, upvoteIssue);
 router.post("/:id/upvote", protect, upvoteIssue);
 
 

@@ -102,6 +102,8 @@ export const getAllIssues = async (req, res) => {
 export const upvoteIssue = async (req, res) => {
   try {
     const { priority } = req.body;  // Expecting priority in the request body
+    // console.log("Authenticated user ID:", req.user?._id);
+
     const issue = await Issue.findById(req.params.id);
     if (!issue) return res.status(404).json({ message: "Issue not found" });
 
@@ -112,6 +114,8 @@ export const upvoteIssue = async (req, res) => {
     }
 
     // Check if the user has already voted
+    // console.log("Voters:", issue.voters);
+
     const alreadyVoted = issue.voters.some(
       (voter) => voter.userId.toString() === req.user._id.toString()
     );
