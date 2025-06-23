@@ -88,7 +88,7 @@
 //             element={<ListedIssuesPage />}
 //           />
 //           <Route path="/residents/AddIssuePage" element={<AddIssuePage />} />
-       
+
 
 //           <Route
 //             path="/serviceTeam/MechanicDashboard"
@@ -482,7 +482,7 @@ const App = () => {
           />
           <Route
             path="/admin/requestedreports"
-// <<<<<<< feature/nizam
+            // <<<<<<< feature/nizam
             element={
               <ProtectedRoute allowedAccountTypes={['admin']}>
                 <RequestedReports />
@@ -545,7 +545,8 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-// =======
+          <Route
+
             element={<RequestedReports />}
           />
           <Route path="/admin/adheader" element={<AdHeader />} />
@@ -555,10 +556,9 @@ const App = () => {
           <Route path="/admin/analytics" element={<Analytics />} />
           <Route path="/admin/issue-reports" element={<IssueReports />} />
           <Route path="/admin/reports" element={<Reports />} />
-           <Route path="/issue-details/:issueId" element={<IssueDetailsPage />} />
+          <Route path="/issue-details/:issueId" element={<IssueDetailsPage />} />
 
 
-// >>>>>>> resident/backend
         </Routes>
         <ToastContainer
           position="top-right"
