@@ -96,7 +96,7 @@ import { getUserStatistics } from "../controllers/userController.js";
 // import { updateProfileImage } from '../controllers/userController.js';
 // =======
 // >>>>>>> resident/backend
-
+import{ getUserProfile } from '../controllers/userController.js';
 const router = express.Router();
 
 router.put('/profile', protect, upload.single("profileImage"), updateProfile);
