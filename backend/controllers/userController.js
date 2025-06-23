@@ -44,6 +44,16 @@ export const updateProfile = async (req, res) => {
 };
 
 
+
+
+
+
+
+
+
+
+
+
 // Change user password
 export const changePassword = async (req, res) => {
     try {
@@ -78,6 +88,14 @@ export const changePassword = async (req, res) => {
       return res.status(500).json({ message: 'Server error' });
     }
   };
+
+
+
+
+
+
+
+
   
 // @desc    Get logged-in user profile
 // @route   GET /api/users/profile
@@ -100,6 +118,45 @@ export const getUserProfile = async (req, res) => {
 
 
 
+
+
+
+
+
+export const getUserStatistics = async (req, res) => {
+  try {
+    const stats = await User.aggregate([
+      {
+        $group: {
+          _id: "$accountType",
+          count: { $sum: 1 }
+        }
+      }
+    ]);
+
+    const formattedStats = {
+      labels: stats.map(item => {
+        // Format account type names
+        return item._id.charAt(0).toUpperCase() + item._id.slice(1);
+      }),
+      data: stats.map(item => item.count)
+    };
+
+    res.status(200).json({ success: true, data: formattedStats });
+  } catch (err) {
+    console.error("Error fetching user statistics:", err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+
+
+
+
+
+
+
+
 // Suspend user account
 export const suspendUser = async (req, res) => {
   const { userId } = req.body;
@@ -117,6 +174,13 @@ export const suspendUser = async (req, res) => {
   }
 };
 
+
+
+
+
+
+
+
 // Deactivate user account
 export const deactivateUser = async (req, res) => {
   const { userId } = req.body;
@@ -133,6 +197,11 @@ export const deactivateUser = async (req, res) => {
     res.status(500).json({ message: 'Error deactivating user' });
   }
 };
+
+
+
+
+
 
 // Activate user account
 export const activateUser = async (req, res) => {
@@ -155,29 +224,68 @@ export const activateUser = async (req, res) => {
 
 
 
-// export const updateProfileImage = async (req, res) => {
-//   try {
-//     // Get the image path from cloudinary (via multer)
-//     if (!req.file || !req.file.path) {
-//       return res.status(400).json({ message: "No image file uploaded" });
-//     }
 
-//     const user = await User.findById(req.user._id);
-//     if (!user) {
-//       return res.status(404).json({ message: "User not found" });
-//     }
 
-//     user.profileImage = req.file.path; // Cloudinary secure_url
-//     await user.save();
 
-//     return res.status(200).json({
-//       success: true,
-//       message: "Profile image updated successfully",
-//       profileImage: user.profileImage,
-//     });
-//   } catch (error) {
-//     console.error("Error updating profile image:", error);
-//     return res.status(500).json({ message: "Server error" });
-//   }
-// };
+// @desc Get total and pending user stats
+export const getUserStats = async (req, res) => {
+  try {
+    const totalUsers = await User.countDocuments(); // all users in the collection
+    const acceptedUsers = await User.countDocuments({ access: true }); // users accepted by admin
+    const pendingUsers = totalUsers - acceptedUsers;
 
+    const pendingPercentage = totalUsers > 0 
+      ? Math.round((pendingUsers / totalUsers) * 100) 
+      : 0;
+
+    res.status(200).json({
+      success: true,
+      totalUsers,
+      acceptedUsers,
+      pendingUsers,
+      pendingPercentage,
+    });
+  } catch (error) {
+    console.error("Error fetching user stats:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+
+
+
+
+
+// Get admin or user profile
+export const getAdminProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const profileData = {
+      fullName: user.fullName,
+      email: user.email,
+      accountType: user.accountType,
+    };
+
+    // Special handling for admin@communityfix.com
+    if (user.email === "admin@communityfix.com") {
+      profileData.isAdmin = true; // Tell frontend to use local image
+    } else {
+      profileData.firstLetter = user.fullName?.charAt(0)?.toUpperCase() || "U";
+      if (user.profileImage) {
+        profileData.profileImage = user.profileImage;
+      }
+    }
+
+    return res.status(200).json(profileData);
+  } catch (error) {
+    console.error("Error fetching profile:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+// >>>>>>> resident/backend
