@@ -7,13 +7,14 @@ const window = new JSDOM("").window;
 const DOMPurify = createDOMPurify(window);
 import Issue from "../models/Issue.js";
 import { cloudinary, storage } from "../config/cloudinary.js";
+import mongoose from "mongoose";
 // import issueSchema from "../models/Issue.js";
 
 // Create a new issue
 export const createIssue = async (req, res) => {
   try {
     const {
-      title,name,description,issueCategory,address,contact,issueType,} = req.body;
+      title, name, description, issueCategory, address, contact, issueType, } = req.body;
 
     // Sanitize the description before saving it
     const sanitizedDescription = DOMPurify.sanitize(description);
@@ -57,10 +58,30 @@ export const createIssue = async (req, res) => {
   }
 };
 
+
+
+
 // Get all issues
 export const getAllIssues = async (req, res) => {
   try {
-    const issues = await Issue.find().sort({ createdAt: -1 });
+    const { issueType, issueCategory } = req.query;
+
+    // Build the filter object
+    let filter = {};
+
+    // Add issueType to filter if it exists
+    if (issueType) {
+      filter.issueType = issueType;
+    }
+
+    // Add issueCategory to filter if it exists
+    if (issueCategory) {
+      filter.issueCategory = issueCategory;
+    }
+
+    // Find the issues based on the filter
+    const issues = await Issue.find(filter).sort({ createdAt: -1 });
+
     res.status(200).json({ success: true, issues });
   } catch (err) {
     console.error(err);
@@ -68,18 +89,43 @@ export const getAllIssues = async (req, res) => {
   }
 };
 
+
+
+
+
+
+
+
+
+
 // Upvote issue
 export const upvoteIssue = async (req, res) => {
   try {
+    const { priority } = req.body;  // Expecting priority in the request body
     const issue = await Issue.findById(req.params.id);
     if (!issue) return res.status(404).json({ message: "Issue not found" });
 
-    // Check if already voted
-    if (issue.voters.includes(req.user._id)) {
-      return res.status(400).json({ message: "You already upvoted" });
+    // Validate priority
+    const validPriorities = ["low", "medium", "high", "extremely-high"];
+    if (!validPriorities.includes(priority)) {
+      return res.status(400).json({ message: "Invalid priority" });
     }
 
-    issue.voters.push(req.user._id);
+    // Check if the user has already voted
+    const alreadyVoted = issue.voters.some(
+      (voter) => voter.userId.toString() === req.user._id.toString()
+    );
+
+    if (alreadyVoted) {
+      return res.status(400).json({ message: "You have already upvoted" });
+    }
+
+    // Add the user's vote with priority to the voters array
+    issue.voters.push({
+      userId: req.user._id,
+      priority: priority,
+    });
+
     issue.upvotes += 1;
     await issue.save();
 
@@ -88,6 +134,7 @@ export const upvoteIssue = async (req, res) => {
     res.status(500).json({ success: false, message: "Failed to upvote" });
   }
 };
+
 
 // backend/controllers/issueController.js
 
@@ -130,19 +177,57 @@ export const commentOnIssue = async (req, res) => {
   }
 };
 
-// Get issue by ID
+
+
+
+
+
+
+// export const getIssueById = async (req, res) => {
+//   try {
+//     const issue = await Issue.findById(req.params.id)
+//       .populate("comments.user", "fullName avatar") // Populate user info in comments
+//       .populate("voters.userId", "fullName") // Populate user info in voters with fullName
+
+//     if (!issue) return res.status(404).json({ message: "Issue not found" });
+
+
+//     res.status(200).json({ success: true, issue });
+//   } catch (err) {
+//     console.error("Failed to get issue:", err);
+//     res.status(500).json({ success: false, message: "Failed to get issue" });
+//   }
+// };
+
+
+
+
+
+
 export const getIssueById = async (req, res) => {
   try {
-    const issue = await Issue.findById(req.params.id)
+    const issueId = req.params.id;
+    // Ensure the id is a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(issueId)) {
+      return res.status(400).json({ success: false, message: "Invalid issue ID" });
+    }
+
+    const issue = await Issue.findById(issueId)
       .populate("comments.user", "fullName avatar")
-      .populate("voters", "user");
-    if (!issue) return res.status(404).json({ message: "Issue not found" });
+      .populate("voters.userId", "fullName");
+
+    if (!issue) {
+      return res.status(404).json({ message: "Issue not found" });
+    }
 
     res.status(200).json({ success: true, issue });
   } catch (err) {
+    console.error("Failed to get issue:", err);
     res.status(500).json({ success: false, message: "Failed to get issue" });
   }
 };
+
+
 
 
 
@@ -187,7 +272,11 @@ export const getIssuesByStatus = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
-// <<<<<<< Graph/dv
+
+
+
+
+
 export const getIssueStatistics = async (req, res) => {
   try {
     const { year, month, timeRange } = req.query;
@@ -195,7 +284,7 @@ export const getIssueStatistics = async (req, res) => {
     const monthNum = month ? parseInt(month) : new Date().getMonth() + 1;
 
     if (timeRange === 'monthly') {
-      // Monthly statistics logic (same as before)
+
       const result = {
         labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
         totalIssues: Array(12).fill(0),
@@ -236,10 +325,10 @@ export const getIssueStatistics = async (req, res) => {
     } else {
       // DAILY STATISTICS - IMPROVED VERSION
       const daysInMonth = new Date(yearNum, monthNum, 0).getDate();
-      
+
       // Create complete days array for the selected month
       const result = {
-        labels: Array.from({length: daysInMonth}, (_, i) => {
+        labels: Array.from({ length: daysInMonth }, (_, i) => {
           const day = i + 1;
           return `${monthNum}/${day}/${yearNum}`; // Format: MM/DD/YYYY
         }),
@@ -290,8 +379,8 @@ export const getIssueStatistics = async (req, res) => {
         }
       });
 
-      return res.json({ 
-        success: true, 
+      return res.json({
+        success: true,
         data: result,
         meta: {
           timeRange: 'daily',
@@ -304,29 +393,33 @@ export const getIssueStatistics = async (req, res) => {
 
   } catch (err) {
     console.error("Error in getIssueStatistics:", err);
-    
+
     // Create appropriate empty response based on timeRange
-    const emptyData = timeRange === 'monthly' 
-      ? { 
-          labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"], 
-          totalIssues: Array(12).fill(0), 
-          pendingIssues: Array(12).fill(0) 
-        }
-      : { 
-          labels: Array.from({length: new Date().getDate()}, (_, i) => (i + 1).toString()),
-          totalIssues: Array(new Date().getDate()).fill(0),
-          pendingIssues: Array(new Date().getDate()).fill(0),
-          resolvedIssues: Array(new Date().getDate()).fill(0)
-        };
-    
-    return res.status(500).json({ 
-      success: false, 
+    const emptyData = timeRange === 'monthly'
+      ? {
+        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+        totalIssues: Array(12).fill(0),
+        pendingIssues: Array(12).fill(0)
+      }
+      : {
+        labels: Array.from({ length: new Date().getDate() }, (_, i) => (i + 1).toString()),
+        totalIssues: Array(new Date().getDate()).fill(0),
+        pendingIssues: Array(new Date().getDate()).fill(0),
+        resolvedIssues: Array(new Date().getDate()).fill(0)
+      };
+
+    return res.status(500).json({
+      success: false,
       message: "Error fetching statistics",
       data: emptyData
     });
   }
 };
-// =======
+
+
+
+
+
 // @desc    Get work progress percentage
 export const getWorkProgress = async (req, res) => {
   try {
@@ -347,4 +440,65 @@ export const getWorkProgress = async (req, res) => {
   }
 };
 
-// >>>>>>> resident/backend
+
+
+
+
+// Accept issue (Admin acceptance)
+export const acceptIssue = async (req, res) => {
+  try {
+    const { issueId } = req.params;
+
+    // Find the issue by ID
+    const issue = await Issue.findById(issueId);
+
+    if (!issue) {
+      return res.status(404).json({ message: "Issue not found" });
+    }
+
+    // Mark the issue as accepted by admin
+    issue.adminAccepted = true;
+
+    // You could assign it to a service team member here if needed
+    // For now, it will remain unassigned (null)
+
+    await issue.save();
+
+    res.status(200).json({ success: true, message: "Issue accepted", issue });
+  } catch (err) {
+    console.error("Failed to accept issue:", err);
+    res.status(500).json({ success: false, message: "Failed to accept issue" });
+  }
+};
+
+
+
+
+
+
+
+
+
+// Reject issue (Admin reject)
+export const rejectIssue = async (req, res) => {
+  try {
+    const { issueId } = req.params;
+
+    // Find the issue by ID
+    const issue = await Issue.findById(issueId);
+
+    if (!issue) {
+      return res.status(404).json({ message: "Issue not found" });
+    }
+
+    // Delete the issue from the database
+    // await issue.remove();
+
+     await Issue.deleteOne({ _id: issueId });
+
+    res.status(200).json({ success: true, message: "Issue rejected and deleted" });
+  } catch (err) {
+    console.error("Failed to reject issue:", err);
+    res.status(500).json({ success: false, message: "Failed to reject issue" });
+  }
+};
