@@ -6,12 +6,16 @@ import connectDB from './config/db.js';
 import cors from 'cors';
 import path from 'path';
 
+
 import authRoutes from './routes/authRoutes.js';
 import issueRoutes from './routes/issueRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import userReviewRoutes from "./routes/admin/userReviewRoutes.js";
 import userRoutes from './routes/userRoutes.js';
 import feedbackRoutes from './routes/feedback.js';
+import aiRoutes from './routes/aiRoutes.js';
+import conciseAiRoutes from './routes/conciseAiRoutes.js';
+
 
 // Connect to MongoDB
 connectDB();
@@ -32,9 +36,14 @@ app.use('/api/issues', issueRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/admin', userReviewRoutes);
 app.use('/api/feedback', feedbackRoutes);
+// <<<<<<< Ai/nizam
+app.use('/api/ai', aiRoutes);
+app.use('/api/ai', conciseAiRoutes);
+// =======
 app.use("/api/auth", authRoutes);
 
 
+// >>>>>>> feature/nizam
 
 // Root Route
 app.get('/', (req, res) => {
