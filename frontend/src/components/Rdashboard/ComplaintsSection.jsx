@@ -41,19 +41,19 @@ export default function ComplaintsSection({ complaints, onViewProgress }) {
 
       <div className="flex border-b mb-4 md:mb-6 overflow-x-auto">
         <button
-          className={`pb-2 px-3 md:px-4 whitespace-nowrap text-sm md:text-base ${activeTab === "all" ? "border-b-2 border-black font-bold" : "text-gray-400"}`}
+          className={`pb-2 cursor-pointer px-3 md:px-4 whitespace-nowrap text-sm md:text-base ${activeTab === "all" ? "border-b-2 border-black font-bold" : "text-gray-400"}`}
           onClick={() => setTab("all")}
         >
           All complaints
         </button>
         <button
-          className={`pb-2 px-3 md:px-4 whitespace-nowrap text-sm md:text-base ${activeTab === "Societal" ? "border-b-2 border-black font-bold" : "text-gray-400"}`}
+          className={`pb-2 px-3 cursor-pointer md:px-4 whitespace-nowrap text-sm md:text-base ${activeTab === "Societal" ? "border-b-2 border-black font-bold" : "text-gray-400"}`}
           onClick={() => setTab("Societal")}
         >
           Societal
         </button>
         <button
-          className={`pb-2 px-3 md:px-4 whitespace-nowrap text-sm md:text-base ${activeTab === "HouseHold" ? "border-b-2 border-black font-bold" : "text-gray-400"}`}
+          className={`pb-2 px-3 md:px-4 cursor-pointer whitespace-nowrap text-sm md:text-base ${activeTab === "HouseHold" ? "border-b-2 border-black font-bold" : "text-gray-400"}`}
           onClick={() => setTab("HouseHold")}
         >
           HouseHold
