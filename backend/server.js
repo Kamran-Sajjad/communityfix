@@ -36,8 +36,14 @@ app.use('/api/issues', issueRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/admin', userReviewRoutes);
 app.use('/api/feedback', feedbackRoutes);
+// <<<<<<< Ai/nizam
 app.use('/api/ai', aiRoutes);
 app.use('/api/ai', conciseAiRoutes);
+// =======
+app.use("/api/auth", authRoutes);
+
+
+// >>>>>>> feature/nizam
 
 // Root Route
 app.get('/', (req, res) => {
