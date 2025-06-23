@@ -346,6 +346,7 @@ import IssueDetailsPage from "./pages/admin/IssueDetailsPage";
 // > resident/backend
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";  // Import ProtectedRoute component
+import CreateAdmin from "./pages/admin/createadmin";
 
 const App = () => {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
@@ -554,6 +555,7 @@ const App = () => {
           <Route path="/admin/regUsers" element={<RegisteredUsers />} />
           <Route path="/admin/pending-reports" element={<PendingReports />} />
           <Route path="/admin/analytics" element={<Analytics />} />
+          <Route path="/admin/createadmin" element={<CreateAdmin />} />
           <Route path="/admin/issue-reports" element={<IssueReports />} />
           <Route path="/admin/reports" element={<Reports />} />
           <Route path="/issue-details/:issueId" element={<IssueDetailsPage />} />

@@ -340,7 +340,8 @@ const AdSideBare = () => {
     { icon: <FaUser className="w-5 h-5" />, text: "Registered Users", path: "/admin/requestedusers" },
     { icon: <FaExclamationCircle className="w-5 h-5" />, text: "Issues Requests", path: "/admin/requestedreports" },
     { icon: <FaChartLine className="w-5 h-5" />, text: "Analytics", path: "/admin/analytics" },
-    { icon: <FaCog className="w-5 h-5" />, text: "Settings", path: "/admin/settings" },
+    { icon: <FaCog className="w-5 h-5" />, text: "Create Admin", path: "/admin/createadmin" },
+    // { icon: <FaCog className="w-5 h-5" />, text: "Settings", path: "/admin/settings" },
     {
       icon: <FaSignOutAlt className="w-5 h-5 text-red-500" />,
       text: "Logout",
