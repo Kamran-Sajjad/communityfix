@@ -30,7 +30,7 @@ export const AdHeader = ({ title = "Dashboard, Admin" }) => {
   }, []);
 
   return (
-    <header className="mb-2 p-4 sm:px-8 flex flex-col sm:flex-row items-center sm:justify-between gap-4 sm:gap-6 bg-white rounded-lg shadow-sm">
+    <header className="p-4 sm:px-8 flex flex-col sm:flex-row items-center sm:justify-between gap-4 sm:gap-6 bg-white rounded-lg shadow-sm">
       {/* Title */}
       <h1 className="w-full text-center sm:text-left font-bold text-xl sm:text-2xl md:text-3xl">
         {title}
