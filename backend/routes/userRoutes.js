@@ -99,20 +99,18 @@ import {
   deactivateUser,
   activateUser,
   getUserStats,
+  getAdminProfile, // ✅ renamed here
   getUserProfile,
-  getAdminProfile // ✅ renamed here
+  getUserStatistics
 } from '../controllers/userController.js';
 import { protect } from '../middlewares/authMiddleware.js';
 import upload from '../middlewares/upload.js';
-import { getUserStatistics } from "../controllers/userController.js";
-// import { updateProfileImage } from '../controllers/userController.js';
-
 
 const router = express.Router();
 
 router.put('/profile', protect, upload.single("profileImage"), updateProfile);
 router.put('/password', protect, changePassword);
-// <<<<<<< Graph/dv
+
 router.get("/profile", protect, getUserProfile);
 router.get('/statistics', protect, getUserStatistics);
 // Route to upload/update profile image

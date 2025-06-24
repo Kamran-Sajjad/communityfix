@@ -46,7 +46,7 @@ export default function ComplaintCard({ title, subTitle, icon, time, count, onVi
             </div>
             <button
               onClick={onViewProgress}
-              className="border border-black rounded-md px-2 py-1 md:px-4 md:py-2 text-xs md:text-sm"
+              className="border cursor-pointer border-black rounded-md px-2 py-1 md:px-4 md:py-2 text-xs md:text-sm"
             >
               View progress
             </button>
