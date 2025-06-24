@@ -7,8 +7,12 @@ import StatsCard from "../../components/STdashboard/StatsCard";
 import WorkingStatus from "../../components/STdashboard/WorkingStatus";
 import CompletionStatus from "../../components/STdashboard/CompletionStatus";
 import IssueStatusTable from "../../components/STdashboard/IssueStatusTable";
-import Contacts from "../../components/STdashboard/Contacts";
+// import Contacts from "../../components/STdashboard/Contacts";
 import { useSelector } from 'react-redux';
+import ChatWindow from '../../components/Chat/ChatWindow';
+
+
+
 
 const MechanicDashboard = () => {
   const { user } = useSelector((state) => state.auth);
@@ -107,10 +111,12 @@ const MechanicDashboard = () => {
 
           {/* Right Sidebar */}
           <div className="w-full lg:w-[300px] border-t lg:border-l border-gray-200 p-4 lg:p-6">
-            <Contacts />
+            {/* <Contacts /> */}
           </div>
         </div>
       </div>
+         <ChatWindow />
+
     </div>
   );
 };
