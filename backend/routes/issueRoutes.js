@@ -59,7 +59,7 @@
 
 
 import express from "express";
-import { getWorkProgress } from "../controllers/issueController.js";
+import  {getWorkProgress}  from "../controllers/issueController.js";
 
 import {
   createIssue,
@@ -78,7 +78,14 @@ import { protect } from "../middlewares/authMiddleware.js";
 const router = express.Router();
 import { getIssueStatistics } from "../controllers/issueController.js";
 import Issue from "../models/Issue.js";
+import { getAcceptedSocietalIssues } from "../controllers/issueController.js";
+import { getAcceptedHouseholdIssues } from "../controllers/issueController.js";
 
+router.get("/work-progress", protect, getWorkProgress);
+
+router.get("/household/accepted", protect, getAcceptedHouseholdIssues);
+
+router.get("/societal/accepted", protect, getAcceptedSocietalIssues);
 
 router.get('/statistics', protect, getIssueStatistics);
 
@@ -131,6 +138,8 @@ router.get("/:issueId/voters", protect, async (req, res) => {
     res.status(500).json({ success: false, message: "Failed to fetch voters" });
   }
 });
+
+
 
 
 export default router;

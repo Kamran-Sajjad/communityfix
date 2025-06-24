@@ -41,7 +41,7 @@ import IssueReports from "./components/Dashboard/IssueReports";
 import Reports from "./pages/admin/Reports";
 import Feedbackhistory from "./components/Dashboard/Feedbackhistory";
 import IssueDetailsPage from "./pages/admin/IssueDetailsPage";
-
+import HouseholdReportsPage from "./pages/serviceTeam/HouseholdReportsPage";
 
 // <<<<<<< resident/backend
 import { AuthProvider } from "./context/AuthContext";
@@ -55,6 +55,7 @@ const App = () => {
     <AuthProvider>
       <Router>
         <Routes>
+          <Route path="/household-reports" element={<HouseholdReportsPage />} />
           <Route path="/" element={<Home />} />
           <Route path="/auth/SignUp" element={<SignUp />} />
           <Route path="/auth/Login" element={<Login />} />
