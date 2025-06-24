@@ -618,6 +618,8 @@ import feedbackRoutes from './routes/feedback.js';
 import aiRoutes from './routes/aiRoutes.js';
 import conciseAiRoutes from './routes/conciseAiRoutes.js';
 import chatRoutes from './routes/chatRoutes.js'; // 👈 must be passed `io` later
+import notificationRoutes from "./routes/notificationRoutes.js";
+
 
 // Connect to MongoDB
 connectDB();
@@ -634,7 +636,7 @@ const corsOptions = {
     "http://localhost:5173"
   ],
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization']
 };
 
@@ -664,6 +666,7 @@ app.use('/api/feedback', feedbackRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/ai', conciseAiRoutes);
 app.use('/api/chat', chatRoutes(io)); // ✅ Pass socket instance
+app.use("/api/notifications", notificationRoutes);
 
 // Health check
 app.get('/', (req, res) => {
