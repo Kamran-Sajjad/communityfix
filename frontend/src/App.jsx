@@ -88,7 +88,7 @@
 //             element={<ListedIssuesPage />}
 //           />
 //           <Route path="/residents/AddIssuePage" element={<AddIssuePage />} />
-       
+
 
 //           <Route
 //             path="/serviceTeam/MechanicDashboard"
@@ -338,8 +338,16 @@ import Analytics from "./pages/admin/Analytics";
 import IssueReports from "./components/Dashboard/IssueReports";
 import Reports from "./pages/admin/Reports";
 import Feedbackhistory from "./components/Dashboard/Feedbackhistory";
+// <<<<<<< feature/nizam
+// =======
+import IssueDetailsPage from "./pages/admin/IssueDetailsPage";
+
+
+// > resident/backend
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";  // Import ProtectedRoute component
+import CreateAdmin from "./pages/admin/createadmin";
+import UpdateProfile from "./pages/admin/UpdateProfile";
 
 const App = () => {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
@@ -476,6 +484,7 @@ const App = () => {
           />
           <Route
             path="/admin/requestedreports"
+            // <<<<<<< feature/nizam
             element={
               <ProtectedRoute allowedAccountTypes={['admin']}>
                 <RequestedReports />
@@ -538,6 +547,22 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+          <Route
+
+            element={<RequestedReports />}
+          />
+          <Route path="/admin/adheader" element={<AdHeader />} />
+          <Route path="/admin/Feedbackhistory" element={<Feedbackhistory />} />
+          <Route path="/admin/regUsers" element={<RegisteredUsers />} />
+          <Route path="/admin/pending-reports" element={<PendingReports />} />
+          <Route path="/admin/analytics" element={<Analytics />} />
+          <Route path="/admin/createadmin" element={<CreateAdmin />} />
+          <Route path="/admin/updateprofile" element={<UpdateProfile />} />
+          <Route path="/admin/issue-reports" element={<IssueReports />} />
+          <Route path="/admin/reports" element={<Reports />} />
+          <Route path="/issue-details/:issueId" element={<IssueDetailsPage />} />
+
+
         </Routes>
         <ToastContainer
           position="top-right"

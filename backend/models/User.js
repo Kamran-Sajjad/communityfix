@@ -37,6 +37,9 @@
 // export default User;
 
 
+
+
+
 // Updated models/User.js
 
 import mongoose from "mongoose";
@@ -69,7 +72,7 @@ const userSchema = new mongoose.Schema(
     status: {
       type: String,
       enum: ["active", "suspended", "deactivated"],
-      default: "active",
+      default: "suspended",
     },
     online: {
       type: Boolean,
