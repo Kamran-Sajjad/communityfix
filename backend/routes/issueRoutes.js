@@ -58,6 +58,11 @@
 
 
 
+// <<<<<<< ST/basit
+// import express from "express";
+// import  {getWorkProgress}  from "../controllers/issueController.js";
+// =======
+// >>>>>>> admin/kamran
 
 
 
@@ -177,13 +182,13 @@ import {
   getUserIssues,
   // getMyIssues,
   getIssuesByStatus,
-// <<<<<<< chat/system
+  // <<<<<<< chat/system
   // getIssueStatistics,
   getWorkProgress,
-// =======
-   acceptIssue,  
-  rejectIssue 
-// >>>>>>> resident/backend
+  // =======
+  acceptIssue,
+  rejectIssue
+  // >>>>>>> resident/backend
 } from "../controllers/issueController.js";
 import upload from "../middlewares/upload.js";
 import { protect } from "../middlewares/authMiddleware.js";
@@ -205,7 +210,14 @@ router.post("/:issueId/comment", protect, commentOnIssue);
 // =======
 import { getIssueStatistics } from "../controllers/issueController.js";
 import Issue from "../models/Issue.js";
+import { getAcceptedSocietalIssues } from "../controllers/issueController.js";
+import { getAcceptedHouseholdIssues } from "../controllers/issueController.js";
 
+router.get("/work-progress", protect, getWorkProgress);
+
+router.get("/household/accepted", protect, getAcceptedHouseholdIssues);
+
+router.get("/societal/accepted", protect, getAcceptedSocietalIssues);
 
 router.get('/statistics', protect, getIssueStatistics);
 
@@ -229,9 +241,9 @@ router.get("/myissues", protect, getUserIssues);
 // router.post("/:id/accept", protect, acceptIssue);  
 
 // router.post("/:id/reject", protect, rejectIssue); 
-router.post("/:issueId/accept", protect, acceptIssue);  
+router.post("/:issueId/accept", protect, acceptIssue);
 
-router.post("/:issueId/reject", protect, rejectIssue); 
+router.post("/:issueId/reject", protect, rejectIssue);
 
 router.get("/:id", protect, getIssueById);
 
@@ -262,4 +274,7 @@ router.get("/:issueId/voters", protect, async (req, res) => {
 
 // >>>>>>> resident/backend
 
+
+
 export default router;
+
