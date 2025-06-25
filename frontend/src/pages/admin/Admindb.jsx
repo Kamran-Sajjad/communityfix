@@ -107,16 +107,16 @@ function Admindb() {
 
   return (
     <div className="flex min-h-screen w-full bg-gray-100 relative">
-// <<<<<<< ST/basit
+
     
       <div
         className={`fixed top-0 left-0 h-screen bg-white shadow-md transition-all duration-300 z-30`} 
       
       >
-// =======
-//       
-//       <div className="fixed top-0 left-0 h-screen bg-white shadow-md transition-all duration-300 z-30">
-// >>>>>>> admin/kamran
+
+  
+       {/* <div className="fixed top-0 left-0 h-screen bg-white shadow-md transition-all duration-300 z-30"> */}
+
         <AdSideBare
           isExpanded={isSidebarExpanded}
           toggleSidebar={() => setIsSidebarExpanded(!isSidebarExpanded)}

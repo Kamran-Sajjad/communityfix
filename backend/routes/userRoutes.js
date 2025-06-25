@@ -147,7 +147,7 @@ import {
   getAdminProfile, // ✅ renamed here
   getUserProfile,
 
-  getAdminProfile,
+  // getAdminProfile,
 
   getUserStatistics
 } from '../controllers/userController.js';

@@ -182,13 +182,13 @@ import {
   getUserIssues,
   // getMyIssues,
   getIssuesByStatus,
-// <<<<<<< chat/system
+  // <<<<<<< chat/system
   // getIssueStatistics,
   getWorkProgress,
-// =======
-   acceptIssue,  
-  rejectIssue 
-// >>>>>>> resident/backend
+  // =======
+  acceptIssue,
+  rejectIssue
+  // >>>>>>> resident/backend
 } from "../controllers/issueController.js";
 import upload from "../middlewares/upload.js";
 import { protect } from "../middlewares/authMiddleware.js";
@@ -241,9 +241,9 @@ router.get("/myissues", protect, getUserIssues);
 // router.post("/:id/accept", protect, acceptIssue);  
 
 // router.post("/:id/reject", protect, rejectIssue); 
-router.post("/:issueId/accept", protect, acceptIssue);  
+router.post("/:issueId/accept", protect, acceptIssue);
 
-router.post("/:issueId/reject", protect, rejectIssue); 
+router.post("/:issueId/reject", protect, rejectIssue);
 
 router.get("/:id", protect, getIssueById);
 
@@ -274,10 +274,7 @@ router.get("/:issueId/voters", protect, async (req, res) => {
 
 // >>>>>>> resident/backend
 
-<<<<<<< ST/basit
 
 
 export default router;
-=======
-export default router;
->>>>>>> admin/kamran
+
