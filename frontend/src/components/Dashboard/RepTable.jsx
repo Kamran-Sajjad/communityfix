@@ -62,19 +62,29 @@ import ReportCard from "./ReportCard"; // adjust if necessary
 export const RepTable = () => {
   const [reports, setReports] = useState([]);
   const [filterCategory, setFilterCategory] = useState("all");
-
-  useEffect(() => {
-    const fetchReports = async () => {
-      try {
-        const { data } = await axios.get("/api/issues");
-        setReports(data.issues || data);
-      } catch (err) {
-        console.error("Failed to load reports:", err);
+useEffect(() => {
+  const fetchReports = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.error("No token found");
+        return;
       }
-    };
-    fetchReports();
-  }, []);
 
+      const { data } = await axios.get("http://localhost:5000/api/issues", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setReports(data.issues || data);
+    } catch (err) {
+      console.error("Failed to load reports:", err);
+    }
+  };
+
+  fetchReports();
+}, []);
   const filtered = filterCategory === "all"
     ? reports
     : reports.filter(issue => issue.issueCategory === filterCategory);
