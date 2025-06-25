@@ -178,8 +178,8 @@ import {
   // getMyIssues,
   getIssuesByStatus,
 // <<<<<<< chat/system
-  getIssueStatistics,
-  getWorkProgress
+  // getIssueStatistics,
+  getWorkProgress,
 // =======
    acceptIssue,  
   rejectIssue 
