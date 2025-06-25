@@ -709,7 +709,7 @@ export const changePassword = async (req, res) => {
 
 // -------------------- Get Logged-in User Profile --------------------
 // =======
-  };
+  // };
 
 
 
