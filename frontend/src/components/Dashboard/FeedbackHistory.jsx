@@ -35,8 +35,12 @@ const FeedbackHistory = () => {
         <AdSideBare isExpanded={isSidebarExpanded} toggleSidebar={toggleSidebar} />
       </div>
 
-      <div
+      {/* <div
         className={`flex-1 p-4 sm:p-6 md:p-8 transition-all duration-300 ${isSidebarExpanded ? "ml-14" : "ml-6"
+          }`}
+      > */}
+      <div
+        className={`flex-1 p-2 transition-all duration-300 ${isSidebarExpanded ? "ml-14" : "ml-0"
           }`}
       >
         <AdHeader title="Feedback History" />

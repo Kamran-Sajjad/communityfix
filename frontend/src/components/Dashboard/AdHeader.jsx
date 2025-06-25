@@ -1,3 +1,4 @@
+
 // import React, { useEffect, useState } from "react";
 // import { Bell } from "lucide-react";
 // import axios from "axios";
@@ -30,14 +31,39 @@
 //   }, []);
 
 //   return (
+
+
+
+
+
+
+
+
+
+
+// <<<<<<< notification
 //     <header className="p-4 sm:px-8 flex flex-col sm:flex-row items-center sm:justify-between gap-4 sm:gap-6 bg-white rounded-lg shadow-sm">
 //       {/* Title */}
 //       <h1 className="w-full text-center sm:text-left font-bold text-xl sm:text-2xl md:text-3xl">
+// =======
+//     <header className="p-4 sm:px-8 flex sm:flex-row items-center sm:justify-between gap-4 sm:gap-6 bg-white rounded-lg shadow-sm">
+//       {/* Title */}
+//       <h1 className="w-full ml-8 sm:text-left font-bold text-sm sm:text-xl md:text-3xl lg:text-3xl xl:text-5xl lg:ml-0 xl:ml-0 md:ml-0 ">
+// >>>>>>> admin/kamran
 //         {title}
 //       </h1>
 
 //       {/* Notification + Profile Section */}
+// <<<<<<< notification
+
+
+
+
 //       <div className="flex items-center justify-between sm:justify-end gap-4 w-full sm:w-auto">
+// =======
+
+//       <div className="flex items-center justify-end sm:justify-end gap-4 w-full sm:w-auto">
+// >>>>>>> admin/kamran
 //         {/* Notification Bell */}
 //         <button
 //           className="p-2 rounded-full bg-white hover:bg-gray-100 transition relative shadow"
@@ -89,6 +115,7 @@
 
 
 
+
 import React, { useEffect, useState } from "react";
 import { Bell } from "lucide-react";
 import axios from "axios";
@@ -122,14 +149,14 @@ export const AdHeader = ({ title = "Dashboard, Admin" }) => {
   }, []);
 
   return (
-    <header className="p-4 sm:px-8 flex flex-col sm:flex-row items-center sm:justify-between gap-4 sm:gap-6 bg-white rounded-lg shadow-sm">
+    <header className="p-4 sm:px-8 flex sm:flex-row items-center sm:justify-between gap-4 sm:gap-6 bg-white rounded-lg shadow-sm">
       {/* Title */}
-      <h1 className="w-full text-center sm:text-left font-bold text-xl sm:text-2xl md:text-3xl">
+      <h1 className="w-full ml-8 sm:text-left font-bold text-sm sm:text-xl md:text-3xl lg:text-3xl xl:text-5xl lg:ml-0 xl:ml-0 md:ml-0 ">
         {title}
       </h1>
 
       {/* Notification + Profile Section */}
-      <div className="flex items-center justify-between sm:justify-end gap-4 w-full sm:w-auto">
+      <div className="flex items-center justify-end sm:justify-end gap-4 w-full sm:w-auto">
         {/* Notification Bell */}
         {/* <button
           className="p-2 rounded-full bg-white hover:bg-gray-100 transition relative shadow"
@@ -147,21 +174,21 @@ export const AdHeader = ({ title = "Dashboard, Admin" }) => {
 
         {/* Profile Avatar and Info */}
         <div className="flex items-center gap-3">
-          {/* Avatar */}
+          {/* Avatar - Hidden on small screens */}
           {userData.isAdmin ? (
             <img
               src={adminImage}
               alt="Admin"
-              className="h-10 w-10 sm:h-11 sm:w-11 rounded-full object-cover shadow"
+              className="h-10 w-10 sm:h-11 sm:w-11 rounded-full object-cover shadow sm:flex hidden"
             />
           ) : userData.profileImage ? (
             <img
               src={userData.profileImage}
               alt="Profile"
-              className="h-10 w-10 sm:h-11 sm:w-11 rounded-full object-cover shadow"
+              className="h-10 w-10 sm:h-11 sm:w-11 rounded-full object-cover shadow sm:flex hidden"
             />
           ) : (
-            <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-full bg-gray-300 flex items-center justify-center text-gray-800 font-bold text-lg shadow">
+            <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-full bg-gray-300 flex items-center justify-center text-gray-800 font-bold text-lg shadow sm:flex hidden">
               {userData.firstLetter}
             </div>
           )}

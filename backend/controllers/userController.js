@@ -671,7 +671,7 @@ export const updateProfile = async (req, res) => {
   }
 };
 
-// -------------------- Change User Password --------------------
+
 export const changePassword = async (req, res) => {
   try {
     const { currentPassword, newPassword, confirmPassword } = req.body;
@@ -681,6 +681,7 @@ export const changePassword = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
+// <<<<<<< notification
 
     // Check if current password matches
     const isMatch = await bcrypt.compare(currentPassword, user.password);
@@ -707,6 +708,24 @@ export const changePassword = async (req, res) => {
 };
 
 // -------------------- Get Logged-in User Profile --------------------
+// =======
+  };
+
+
+
+
+
+
+
+
+  
+// @desc    Get logged-in user profile
+// @route   GET /api/users/profile
+// @access  Private
+// >>>>>>> admin/kamran
+
+
+
 export const getUserProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select("-password");
@@ -722,7 +741,10 @@ export const getUserProfile = async (req, res) => {
   }
 };
 
-// -------------------- Get User Statistics --------------------
+
+
+
+
 export const getUserStatistics = async (req, res) => {
   try {
     const stats = await User.aggregate([
@@ -748,6 +770,10 @@ export const getUserStatistics = async (req, res) => {
   }
 };
 
+
+
+
+
 // -------------------- Suspend User --------------------
 export const suspendUser = async (req, res) => {
   const { userId } = req.body;
@@ -768,7 +794,16 @@ export const suspendUser = async (req, res) => {
   }
 };
 
-// -------------------- Deactivate User --------------------
+
+
+
+
+
+
+
+
+// Deactivate user account
+
 export const deactivateUser = async (req, res) => {
   const { userId } = req.body;
   try {
@@ -785,7 +820,12 @@ export const deactivateUser = async (req, res) => {
   }
 };
 
-// -------------------- Activate User --------------------
+
+
+
+
+
+
 export const activateUser = async (req, res) => {
   const { userId } = req.body;
   try {
@@ -805,7 +845,14 @@ export const activateUser = async (req, res) => {
   }
 };
 
-// -------------------- Get Total and Pending User Stats --------------------
+
+
+
+
+
+
+
+
 export const getUserStats = async (req, res) => {
   try {
     const totalUsers = await User.countDocuments(); // all users in the collection
@@ -829,7 +876,15 @@ export const getUserStats = async (req, res) => {
   }
 };
 
-// -------------------- Get Admin or User Profile --------------------
+
+
+
+
+
+
+
+// Get admin or user profile
+
 export const getAdminProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select("-password");
