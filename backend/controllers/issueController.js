@@ -1,3 +1,5 @@
+// <<<<<<< ST/basit
+// =======
 
 
 
@@ -366,6 +368,7 @@
 
 
 
+// >>>>>>> admin/kamran
 import { JSDOM } from "jsdom";
 import createDOMPurify from "dompurify";
 const window = new JSDOM("").window;
@@ -461,9 +464,6 @@ export const createIssue = async (req, res) => {
   }
 };
 
-
-
-
 // Get all issues
 export const getAllIssues = async (req, res) => {
   try {
@@ -491,16 +491,6 @@ export const getAllIssues = async (req, res) => {
     res.status(500).json({ success: false, message: "Failed to fetch issues" });
   }
 };
-
-
-
-
-
-
-
-
-
-
 // Upvote issue
 export const upvoteIssue = async (req, res) => {
   try {
@@ -541,8 +531,12 @@ export const upvoteIssue = async (req, res) => {
     res.status(500).json({ success: false, message: "Failed to upvote" });
   }
 };
+// <<<<<<< ST/basit
+// // backend/controllers/issueController.js
+// =======
 
 
+// >>>>>>> admin/kamran
 export const commentOnIssue = async (req, res) => {
   try {
     const { text } = req.body;
@@ -591,34 +585,18 @@ export const commentOnIssue = async (req, res) => {
     res.status(500).json({ success: false, message: "Failed to post comment" });
   }
 };
-
-
-
-
-
-
-
 // export const getIssueById = async (req, res) => {
 //   try {
 //     const issue = await Issue.findById(req.params.id)
 //       .populate("comments.user", "fullName avatar") // Populate user info in comments
 //       .populate("voters.userId", "fullName") // Populate user info in voters with fullName
-
 //     if (!issue) return res.status(404).json({ message: "Issue not found" });
-
-
 //     res.status(200).json({ success: true, issue });
 //   } catch (err) {
 //     console.error("Failed to get issue:", err);
 //     res.status(500).json({ success: false, message: "Failed to get issue" });
 //   }
 // };
-
-
-
-
-
-
 export const getIssueById = async (req, res) => {
   try {
     const issueId = req.params.id;
@@ -660,6 +638,9 @@ export const getUserIssues = async (req, res) => {
     return res.status(500).json({ success: false, message: 'Failed to get issue' });
   }
 };
+
+
+
 
 export const getIssuesByStatus = async (req, res) => {
   try {
@@ -830,7 +811,7 @@ export const getIssueStatistics = async (req, res) => {
     });
   }
 };
-
+// @desc    Get work progress percentage
 
 export const getWorkProgress = async (req, res) => {
   try {
@@ -850,6 +831,8 @@ export const getWorkProgress = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
+// <<<<<<< ST/basit
+// =======
 
 // <<<<<<< notification
 // Add this new function to update issue status and send notifications
@@ -899,6 +882,9 @@ export const updateIssueStatus = async (req, res) => {
 
 
 
+// >>>>>>> admin/kamran
+
+
 // Accept issue (Admin acceptance)
 export const acceptIssue = async (req, res) => {
   try {
@@ -925,15 +911,6 @@ export const acceptIssue = async (req, res) => {
     res.status(500).json({ success: false, message: "Failed to accept issue" });
   }
 };
-
-
-
-
-
-
-
-
-
 // Reject issue (Admin reject)
 export const rejectIssue = async (req, res) => {
   try {
@@ -957,4 +934,34 @@ export const rejectIssue = async (req, res) => {
     res.status(500).json({ success: false, message: "Failed to reject issue" });
   }
 };
-// >>>>>>> admin/kamran
+
+
+// Get societal issues accepted by admin with images
+export const getAcceptedSocietalIssues = async (req, res) => {
+  try {
+    const issues = await Issue.find({
+      issueType: 'societal',
+      adminAccepted: true,
+      attachments: { $exists: true, $not: { $size: 0 } }
+    }).sort({ createdAt: -1 });
+
+    res.status(200).json({ success: true, issues });
+  } catch (error) {
+    console.error("Error fetching accepted societal issues:", error);
+    res.status(500).json({ success: false, message: "Failed to fetch issues" });
+  }
+};
+export const getAcceptedHouseholdIssues = async (req, res) => {
+  try {
+    const issues = await Issue.find({
+      issueType: 'household',
+      adminAccepted: true
+    }).sort({ createdAt: -1 });
+
+    res.status(200).json({ success: true, issues });
+  } catch (error) {
+    console.error("Error fetching household issues:", error);
+    res.status(500).json({ success: false, message: "Failed to fetch household issues" });
+  }
+};
+

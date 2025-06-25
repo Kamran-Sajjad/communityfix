@@ -58,6 +58,11 @@
 
 
 
+// <<<<<<< ST/basit
+// import express from "express";
+// import  {getWorkProgress}  from "../controllers/issueController.js";
+// =======
+// >>>>>>> admin/kamran
 
 
 
@@ -205,7 +210,14 @@ router.post("/:issueId/comment", protect, commentOnIssue);
 // =======
 import { getIssueStatistics } from "../controllers/issueController.js";
 import Issue from "../models/Issue.js";
+import { getAcceptedSocietalIssues } from "../controllers/issueController.js";
+import { getAcceptedHouseholdIssues } from "../controllers/issueController.js";
 
+router.get("/work-progress", protect, getWorkProgress);
+
+router.get("/household/accepted", protect, getAcceptedHouseholdIssues);
+
+router.get("/societal/accepted", protect, getAcceptedSocietalIssues);
 
 router.get('/statistics', protect, getIssueStatistics);
 
@@ -262,4 +274,10 @@ router.get("/:issueId/voters", protect, async (req, res) => {
 
 // >>>>>>> resident/backend
 
+<<<<<<< ST/basit
+
+
 export default router;
+=======
+export default router;
+>>>>>>> admin/kamran
