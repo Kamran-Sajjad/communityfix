@@ -83,12 +83,12 @@ export default function AboutUs() {
 
             {/* Social Media Links */}
             <div className="flex flex-col sm:flex-row justify-center items-center gap-6">
-              <a href="#" aria-label="Facebook" className="flex items-center text-gray-700 hover:text-blue-600 transition">
+              <a href="https://www.facebook.com/share/1AekR8FBva/?mibextid=wwXIfr" aria-label="Facebook" target="_blank"  className="flex items-center text-gray-700 hover:text-blue-600 transition">
                 <div className="w-8 h-8 bg-blue-600 text-white rounded flex items-center justify-center mr-2 font-bold">f</div>
                 <span>Facebook</span>
               </a>
 
-              <a href="#" aria-label="Instagram" className="flex items-center text-gray-700 hover:text-pink-500 transition">
+              <a href="https://www.instagram.com/kamran973_1?igsh=NDc0dDBrYmRzMXlr" aria-label="Instagram" target="_blank"  className="flex items-center text-gray-700 hover:text-pink-500 transition">
                 <div className="w-8 h-8 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded flex items-center justify-center mr-2">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -106,7 +106,7 @@ export default function AboutUs() {
                 <span>Instagram</span>
               </a>
 
-              <a href="#" aria-label="YouTube" className="flex items-center text-gray-700 hover:text-red-600 transition">
+              <a href="https://www.youtube.com/@kamransajjad8798" aria-label="YouTube" target="_blank"  className="flex items-center text-gray-700 hover:text-red-600 transition">
                 <div className="w-8 h-8 bg-red-600 text-white rounded flex items-center justify-center mr-2">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

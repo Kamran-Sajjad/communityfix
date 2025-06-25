@@ -144,8 +144,11 @@ import {
   deactivateUser,
   activateUser,
   getUserStats,
+  getAdminProfile, // ✅ renamed here
   getUserProfile,
+
   getAdminProfile,
+
   getUserStatistics
 } from '../controllers/userController.js';
 
@@ -158,10 +161,11 @@ const router = express.Router();
 router.put('/profile', protect, upload.single("profileImage"), updateProfile);
 router.put('/password', protect, changePassword);
 
+
 //  Get profile - user and admin
 router.get("/profile", protect, getUserProfile); // You can conditionally return admin/user from controller if needed
 
-//  Stats & analytics
+
 router.get('/statistics', protect, getUserStatistics);
 router.get("/stats", getUserStats);
 

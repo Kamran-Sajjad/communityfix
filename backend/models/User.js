@@ -41,6 +41,7 @@
 
 
 // Updated models/User.js
+
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
@@ -72,6 +73,14 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ["active", "suspended", "deactivated"],
       default: "suspended",
+    },
+    online: {
+      type: Boolean,
+      default: false,
+    },
+    socketId: {
+      type: String,
+      default: "",
     },
     agreeToTerms: { type: Boolean, required: true },
   },

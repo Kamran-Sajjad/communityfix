@@ -155,30 +155,31 @@
 "use client";
 
 import React from "react";
-import Notification from "./Notification"; // Adjust the import path as needed
+// import Notification from "./Notification"; // Adjust the import path as needed
+import NotificationBell from "../../components/Notification/NotificationBell";
 
 // const Header = ({ title = "Welcome back" }) => {
 const Header = ({ firstName= "Welcome back" }) => {
-  const initialNotifications = [
-    {
-      id: 1,
-      text: "New service request from Kamran",
-      time: "2 mins ago",
-      read: false,
-    },
-    {
-      id: 2,
-      text: "Service completed for Nizam",
-      time: "1 hour ago",
-      read: true,
-    },
-    {
-      id: 3,
-      text: "Urgent: Pipe leak reported by Basit",
-      time: "3 hours ago",
-      read: false,
-    },
-  ];
+  // const initialNotifications = [
+  //   {
+  //     id: 1,
+  //     text: "New service request from Kamran",
+  //     time: "2 mins ago",
+  //     read: false,
+  //   },
+  //   {
+  //     id: 2,
+  //     text: "Service completed for Nizam",
+  //     time: "1 hour ago",
+  //     read: true,
+  //   },
+  //   {
+  //     id: 3,
+  //     text: "Urgent: Pipe leak reported by Basit",
+  //     time: "3 hours ago",
+  //     read: false,
+  //   },
+  // ];
  // Get current time for dynamic greeting
  const currentHour = new Date().getHours();
  let greeting = "Welcome";
@@ -200,7 +201,11 @@ const Header = ({ firstName= "Welcome back" }) => {
       {/* Notification + Profile */}
       <div className="flex items-center justify-center sm:justify-end gap-4 w-full sm:w-auto">
         {/* Using the Notification component */}
-        <Notification initialNotifications={initialNotifications} />
+        {/* <Notification initialNotifications={initialNotifications} /> */}
+
+        <div className="mr-4">
+          <NotificationBell color="black"/>
+        </div>
 
         {/* Profile Section - Unchanged */}
         <div className="flex items-center gap-2 sm:gap-3">

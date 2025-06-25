@@ -437,3 +437,68 @@ export const verifySignupOtp = async (req, res) => {
 
   res.status(200).json({ success: true, message: "OTP verified" });
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Create admin account (only logged-in admins can do this)
+export const createAdmin = async (req, res) => {
+  const { fullName, email, password, address, phoneNumber, cnic, agreeToTerms } = req.body;
+
+  console.log('[CREATE ADMIN] Attempting to create new admin:', { email });
+
+  try {
+    // Ensure logged-in user is admin
+    if (req.user.accountType !== 'admin') {
+      return res.status(403).json({ message: 'Admin access required to create another admin' });
+    }
+
+    // Check if email already exists
+    const adminExists = await User.findOne({ email });
+    if (adminExists) {
+      return res.status(400).json({ message: 'Email already exists' });
+    }
+
+    // Hash the password for security
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // Create new admin
+    const newAdmin = new User({
+      fullName,
+      email,
+      password: hashedPassword,
+      accountType: 'admin',
+      address,
+      phoneNumber,
+      cnic,
+      agreeToTerms,
+    });
+
+    // Save the new admin user
+    await newAdmin.save();
+
+    // Generate token for the new admin
+    const token = generateToken(newAdmin._id);
+
+    res.status(201).json({
+      _id: newAdmin._id,
+      fullName: newAdmin.fullName,
+      email: newAdmin.email,
+      accountType: newAdmin.accountType,
+      token: token,
+    });
+  } catch (error) {
+    console.error('[CREATE ADMIN ERROR]', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
