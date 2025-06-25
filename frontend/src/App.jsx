@@ -341,7 +341,7 @@ import Feedbackhistory from "./components/Dashboard/Feedbackhistory";
 // <<<<<<< feature/nizam
 // =======
 import IssueDetailsPage from "./pages/admin/IssueDetailsPage";
-
+import HouseholdReportsPage from "./pages/serviceTeam/HouseholdReportsPage";
 
 // > resident/backend
 import { AuthProvider } from "./context/AuthContext";
@@ -356,7 +356,9 @@ const App = () => {
     <AuthProvider>
       <Router>
         <Routes>
-          {/* Public Routes */}
+
+          <Route path="/household-reports" element={<HouseholdReportsPage />} />
+
           <Route path="/" element={<Home />} />
           <Route path="/auth/SignUp" element={<SignUp />} />
           <Route path="/auth/Login" element={<Login />} />

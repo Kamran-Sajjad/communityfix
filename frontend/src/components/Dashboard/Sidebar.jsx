@@ -219,3 +219,27 @@
 // };
 
 // export default Sidebar;
+import React from "react";
+import { Home, List, ClipboardList } from "lucide-react";
+import { Link } from "react-router-dom";
+
+const Sidebar = () => {
+  return (
+    <aside className="w-[250px] h-screen bg-gray-900 text-white fixed top-0 left-0 flex flex-col p-6">
+      <h2 className="text-2xl font-bold mb-8">CommunityFix</h2>
+      <nav className="flex flex-col gap-4">
+        <Link to="/service-dashboard" className="flex items-center gap-2 hover:text-yellow-400 transition-colors">
+          <Home className="w-5 h-5" /> Dashboard
+        </Link>
+        <Link to="/reports" className="flex items-center gap-2 hover:text-yellow-400 transition-colors">
+          <List className="w-5 h-5" /> Societal Reports
+        </Link>
+        <Link to="/reports/household" className="flex items-center gap-2 hover:text-yellow-400 transition-colors">
+          <ClipboardList className="w-5 h-5" /> Household Reports
+        </Link>
+      </nav>
+    </aside>
+  );
+};
+
+export default Sidebar;
