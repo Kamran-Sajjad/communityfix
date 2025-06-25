@@ -413,7 +413,7 @@ const ChatWindow = () => {
   const { user } = useSelector((state) => state.auth);
   const { contacts, activeChat, setActiveChat, messages, setMessages, loadingContacts, searchQuery, handleSearchChange, filteredContacts } = useChat();
   const [messageInput, setMessageInput] = useState('');
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const [showContacts, setShowContacts] = useState(false);
 
   // Fetch messages for the selected active chat
