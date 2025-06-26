@@ -99,7 +99,7 @@ import { FeedBack } from "../../components/Dashboard/FeedBack";
 import { Stats } from "../../components/Dashboard/Stats";
 import { RegUsers } from "../../components/Dashboard/RegUsers";
 import { RepTable } from "../../components/Dashboard/RepTable";
-// import { DepartmentMem } from "../../components/Dashboard/DepartmentMem";
+import { DepartmentMem } from "../../components/Dashboard/DepartmentMem";
 import ChatWindow from '../../components/Chat/ChatWindow';
 
 function Admindb() {
@@ -107,16 +107,16 @@ function Admindb() {
 
   return (
     <div className="flex min-h-screen w-full bg-gray-100 relative">
-
+// <<<<<<< ST/basit
     
       <div
         className={`fixed top-0 left-0 h-screen bg-white shadow-md transition-all duration-300 z-30`} 
       
       >
-
-  
-       {/* <div className="fixed top-0 left-0 h-screen bg-white shadow-md transition-all duration-300 z-30"> */}
-
+// =======
+//       
+//       <div className="fixed top-0 left-0 h-screen bg-white shadow-md transition-all duration-300 z-30">
+// >>>>>>> admin/kamran
         <AdSideBare
           isExpanded={isSidebarExpanded}
           toggleSidebar={() => setIsSidebarExpanded(!isSidebarExpanded)}
@@ -142,12 +142,12 @@ function Admindb() {
         </div>
 
         <div className="mt-6 px-4 sm:px-6 md:px-8 flex flex-col lg:flex-row gap-6">
-          <div className="w-full">
+          <div className="w-full lg:w-3/5">
             <RepTable />
           </div>
-          {/* <div className="w-full lg:w-2/5">
+          <div className="w-full lg:w-2/5">
             <DepartmentMem />
-          </div> */}
+          </div>
         </div>
       </div>
 

@@ -48,7 +48,7 @@ const ReportsPage = () => {
         <div className="flex-1 lg:ml-[250px] p-6 overflow-auto">
           <div className="flex items-center mb-8">
             <CircleDashed className="w-6 h-6 mr-2" />
-            <h2 className="text-xl font-bold"> Societal Tasks</h2>
+            <h2 className="text-xl font-bold">Accepted Societal Reports</h2>
           </div>
 
           <div className="space-y-6">
