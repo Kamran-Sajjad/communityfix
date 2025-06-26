@@ -1,5 +1,6 @@
-// <<<<<<< ST/basit
-// =======
+
+
+
 
 
 
@@ -8,14 +9,21 @@
 // const window = new JSDOM("").window;
 // const DOMPurify = createDOMPurify(window);
 // import Issue from "../models/Issue.js";
+// import Notification from "../models/Notification.js";
+// import User from "../models/User.js";
 // import { cloudinary, storage } from "../config/cloudinary.js";
-// // import issueSchema from "../models/Issue.js";
+
+// import mongoose from "mongoose";
+
 
 // // Create a new issue
 // export const createIssue = async (req, res) => {
 //   try {
 //     const {
-//       title,name,description,issueCategory,address,contact,issueType,} = req.body;
+
+//       title, name, description, issueCategory, address, contact, issueType
+//     } = req.body;
+
 
 //     // Sanitize the description before saving it
 //     const sanitizedDescription = DOMPurify.sanitize(description);
@@ -39,7 +47,7 @@
 //     const newIssue = new Issue({
 //       title,
 //       name,
-//       description: sanitizedDescription, // Save the sanitized description
+//       description: sanitizedDescription,
 //       issueCategory,
 //       address,
 //       contact,
@@ -50,9 +58,39 @@
 
 //     await newIssue.save();
 
-//     res
-//       .status(201)
-//       .json({ success: true, message: "Issue reported", issue: newIssue });
+//     // Notification logic
+//     try {
+//       if (newIssue.issueType === "societal") {
+//         // Notify all residents
+//         const residents = await User.find({ accountType: "resident" });
+//         await Notification.insertMany(
+//           residents.map(resident => ({
+//             recipient: resident._id,
+//             sender: req.user._id,
+//             message: `New societal issue reported: ${newIssue.title}`,
+//             issue: newIssue._id,
+//             notificationType: "issue_reported"
+//           }))
+//         );
+//       }
+
+//       // Always notify admin
+//       const admin = await User.findOne({ accountType: "admin" });
+//       if (admin) {
+//         await Notification.create({
+//           recipient: admin._id,
+//           sender: req.user._id,
+//           message: `New ${newIssue.issueType} issue reported: ${newIssue.title}`,
+//           issue: newIssue._id,
+//           notificationType: "issue_reported"
+//         });
+//       }
+//     } catch (notificationError) {
+//       console.error("Notification failed:", notificationError);
+//       // Don't fail the whole request if notifications fail
+//     }
+
+//     res.status(201).json({ success: true, message: "Issue reported", issue: newIssue });
 //   } catch (err) {
 //     console.error(err);
 //     res.status(500).json({ success: false, message: "Server error" });
@@ -62,26 +100,62 @@
 // // Get all issues
 // export const getAllIssues = async (req, res) => {
 //   try {
-//     const issues = await Issue.find().sort({ createdAt: -1 });
+//     const { issueType, issueCategory } = req.query;
+
+//     // Build the filter object
+//     let filter = {};
+
+//     // Add issueType to filter if it exists
+//     if (issueType) {
+//       filter.issueType = issueType;
+//     }
+
+//     // Add issueCategory to filter if it exists
+//     if (issueCategory) {
+//       filter.issueCategory = issueCategory;
+//     }
+
+//     // Find the issues based on the filter
+//     const issues = await Issue.find(filter).sort({ createdAt: -1 });
+
 //     res.status(200).json({ success: true, issues });
 //   } catch (err) {
 //     console.error(err);
 //     res.status(500).json({ success: false, message: "Failed to fetch issues" });
 //   }
 // };
-
 // // Upvote issue
 // export const upvoteIssue = async (req, res) => {
 //   try {
+//     const { priority } = req.body;  // Expecting priority in the request body
+//     // console.log("Authenticated user ID:", req.user?._id);
+
 //     const issue = await Issue.findById(req.params.id);
 //     if (!issue) return res.status(404).json({ message: "Issue not found" });
 
-//     // Check if already voted
-//     if (issue.voters.includes(req.user._id)) {
-//       return res.status(400).json({ message: "You already upvoted" });
+//     // Validate priority
+//     const validPriorities = ["low", "medium", "high", "extremely-high"];
+//     if (!validPriorities.includes(priority)) {
+//       return res.status(400).json({ message: "Invalid priority" });
 //     }
 
-//     issue.voters.push(req.user._id);
+//     // Check if the user has already voted
+//     // console.log("Voters:", issue.voters);
+
+//     const alreadyVoted = issue.voters.some(
+//       (voter) => voter.userId.toString() === req.user._id.toString()
+//     );
+
+//     if (alreadyVoted) {
+//       return res.status(400).json({ message: "You have already upvoted" });
+//     }
+
+//     // Add the user's vote with priority to the voters array
+//     issue.voters.push({
+//       userId: req.user._id,
+//       priority: priority,
+//     });
+
 //     issue.upvotes += 1;
 //     await issue.save();
 
@@ -90,21 +164,22 @@
 //     res.status(500).json({ success: false, message: "Failed to upvote" });
 //   }
 // };
+// // <<<<<<< ST/basit
+// // // backend/controllers/issueController.js
+// // =======
 
-// // backend/controllers/issueController.js
 
+// // >>>>>>> admin/kamran
 // export const commentOnIssue = async (req, res) => {
 //   try {
-//     const { text } = req.body; // Get the comment text
-//     const { issueId } = req.params; // Get the issueId from the URL params
+//     const { text } = req.body;
+//     const { issueId } = req.params;
 
-//     // Ensure the text is not empty
 //     if (!text || text.trim().length === 0) {
 //       return res.status(400).json({ message: "Comment text cannot be empty" });
 //     }
 //     const sanitizedText = DOMPurify.sanitize(text);
 
-//     // Find the issue by ID
 //     const issue = await Issue.findById(issueId).populate(
 //       "comments.user",
 //       "fullName avatar"
@@ -114,41 +189,61 @@
 //       return res.status(404).json({ message: "Issue not found" });
 //     }
 
-//     // Add the new comment to the issue
 //     issue.comments.push({
-//       user: req.user._id, // Assuming you have a user object on the request (via authentication middleware)
+//       user: req.user._id,
 //       text: sanitizedText,
 //       createdAt: new Date(),
 //     });
 
-//     // Save the updated issue with the new comment
 //     await issue.save();
 
-//     // Return the updated issue with the new comment
-//     res.status(201).json({ success: true, issue }); // Send the updated issue back
+//     // Notification for issue owner about new comment
+//     if (issue.createdBy.toString() !== req.user._id.toString()) {
+//       try {
+//         await Notification.create({
+//           recipient: issue.createdBy,
+//           sender: req.user._id,
+//           message: `New comment on your issue: ${issue.title}`,
+//           issue: issue._id,
+//           notificationType: "comment_added"
+//         });
+//       } catch (notificationError) {
+//         console.error("Comment notification failed:", notificationError);
+//       }
+//     }
+
+//     res.status(201).json({ success: true, issue });
 //   } catch (error) {
 //     console.error("Failed to post comment:", error);
 //     res.status(500).json({ success: false, message: "Failed to post comment" });
 //   }
 // };
 
-// // Get issue by ID
 // export const getIssueById = async (req, res) => {
 //   try {
-//     const issue = await Issue.findById(req.params.id)
+//     const issueId = req.params.id;
+//     // Ensure the id is a valid ObjectId
+//     if (!mongoose.Types.ObjectId.isValid(issueId)) {
+//       return res.status(400).json({ success: false, message: "Invalid issue ID" });
+//     }
+
+//     const issue = await Issue.findById(issueId)
 //       .populate("comments.user", "fullName avatar")
-//       .populate("voters", "user");
-//     if (!issue) return res.status(404).json({ message: "Issue not found" });
+//       .populate("voters.userId", "fullName");
+
+//     if (!issue) {
+//       return res.status(404).json({ message: "Issue not found" });
+//     }
 
 //     res.status(200).json({ success: true, issue });
 //   } catch (err) {
+//     console.error("Failed to get issue:", err);
 //     res.status(500).json({ success: false, message: "Failed to get issue" });
 //   }
 // };
 
 
 
-// // import Issue from '../models/Issue.js';
 
 // export const getUserIssues = async (req, res) => {
 //   try {
@@ -159,8 +254,6 @@
 //     }
 
 //     const issues = await Issue.find({ createdBy: userId }).select('title description issueType status upvotes createdAt attachments');
-//     // const issues = await Issue.find({ createdBy: userId }).select('title');
-
 //     return res.status(200).json({ success: true, issues });
 //   } catch (error) {
 //     console.error("Error in getUserIssues:", error);
@@ -170,26 +263,26 @@
 
 
 
-// // Get issues by status
+
 // export const getIssuesByStatus = async (req, res) => {
 //   try {
 //     const { status } = req.params;
-
-//     // Validate status
 //     const validStatuses = ['pending', 'in_progress', 'resolved', 'closed'];
 //     if (!validStatuses.includes(status.toLowerCase())) {
 //       return res.status(400).json({ success: false, message: "Invalid status" });
 //     }
 
 //     const issues = await Issue.find({ status: status.toLowerCase() }).sort({ createdAt: -1 });
-
 //     res.status(200).json({ success: true, issues });
 //   } catch (err) {
 //     console.error("Failed to fetch issues by status:", err);
 //     res.status(500).json({ success: false, message: "Server error" });
 //   }
 // };
-// // <<<<<<< Graph/dv
+
+
+
+
 // export const getIssueStatistics = async (req, res) => {
 //   try {
 //     const { year, month, timeRange } = req.query;
@@ -197,7 +290,7 @@
 //     const monthNum = month ? parseInt(month) : new Date().getMonth() + 1;
 
 //     if (timeRange === 'monthly') {
-//       // Monthly statistics logic (same as before)
+
 //       const result = {
 //         labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
 //         totalIssues: Array(12).fill(0),
@@ -234,23 +327,19 @@
 //       });
 
 //       return res.json({ success: true, data: result });
-
 //     } else {
-//       // DAILY STATISTICS - IMPROVED VERSION
 //       const daysInMonth = new Date(yearNum, monthNum, 0).getDate();
-      
-//       // Create complete days array for the selected month
+
 //       const result = {
-//         labels: Array.from({length: daysInMonth}, (_, i) => {
+//         labels: Array.from({ length: daysInMonth }, (_, i) => {
 //           const day = i + 1;
-//           return `${monthNum}/${day}/${yearNum}`; // Format: MM/DD/YYYY
+//           return `${monthNum}/${day}/${yearNum}`;
 //         }),
 //         totalIssues: Array(daysInMonth).fill(0),
 //         pendingIssues: Array(daysInMonth).fill(0),
-//         resolvedIssues: Array(daysInMonth).fill(0) // Added resolved issues count
+//         resolvedIssues: Array(daysInMonth).fill(0)
 //       };
 
-//       // Get daily statistics for the selected month
 //       const stats = await Issue.aggregate([
 //         {
 //           $match: {
@@ -282,7 +371,6 @@
 //         { $sort: { "_id": 1 } }
 //       ]);
 
-//       // Merge database results with our complete days structure
 //       stats.forEach(stat => {
 //         const dayIndex = stat._id - 1;
 //         if (dayIndex >= 0 && dayIndex < daysInMonth) {
@@ -292,8 +380,8 @@
 //         }
 //       });
 
-//       return res.json({ 
-//         success: true, 
+//       return res.json({
+//         success: true,
 //         data: result,
 //         meta: {
 //           timeRange: 'daily',
@@ -303,11 +391,9 @@
 //         }
 //       });
 //     }
-
 //   } catch (err) {
 //     console.error("Error in getIssueStatistics:", err);
-    
-//     // Create appropriate empty response based on timeRange
+// // <<<<<<< notification
 //     const emptyData = timeRange === 'monthly' 
 //       ? { 
 //           labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"], 
@@ -320,16 +406,35 @@
 //           pendingIssues: Array(new Date().getDate()).fill(0),
 //           resolvedIssues: Array(new Date().getDate()).fill(0)
 //         };
-    
+
 //     return res.status(500).json({ 
 //       success: false, 
+// // =======
+
+// //     // Create appropriate empty response based on timeRange
+// //     const emptyData = timeRange === 'monthly'
+// //       ? {
+// //         labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+// //         totalIssues: Array(12).fill(0),
+// //         pendingIssues: Array(12).fill(0)
+// //       }
+// //       : {
+// //         labels: Array.from({ length: new Date().getDate() }, (_, i) => (i + 1).toString()),
+// //         totalIssues: Array(new Date().getDate()).fill(0),
+// //         pendingIssues: Array(new Date().getDate()).fill(0),
+// //         resolvedIssues: Array(new Date().getDate()).fill(0)
+// //       };
+
+// //     return res.status(500).json({
+// //       success: false,
+// // >>>>>>> admin/kamran
 //       message: "Error fetching statistics",
 //       data: emptyData
 //     });
 //   }
 // };
-// // =======
 // // @desc    Get work progress percentage
+
 // export const getWorkProgress = async (req, res) => {
 //   try {
 //     const totalIssues = await Issue.countDocuments();
@@ -341,15 +446,146 @@
 //       success: true,
 //       totalIssues,
 //       resolvedIssues,
-//       progress: Math.round(progress), // Rounded to nearest whole number
+//       progress: Math.round(progress),
 //     });
 //   } catch (error) {
 //     console.error("Error fetching work progress:", error);
 //     res.status(500).json({ success: false, message: "Server error" });
 //   }
 // };
+// // <<<<<<< ST/basit
+// // =======
 
-// // >>>>>>> resident/backend
+// // <<<<<<< notification
+// // Add this new function to update issue status and send notifications
+// export const updateIssueStatus = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const { status } = req.body;
+
+//     const validStatuses = ['pending', 'in_progress', 'resolved'];
+//     if (!validStatuses.includes(status)) {
+//       return res.status(400).json({ success: false, message: "Invalid status" });
+//     }
+
+//     const issue = await Issue.findByIdAndUpdate(
+//       id,
+//       { status },
+//       { new: true }
+//     );
+
+//     if (!issue) {
+//       return res.status(404).json({ success: false, message: "Issue not found" });
+//     }
+
+//     // Send notification to issue creator about status change
+//     if (issue.createdBy.toString() !== req.user._id.toString()) {
+//       try {
+//         await Notification.create({
+//           recipient: issue.createdBy,
+//           sender: req.user._id,
+//           message: `Your issue "${issue.title}" status changed to ${status}`,
+//           issue: issue._id,
+//           notificationType: "status_changed"
+//         });
+//       } catch (notificationError) {
+//         console.error("Status change notification failed:", notificationError);
+//       }
+//     }
+
+//     res.status(200).json({ success: true, issue });
+//   } catch (error) {
+//     console.error("Error updating issue status:", error);
+//     res.status(500).json({ success: false, message: "Server error" });
+//   }
+// };
+// // =======
+
+
+
+
+// // >>>>>>> admin/kamran
+
+
+// // Accept issue (Admin acceptance)
+// export const acceptIssue = async (req, res) => {
+//   try {
+//     const { issueId } = req.params;
+
+//     // Find the issue by ID
+//     const issue = await Issue.findById(issueId);
+
+//     if (!issue) {
+//       return res.status(404).json({ message: "Issue not found" });
+//     }
+
+//     // Mark the issue as accepted by admin
+//     issue.adminAccepted = true;
+
+//     // You could assign it to a service team member here if needed
+//     // For now, it will remain unassigned (null)
+
+//     await issue.save();
+
+//     res.status(200).json({ success: true, message: "Issue accepted", issue });
+//   } catch (err) {
+//     console.error("Failed to accept issue:", err);
+//     res.status(500).json({ success: false, message: "Failed to accept issue" });
+//   }
+// };
+// // Reject issue (Admin reject)
+// export const rejectIssue = async (req, res) => {
+//   try {
+//     const { issueId } = req.params;
+
+//     // Find the issue by ID
+//     const issue = await Issue.findById(issueId);
+
+//     if (!issue) {
+//       return res.status(404).json({ message: "Issue not found" });
+//     }
+
+//     // Delete the issue from the database
+//     // await issue.remove();
+
+//      await Issue.deleteOne({ _id: issueId });
+
+//     res.status(200).json({ success: true, message: "Issue rejected and deleted" });
+//   } catch (err) {
+//     console.error("Failed to reject issue:", err);
+//     res.status(500).json({ success: false, message: "Failed to reject issue" });
+//   }
+// };
+
+
+// // Get societal issues accepted by admin with images
+// export const getAcceptedSocietalIssues = async (req, res) => {
+//   try {
+//     const issues = await Issue.find({
+//       issueType: 'societal',
+//       adminAccepted: true,
+//       attachments: { $exists: true, $not: { $size: 0 } }
+//     }).sort({ createdAt: -1 });
+
+//     res.status(200).json({ success: true, issues });
+//   } catch (error) {
+//     console.error("Error fetching accepted societal issues:", error);
+//     res.status(500).json({ success: false, message: "Failed to fetch issues" });
+//   }
+// };
+// export const getAcceptedHouseholdIssues = async (req, res) => {
+//   try {
+//     const issues = await Issue.find({
+//       issueType: 'household',
+//       adminAccepted: true
+//     }).sort({ createdAt: -1 });
+
+//     res.status(200).json({ success: true, issues });
+//   } catch (error) {
+//     console.error("Error fetching household issues:", error);
+//     res.status(500).json({ success: false, message: "Failed to fetch household issues" });
+//   }
+// };
 
 
 
@@ -357,18 +593,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-// >>>>>>> admin/kamran
 import { JSDOM } from "jsdom";
 import createDOMPurify from "dompurify";
 const window = new JSDOM("").window;
@@ -377,11 +601,9 @@ import Issue from "../models/Issue.js";
 import Notification from "../models/Notification.js";
 import User from "../models/User.js";
 import { cloudinary, storage } from "../config/cloudinary.js";
-// <<<<<<< notification
-// =======
+
 import mongoose from "mongoose";
-// import issueSchema from "../models/Issue.js";
-// >>>>>>> admin/kamran
+
 
 // Create a new issue
 export const createIssue = async (req, res) => {
@@ -585,18 +807,7 @@ export const commentOnIssue = async (req, res) => {
     res.status(500).json({ success: false, message: "Failed to post comment" });
   }
 };
-// export const getIssueById = async (req, res) => {
-//   try {
-//     const issue = await Issue.findById(req.params.id)
-//       .populate("comments.user", "fullName avatar") // Populate user info in comments
-//       .populate("voters.userId", "fullName") // Populate user info in voters with fullName
-//     if (!issue) return res.status(404).json({ message: "Issue not found" });
-//     res.status(200).json({ success: true, issue });
-//   } catch (err) {
-//     console.error("Failed to get issue:", err);
-//     res.status(500).json({ success: false, message: "Failed to get issue" });
-//   }
-// };
+
 export const getIssueById = async (req, res) => {
   try {
     const issueId = req.params.id;
@@ -668,7 +879,7 @@ export const getIssueStatistics = async (req, res) => {
     const monthNum = month ? parseInt(month) : new Date().getMonth() + 1;
 
     if (timeRange === 'monthly') {
-      
+
       const result = {
         labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
         totalIssues: Array(12).fill(0),
@@ -771,41 +982,23 @@ export const getIssueStatistics = async (req, res) => {
     }
   } catch (err) {
     console.error("Error in getIssueStatistics:", err);
-// <<<<<<< notification
-    const emptyData = timeRange === 'monthly' 
-      ? { 
-          labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"], 
-          totalIssues: Array(12).fill(0), 
-          pendingIssues: Array(12).fill(0) 
-        }
-      : { 
-          labels: Array.from({length: new Date().getDate()}, (_, i) => (i + 1).toString()),
-          totalIssues: Array(new Date().getDate()).fill(0),
-          pendingIssues: Array(new Date().getDate()).fill(0),
-          resolvedIssues: Array(new Date().getDate()).fill(0)
-        };
-    
-    return res.status(500).json({ 
-      success: false, 
-// =======
+    // <<<<<<< notification
+    const emptyData = timeRange === 'monthly'
+      ? {
+        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+        totalIssues: Array(12).fill(0),
+        pendingIssues: Array(12).fill(0)
+      }
+      : {
+        labels: Array.from({ length: new Date().getDate() }, (_, i) => (i + 1).toString()),
+        totalIssues: Array(new Date().getDate()).fill(0),
+        pendingIssues: Array(new Date().getDate()).fill(0),
+        resolvedIssues: Array(new Date().getDate()).fill(0)
+      };
 
-//     // Create appropriate empty response based on timeRange
-//     const emptyData = timeRange === 'monthly'
-//       ? {
-//         labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-//         totalIssues: Array(12).fill(0),
-//         pendingIssues: Array(12).fill(0)
-//       }
-//       : {
-//         labels: Array.from({ length: new Date().getDate() }, (_, i) => (i + 1).toString()),
-//         totalIssues: Array(new Date().getDate()).fill(0),
-//         pendingIssues: Array(new Date().getDate()).fill(0),
-//         resolvedIssues: Array(new Date().getDate()).fill(0)
-//       };
-
-//     return res.status(500).json({
-//       success: false,
-// >>>>>>> admin/kamran
+    return res.status(500).json({
+      success: false,
+  
       message: "Error fetching statistics",
       data: emptyData
     });
@@ -840,7 +1033,7 @@ export const updateIssueStatus = async (req, res) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
-    
+
     const validStatuses = ['pending', 'in_progress', 'resolved'];
     if (!validStatuses.includes(status)) {
       return res.status(400).json({ success: false, message: "Invalid status" });
@@ -877,12 +1070,7 @@ export const updateIssueStatus = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
-// =======
 
-
-
-
-// >>>>>>> admin/kamran
 
 
 // Accept issue (Admin acceptance)
@@ -926,7 +1114,7 @@ export const rejectIssue = async (req, res) => {
     // Delete the issue from the database
     // await issue.remove();
 
-     await Issue.deleteOne({ _id: issueId });
+    await Issue.deleteOne({ _id: issueId });
 
     res.status(200).json({ success: true, message: "Issue rejected and deleted" });
   } catch (err) {
@@ -939,9 +1127,13 @@ export const rejectIssue = async (req, res) => {
 // Get societal issues accepted by admin with images
 export const getAcceptedSocietalIssues = async (req, res) => {
   try {
+    const userId = req.user._id;
+
     const issues = await Issue.find({
       issueType: 'societal',
       adminAccepted: true,
+      serviceAccepted: false, // Optional: prevent already accepted from being listed
+      rejectedByServiceTeam: { $ne: userId }, // 👈 KEY FILTER
       attachments: { $exists: true, $not: { $size: 0 } }
     }).sort({ createdAt: -1 });
 
@@ -953,9 +1145,13 @@ export const getAcceptedSocietalIssues = async (req, res) => {
 };
 export const getAcceptedHouseholdIssues = async (req, res) => {
   try {
+    const userId = req.user._id;
+
     const issues = await Issue.find({
       issueType: 'household',
-      adminAccepted: true
+      // adminAccepted: true,
+      serviceAccepted: false, // Optional
+      rejectedByServiceTeam: { $ne: userId } // 👈 KEY FILTER
     }).sort({ createdAt: -1 });
 
     res.status(200).json({ success: true, issues });
@@ -964,4 +1160,85 @@ export const getAcceptedHouseholdIssues = async (req, res) => {
     res.status(500).json({ success: false, message: "Failed to fetch household issues" });
   }
 };
+
+
+
+
+
+
+
+
+export const acceptIssueByServiceTeam = async (req, res) => {
+  try {
+    const { issueId } = req.params;
+    const userId = req.user._id;
+
+    const issue = await Issue.findById(issueId);
+    if (!issue) return res.status(404).json({ message: "Issue not found" });
+
+    // Prevent others from re-accepting
+    if (issue.serviceAccepted) return res.status(400).json({ message: "Already accepted by another member" });
+
+    issue.assignedToServiceTeam = userId;
+    issue.serviceAccepted = true;
+    await issue.save();
+
+    res.status(200).json({ success: true, message: "Issue accepted", issue });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Failed to accept issue" });
+  }
+};
+
+
+
+
+
+// export const rejectIssueByServiceTeam = async (req, res) => {
+//   try {
+//     const { issueId } = req.params;
+//     const userId = req.user._id;
+
+//     const issue = await Issue.findById(issueId);
+//     if (!issue) return res.status(404).json({ message: "Issue not found" });
+
+//     // Prevent duplicate rejections
+//     if (!issue.rejectedByServiceTeam.includes(userId)) {
+//       issue.rejectedByServiceTeam.push(userId);
+//       await issue.save();
+//     }
+
+//     res.status(200).json({ success: true, message: "Issue rejected", issue });
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ success: false, message: "Failed to reject issue" });
+//   }
+// };
+
+
+
+export const rejectIssueByServiceTeam = async (req, res) => {
+  try {
+    const { issueId } = req.params;
+    const userId = req.user._id;
+
+    const issue = await Issue.findById(issueId);
+    if (!issue) return res.status(404).json({ message: "Issue not found" });
+
+    // Prevent duplicate rejections
+    if (!issue.rejectedByServiceTeam.includes(userId)) {
+      issue.rejectedByServiceTeam.push(userId);
+      await issue.save();
+    }
+    // await issue.save();
+    await issue.populate("rejectedByServiceTeam", "_id"); // optional if you use refs
+    // res.status(200).json({ success: true, message: "Issue rejected", issue });
+
+    res.status(200).json({ success: true, message: "Issue rejected", issue });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Failed to reject issue" });
+  }
+};
+
 
