@@ -99,7 +99,7 @@ import { FeedBack } from "../../components/Dashboard/FeedBack";
 import { Stats } from "../../components/Dashboard/Stats";
 import { RegUsers } from "../../components/Dashboard/RegUsers";
 import { RepTable } from "../../components/Dashboard/RepTable";
-import { DepartmentMem } from "../../components/Dashboard/DepartmentMem";
+// import { DepartmentMem } from "../../components/Dashboard/DepartmentMem";
 import ChatWindow from '../../components/Chat/ChatWindow';
 
 function Admindb() {
@@ -142,12 +142,12 @@ function Admindb() {
         </div>
 
         <div className="mt-6 px-4 sm:px-6 md:px-8 flex flex-col lg:flex-row gap-6">
-          <div className="w-full lg:w-3/5">
+          <div className="w-full">
             <RepTable />
           </div>
-          <div className="w-full lg:w-2/5">
+          {/* <div className="w-full lg:w-2/5">
             <DepartmentMem />
-          </div>
+          </div> */}
         </div>
       </div>
 

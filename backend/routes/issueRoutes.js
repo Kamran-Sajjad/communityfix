@@ -26,7 +26,7 @@ const router = express.Router();
 
 // Properly formatted routes:
 router.post("/report", protect, upload.array("attachments", 3), createIssue);
-router.get("/", protect, getAllIssues);
+router.get("/list", protect, getAllIssues);
 router.get("/statistics", protect, getIssueStatistics);
 router.get("/progress", protect, getWorkProgress);
 router.get("/myissues", protect, getUserIssues);
