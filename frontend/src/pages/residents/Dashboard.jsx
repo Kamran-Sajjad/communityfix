@@ -500,7 +500,7 @@ import WelcomeSection from "../../components/Rdashboard/WelcomeSection";
 import ProgressCard from "../../components/Rdashboard/ProgressCard";
 import StatsCard from "../../components/Rdashboard/StatsCard";
 import ComplaintsSection from "../../components/Rdashboard/ComplaintsSection";
-import Chart from "../../components/Rdashboard/WorkStatisticsChart";
+// import Chart from "../../components/Rdashboard/WorkStatisticsChart";
 import axios from 'axios';
 import ChatWindow from '../../components/Chat/ChatWindow';
 import { connectSocket, disconnectSocket } from '../../utils/socket';
@@ -652,7 +652,7 @@ export default function Dashboard() {
           </div>
 
           <div className="flex flex-col lg:flex-row lg:space-x-6 mt-6 space-y-6 lg:space-y-0">
-            <div className="w-full lg:w-2/3 space-y-6">
+            <div className="w-full space-y-6">
               {selectedComplaint ? (
                 <ProgressCard {...selectedComplaint} />
               ) : complaints.length > 0 ? (
@@ -669,14 +669,15 @@ export default function Dashboard() {
               />
             </div>
 
-            <div className="w-full lg:w-1/3 space-y-6">
+            {/* <div className="w-full space-y-6">
               <h2 className="text-xl md:text-2xl font-bold mb-4">Work statistics</h2>
               <Chart />
-              <ChatWindow />
-            </div>
+              
+            </div> */}
           </div>
         </div>
       </div>
+      <ChatWindow />
     </div>
   );
 }

@@ -110,9 +110,6 @@ const MechanicDashboard = () => {
           </div>
 
           {/* Right Sidebar */}
-          <div className="w-full lg:w-[300px] border-t lg:border-l border-gray-200 p-4 lg:p-6">
-            {/* <Contacts /> */}
-          </div>
         </div>
       </div>
          <ChatWindow />
