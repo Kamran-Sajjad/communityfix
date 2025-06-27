@@ -23,9 +23,29 @@
 
 
 
-// use it 
+// // use it 
+// import express from "express";
+// import upload from "../middlewares/upload.js"; // ✅ use the configured one
+// import { submitFeedback, getAllFeedback } from "../controllers/feedbackController.js";
+// import { protect } from "../middlewares/authMiddleware.js";
+
+// const router = express.Router();
+
+// router.post("/", protect, upload.single("attachment"), submitFeedback);
+// router.get("/", getAllFeedback);
+
+// export default router;
+
+
+
+
+
+
+
+
+
 import express from "express";
-import upload from "../middlewares/upload.js"; // ✅ use the configured one
+import upload from "../middlewares/upload.js";
 import { submitFeedback, getAllFeedback } from "../controllers/feedbackController.js";
 import { protect } from "../middlewares/authMiddleware.js";
 
@@ -35,4 +55,5 @@ router.post("/", protect, upload.single("attachment"), submitFeedback);
 router.get("/", getAllFeedback);
 
 export default router;
+
 

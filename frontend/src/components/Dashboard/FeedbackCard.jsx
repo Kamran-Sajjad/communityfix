@@ -28,7 +28,7 @@ const FeedbackCard = ({ feedback }) => {
   return (
     <div
       ref={cardRef}
-      className="p-4 m-2 bg-white rounded-xl shadow-md flex flex-row gap-4"
+      className="p-4 m-1 bg-white rounded-xl shadow-md flex flex-row gap-4"
       style={{ alignItems: "flex-start" }}
     >
       {/* Left side: User info and feedback details */}

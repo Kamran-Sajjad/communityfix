@@ -211,30 +211,99 @@ export const forgotPassword = async (req, res) => {
 // @desc    Verify OTP
 // @route   POST /api/auth/verify-otp
 // @access  Public
+// export const verifyOtp = async (req, res) => {
+//   const { email, otp } = req.body;
+
+//   try {
+//     // 1. Find user and check OTP
+//     const user = await User.findOne({ 
+//       email,
+//       resetPasswordOtp: otp,
+//       resetPasswordOtpExpiry: { $gt: Date.now() } // Check expiry
+//     });
+
+//     if (!user) {
+//       return res.status(400).json({ 
+//         success: false,
+//         message: 'Invalid or expired OTP' 
+//       });
+//     }
+
+//     // 2. OTP is valid - return success
+//     res.status(200).json({ 
+//       success: true,
+//       message: 'OTP verified successfully',
+//       email: email
+//     });
+//   } catch (error) {
+//     console.error('[VERIFY OTP ERROR]', error);
+//     res.status(500).json({ 
+//       success: false,
+//       message: 'Server error' 
+//     });
+//   }
+// };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export const verifyOtp = async (req, res) => {
   const { email, otp } = req.body;
 
   try {
-    // 1. Find user and check OTP
-    const user = await User.findOne({ 
-      email,
-      resetPasswordOtp: otp,
-      resetPasswordOtpExpiry: { $gt: Date.now() } // Check expiry
-    });
+    const user = await User.findOne({ email });
 
     if (!user) {
+      return res.status(404).json({ 
+        success: false,
+        message: 'User not found' 
+      });
+    }
+
+    // Ensure OTP is string and trimmed
+    const storedOtp = user.resetPasswordOtp?.toString().trim();
+    const inputOtp = otp?.toString().trim();
+    const isExpired = user.resetPasswordOtpExpiry < new Date();
+
+    if (storedOtp !== inputOtp || isExpired) {
       return res.status(400).json({ 
         success: false,
         message: 'Invalid or expired OTP' 
       });
     }
 
-    // 2. OTP is valid - return success
     res.status(200).json({ 
       success: true,
       message: 'OTP verified successfully',
       email: email
     });
+
   } catch (error) {
     console.error('[VERIFY OTP ERROR]', error);
     res.status(500).json({ 
@@ -243,6 +312,21 @@ export const verifyOtp = async (req, res) => {
     });
   }
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // @desc    Reset Password
 // @route   POST /api/auth/reset-password
@@ -280,5 +364,141 @@ export const resetPassword = async (req, res) => {
       success: false,
       message: 'Server error' 
     });
+  }
+};
+
+
+// @desc    Precheck if email is already registered before signup
+// @route   POST /api/users/precheck-email
+export const precheckEmail = async (req, res) => {
+  const { email } = req.body;
+  try {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ success: false, message: "Email already exists" });
+    }
+    res.status(200).json({ success: true });
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+
+
+
+export const sendSignupOtp = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    // Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ success: false, message: "Email already exists" });
+    }
+
+    // Generate OTP
+    const otp = crypto.randomInt(1000, 9999).toString();
+    const otpExpiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+    // Save OTP to temp store or reuse User model fields (if user not yet created)
+    // You can store this temporarily in DB, Redis, or a fake User placeholder
+
+    // TEMP OPTION: store OTP in a global in-memory object (for test/demo only)
+    global.signupOtps = global.signupOtps || {};
+    global.signupOtps[email] = { otp, expiry: otpExpiry };
+
+    // Send email
+    const mailOptions = {
+      from: `"Community Fix" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: "Verify Your Email - Signup OTP",
+      html: `<p>Your verification OTP is:</p><h2>${otp}</h2><p>Expires in 10 minutes.</p>`,
+    };
+
+    await transporter.sendMail(mailOptions);
+    res.status(200).json({ success: true, message: "OTP sent to email" });
+
+  } catch (error) {
+    console.error('[SIGNUP OTP ERROR]', error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+
+export const verifySignupOtp = async (req, res) => {
+  const { email, otp } = req.body;
+
+  global.signupOtps = global.signupOtps || {};
+  const record = global.signupOtps[email];
+
+  if (!record || record.otp !== otp || record.expiry < new Date()) {
+    return res.status(400).json({ success: false, message: "Invalid or expired OTP" });
+  }
+
+  res.status(200).json({ success: true, message: "OTP verified" });
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Create admin account (only logged-in admins can do this)
+export const createAdmin = async (req, res) => {
+  const { fullName, email, password, address, phoneNumber, cnic, agreeToTerms } = req.body;
+
+  console.log('[CREATE ADMIN] Attempting to create new admin:', { email });
+
+  try {
+    // Ensure logged-in user is admin
+    if (req.user.accountType !== 'admin') {
+      return res.status(403).json({ message: 'Admin access required to create another admin' });
+    }
+
+    // Check if email already exists
+    const adminExists = await User.findOne({ email });
+    if (adminExists) {
+      return res.status(400).json({ message: 'Email already exists' });
+    }
+
+    // Hash the password for security
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // Create new admin
+    const newAdmin = new User({
+      fullName,
+      email,
+      password: hashedPassword,
+      accountType: 'admin',
+      address,
+      phoneNumber,
+      cnic,
+      agreeToTerms,
+    });
+
+    // Save the new admin user
+    await newAdmin.save();
+
+    // Generate token for the new admin
+    const token = generateToken(newAdmin._id);
+
+    res.status(201).json({
+      _id: newAdmin._id,
+      fullName: newAdmin.fullName,
+      email: newAdmin.email,
+      accountType: newAdmin.accountType,
+      token: token,
+    });
+  } catch (error) {
+    console.error('[CREATE ADMIN ERROR]', error);
+    res.status(500).json({ message: 'Server error' });
   }
 };
