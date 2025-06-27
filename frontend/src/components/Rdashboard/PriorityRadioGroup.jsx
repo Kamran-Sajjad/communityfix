@@ -18,6 +18,7 @@ export default function PriorityRadioGroup({
       <h3 className="text-lg font-bold mb-3 flex items-center">
         Prioritize
         {hasVoted && (
+          
           <span className="ml-2 flex items-center text-sm text-orange-500">
             <svg
               xmlns="http://www.w3.org/2000/svg"

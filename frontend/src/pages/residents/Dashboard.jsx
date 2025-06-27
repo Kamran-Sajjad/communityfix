@@ -1,32 +1,156 @@
 
 
-// "use client";
 
-// import { useState } from "react";
+
+
+// "use client";
+// import { useState, useEffect } from "react";
+// import { useSelector } from 'react-redux';
 // import { ChevronDown } from "lucide-react";
-// import Sidebar from "../../components/Dashboard/Sidebar";
+// import Sidebar from "../../components/Rdashboard/Sidebar";
 // import Header from "../../components/Rdashboard/Header";
 // import WelcomeSection from "../../components/Rdashboard/WelcomeSection";
 // import ProgressCard from "../../components/Rdashboard/ProgressCard";
 // import StatsCard from "../../components/Rdashboard/StatsCard";
 // import ComplaintsSection from "../../components/Rdashboard/ComplaintsSection";
-// import Chart from "../../components/Rdashboard/Chart";
-// import ChatWidget from "../../components/Rdashboard/ChatWidget";
-// import { complaints } from "../../components/data/complaints";
+// import Chart from "../../components/Rdashboard/WorkStatisticsChart";
+// import ContactWidget from "../../components/Rdashboard/ContactWidget";
+// import axios from 'axios';
 
 // export default function Dashboard() {
+//   const { user } = useSelector((state) => state.auth);
 //   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+//   const [isExpanded, setIsExpanded] = useState(false);
 //   const [selectedComplaint, setSelectedComplaint] = useState(null);
+//   const [complaints, setComplaints] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState(null);
+
+//   useEffect(() => {
+//     const fetchUserIssues = async () => {
+//       try {
+//         const config = {
+//           headers: {
+//             Authorization: `Bearer ${user.token}`,
+//           },
+//         };
+
+//         const response = await axios.get('/api/issues/myissues', config);
+
+//         const transformedComplaints = response.data.issues.map(issue => ({
+//           id: issue._id,
+//           title: issue.title,
+//           subTitle: issue.description.length > 25 ? issue.description.slice(0, 25) + "..." : issue.description,
+//           icon: issue.attachments && issue.attachments.length > 0
+//             ? issue.attachments
+//             : [getIconForIssueType(issue.issueType)],
+//           time: calculateTimeSince(issue.createdAt),
+//           count: issue.upvotes,
+//           progress: calculateProgress(issue.status),
+//           status: issue.status,
+//           issueType: issue.issueType
+//         }));
+
+
+//         setComplaints(transformedComplaints);
+//         setLoading(false);
+//       } catch (err) {
+//         setError(err.response?.data?.message || 'Failed to fetch issues');
+//         setLoading(false);
+//         console.error('Error fetching issues:', err);
+//       }
+//     };
+
+//     if (user?.token) {
+//       fetchUserIssues();
+//     }
+//   }, [user]);
+
+//   const getIconForIssueType = (issueType) => {
+//     const icons = {
+//       societal: (
+//         <span role="img" aria-label="Society" className="text-3xl md:text-4xl">
+//           🏘️
+//         </span>
+//       ),
+//       household: (
+//         <span role="img" aria-label="Home" className="text-3xl md:text-4xl">
+//           🏠
+//         </span>
+//       )
+//     };
+//     return icons[issueType] || (
+//       <span role="img" aria-label="Issue" className="text-3xl md:text-4xl">
+//         ❓
+//       </span>
+//     );
+//   };
+
+//   const calculateTimeSince = (createdAt) => {
+//     const now = new Date();
+//     const createdDate = new Date(createdAt);
+//     const diffInHours = Math.floor((now - createdDate) / (1000 * 60 * 60));
+//     // const diffInHours = Math.ceil((now - createdDate) / (1000 * 60 * 60));
+
+//     if (diffInHours == 0) {
+//       let min=diffInHours*60;
+//       // return `${min}m ago`;
+//       return `few mins ago`;
+//     } 
+//     else if (diffInHours < 24) {
+//       return `${diffInHours}h ago`;
+//     } else {
+//       const diffInDays = Math.floor(diffInHours / 24);
+//       return `${diffInDays}d ago`;
+//     }
+
+//   };
+
+//   const calculateProgress = (status) => {
+//     switch (status) {
+//       case 'pending':
+//         return 20;
+//       case 'in_progress':
+//         return 50;
+//       case 'resolved':
+//         return 100;
+//       default:
+//         return 0;
+//     }
+//   };
 
 //   const handleViewProgress = (complaint) => {
 //     setSelectedComplaint(complaint);
 //   };
 
+//   // Calculate stats for the StatsCard components
+//   const completedCount = complaints.filter(c => c.status === 'resolved').length;
+//   // const inProgressCount = complaints.filter(c => c.status === 'in_progress').length;
+//   const inProgressCount = complaints.filter(c => c.status === 'pending').length;
+
+//   // Extract first name from fullName
+//   const firstName = user?.fullName || 'Resident';
+//   // const firstName = user?.fullName?.split(' ')[0] || 'Resident';
+
+//   if (loading) {
+//     return <div className="flex justify-center items-center h-screen">Loading...</div>;
+//   }
+
+//   if (error) {
+//     return <div className="flex justify-center items-center h-screen text-red-500">{error}</div>;
+//   }
+
 //   return (
-//     <div className="flex flex-col md:flex-row h-screen w-full bg-white overflow-hidden">
-//       {/* Sidebar - hidden on mobile unless toggled */}
-//       <div className={`${mobileMenuOpen ? 'block' : 'hidden'} md:block fixed md:relative z-50`}>
-//         <Sidebar />
+//     <div className="flex h-screen w-full bg-white overflow-hidden">
+//       {/* Sidebar */}
+//       <div className={`fixed md:relative z-50 h-full ${mobileMenuOpen ? "block" : "hidden"} md:block`}>
+//         <Sidebar
+//           mobileMenuOpen={mobileMenuOpen}
+//           setMobileMenuOpen={setMobileMenuOpen}
+//           isExpanded={isExpanded}
+//           setIsExpanded={setIsExpanded}
+//           user={user}
+//         />
 //       </div>
 
 //       {/* Overlay for mobile menu */}
@@ -37,65 +161,66 @@
 //         />
 //       )}
 
-//       <div className="flex-1 flex flex-col overflow-hidden">
-//         <Header setMobileMenuOpen={setMobileMenuOpen} mobileMenuOpen={mobileMenuOpen} />
-//         <div className="flex-1 ml-0 md:ml-14 p-4 md:p-6 overflow-auto">
-//           <div className="flex flex-col lg:flex-row lg:space-x-6 space-y-6 lg:space-y-0">
-//             {/* Left Column - Welcome and Stats */}
-//             <div className="w-full lg:w-1/2">
-//               <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-6 space-y-6 lg:space-y-0">
-//                 <div className="w-full lg:w-1/2">
-//                   <WelcomeSection />
-//                 </div>
-//                 <div className="w-full lg:w-1/2 flex space-x-4 md:space-x-6">
-//                   <StatsCard value="11" label="completed" subLabel="work" />
-//                   <StatsCard value="4" label="in progress" subLabel="Work" />
-//                 </div>
-//               </div>
+//       {/* Main content area */}
+//       <div className="flex-1 flex flex-col overflow-hidden md:ml-16">
+//         <Header
+//           setMobileMenuOpen={setMobileMenuOpen}
+//           mobileMenuOpen={mobileMenuOpen}
+//           user={user}
+//         />
 
-//               {/* Progress Card and Complaints */}
-//               <div className="mt-6 space-y-6">
-//                 {selectedComplaint ? (
-//                   <ProgressCard
-//                     title={selectedComplaint.title}
-//                     subTitle={selectedComplaint.subTitle}
-//                     progress={selectedComplaint.progress}
-//                     icon={selectedComplaint.icon}
-//                   />
-//                 ) : (
-//                   <ProgressCard
-//                     title={complaints[0].title}
-//                     subTitle={complaints[0].subTitle}
-//                     progress={complaints[0].progress}
-//                     icon={complaints[0].icon}
-//                   />
-//                 )}
+//         <div className="flex-1 p-4 md:p-6 overflow-auto">
+//           {/* Top Section - Welcome and Stats */}
+//           <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-6 space-y-4 lg:space-y-0">
+//             <div className="w-full lg:w-2/3">
+//               <WelcomeSection firstName={firstName} />
+//             </div>
+//             <div className="w-full lg:w-1/3 flex space-x-2 sm:space-x-3 md:space-x-4">
+//               <StatsCard value={completedCount.toString()} label="Resolved" subLabel="Complaints" />
+//               {/* <StatsCard value={inProgressCount.toString()} label="in progress" subLabel="Complaints" /> */}
+//               <StatsCard value={inProgressCount.toString()} label="Pending" subLabel="Complaints" />
+//             </div>
+//           </div>
 
-//                 <ComplaintsSection complaints={complaints} onViewProgress={handleViewProgress} />
-//               </div>
+//           {/* Main Content Area */}
+//           <div className="flex flex-col lg:flex-row lg:space-x-6 mt-6 space-y-6 lg:space-y-0">
+//             <div className="w-full lg:w-2/3 space-y-6">
+//               {selectedComplaint ? (
+//                 <ProgressCard
+//                   title={selectedComplaint.title}
+//                   subTitle={selectedComplaint.subTitle}
+//                   progress={selectedComplaint.progress}
+//                   icon={selectedComplaint.icon}
+//                   // icon={selectedComplaint.attachments}
+//                 />
+//               ) : complaints.length > 0 ? (
+//                 <ProgressCard
+//                   title={complaints[0].title}
+//                   subTitle={complaints[0].subTitle}
+//                   progress={complaints[0].progress}
+//                   icon={complaints[0].icon}
+
+//                 />
+//               ) : (
+//                 <div className="bg-gray-100 rounded-lg p-6 text-center">
+//                   No complaints found. Report an issue to see progress here.
+//                 </div>
+//               )}
+
+//               <ComplaintsSection
+//                 complaints={complaints}
+//                 onViewProgress={handleViewProgress}
+//               />
 //             </div>
 
-//             {/* Right Column - Stats (lg), Chart and Chat */}
-//             <div className="w-full lg:w-1/2 space-y-6 hidden md:block">
+//             <div className="w-full lg:w-1/3 space-y-6">
 //               <div>
-//                 <h2 className="text-xl md:text-2xl font-bold mb-3 md:mb-4">Work statistics</h2>
-//                 <div className="flex border-b mb-4 md:mb-6 overflow-x-auto">
-//                   <button className="pb-2 px-3 md:px-4 border-b-2 border-black font-bold text-sm md:text-base whitespace-nowrap">
-//                     Working Hours
-//                   </button>
-//                   <button className="pb-2 px-3 md:px-4 text-gray-400 text-sm md:text-base whitespace-nowrap">
-//                     My work
-//                   </button>
-//                   <div className="ml-auto">
-//                     <button className="flex items-center bg-gray-100 px-2 py-1 md:px-3 md:py-1 rounded-md text-xs md:text-sm">
-//                       Weekly <ChevronDown className="w-3 h-3 md:w-4 md:h-4 ml-1" />
-//                     </button>
-//                   </div>
-//                 </div>
+//                 <h2 className="text-xl md:text-2xl font-bold mb-4">
+//                   Work statistics
+//                 </h2>
 //                 <Chart />
 //               </div>
-
-//               <ChatWidget />
+//               <ContactWidget />
 //             </div>
 //           </div>
 //         </div>
@@ -104,9 +229,777 @@
 //   );
 // }
 
-"use client";
 
-import { useState } from "react";
+
+
+
+
+
+
+
+
+
+// "use client";
+// import { useState, useEffect } from "react";
+// import { useSelector } from 'react-redux';
+// import { ChevronDown } from "lucide-react";
+// import Sidebar from "../../components/Rdashboard/Sidebar";
+// import Header from "../../components/Rdashboard/Header";
+// import WelcomeSection from "../../components/Rdashboard/WelcomeSection";
+// import ProgressCard from "../../components/Rdashboard/ProgressCard";
+// import StatsCard from "../../components/Rdashboard/StatsCard";
+// import ComplaintsSection from "../../components/Rdashboard/ComplaintsSection";
+// import Chart from "../../components/Rdashboard/WorkStatisticsChart";
+// // import ContactWidget from "../../components/Rdashboard/ContactWidget";
+// // import Chatbot from "../../components/Rdashboard/Chatbot";
+// import axios from 'axios';
+// import ChatWindow from '../../components/Chat/ChatWindow';
+// import { connectSocket, disconnectSocket } from '../../utils/socket';
+
+
+
+// export default function Dashboard() {
+//   const { user } = useSelector((state) => state.auth);
+//   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+//   const [isExpanded, setIsExpanded] = useState(false);
+//   const [selectedComplaint, setSelectedComplaint] = useState(null);
+//   const [complaints, setComplaints] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState(null);
+
+//   // ✅ Socket connection setup — outside fetch function
+//   useEffect(() => {
+//     if (user?._id) {
+//       connectSocket(user._id);
+//     }
+//     return () => {
+//       disconnectSocket();
+//     };
+//   }, [user?._id]);
+
+//   // ✅ Fetching issues
+//   useEffect(() => {
+//     const fetchUserIssues = async () => {
+//       try {
+//         const config = {
+//           headers: {
+//             Authorization: `Bearer ${user.token}`,
+//           },
+//         };
+
+//         const response = await axios.get('/api/issues/myissues', config);
+
+//         const transformedComplaints = response.data.issues.map(issue => ({
+//           id: issue._id,
+//           title: issue.title,
+//           subTitle: issue.description.length > 25
+//             ? issue.description.slice(0, 25) + "..."
+//             : issue.description,
+//           icon: issue.attachments && issue.attachments.length > 0
+//             ? issue.attachments
+//             : [getIconForIssueType(issue.issueType)],
+//           time: calculateTimeSince(issue.createdAt),
+//           count: issue.upvotes,
+//           progress: calculateProgress(issue.status),
+//           status: issue.status,
+//           issueType: issue.issueType
+//         }));
+
+//         setComplaints(transformedComplaints);
+//         setLoading(false);
+//       } catch (err) {
+//         setError(err.response?.data?.message || 'Failed to fetch issues');
+//         setLoading(false);
+//         console.error('Error fetching issues:', err);
+//       }
+//     };
+
+//     if (user?.token) {
+//       fetchUserIssues();
+//     }
+//   }, [user]);
+
+
+//   const getIconForIssueType = (issueType) => {
+//     const icons = {
+//       societal: (
+//         <span role="img" aria-label="Society" className="text-3xl md:text-4xl">
+//           🏘️
+//         </span>
+//       ),
+//       household: (
+//         <span role="img" aria-label="Home" className="text-3xl md:text-4xl">
+//           🏠
+//         </span>
+//       )
+//     };
+//     return icons[issueType] || (
+//       <span role="img" aria-label="Issue" className="text-3xl md:text-4xl">
+//         ❓
+//       </span>
+//     );
+//   };
+
+//   const calculateTimeSince = (createdAt) => {
+//     const now = new Date();
+//     const createdDate = new Date(createdAt);
+//     const diffInHours = Math.floor((now - createdDate) / (1000 * 60 * 60));
+
+//     if (diffInHours == 0) {
+//       return `few mins ago`;
+//     }
+//     else if (diffInHours < 24) {
+//       return `${diffInHours}h ago`;
+//     } else {
+//       const diffInDays = Math.floor(diffInHours / 24);
+//       return `${diffInDays}d ago`;
+//     }
+//   };
+
+//   const calculateProgress = (status) => {
+//     switch (status) {
+//       case 'pending':
+//         return 20;
+//       case 'in_progress':
+//         return 50;
+//       case 'resolved':
+//         return 100;
+//       default:
+//         return 0;
+//     }
+//   };
+
+//   const handleViewProgress = (complaint) => {
+//     setSelectedComplaint(complaint);
+//   };
+
+//   const completedCount = complaints.filter(c => c.status === 'resolved').length;
+//   const inProgressCount = complaints.filter(c => c.status === 'pending').length;
+
+//   const firstName = user?.fullName || 'Resident';
+
+//   if (loading) {
+//     return <div className="flex justify-center items-center h-screen">Loading...</div>;
+//   }
+
+//   if (error) {
+//     return <div className="flex justify-center items-center h-screen text-red-500">{error}</div>;
+//   }
+
+//   return (
+//     <div className="flex h-screen w-full bg-white overflow-hidden">
+//       {/* Sidebar */}
+//       <div className={`fixed md:relative z-50 h-full ${mobileMenuOpen ? "block" : "hidden"} md:block`}>
+//         <Sidebar
+//           mobileMenuOpen={mobileMenuOpen}
+//           setMobileMenuOpen={setMobileMenuOpen}
+//           isExpanded={isExpanded}
+//           setIsExpanded={setIsExpanded}
+//           user={user}
+//         />
+//       </div>
+
+//       {/* Overlay for mobile menu */}
+//       {mobileMenuOpen && (
+//         <div
+//           className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+//           onClick={() => setMobileMenuOpen(false)}
+//         />
+//       )}
+
+//       {/* Main content area */}
+//       <div className="flex-1 flex flex-col overflow-hidden md:ml-16">
+//         <Header
+//           setMobileMenuOpen={setMobileMenuOpen}
+//           mobileMenuOpen={mobileMenuOpen}
+//           user={user}
+//         />
+
+//         <div className="flex-1 p-4 md:p-6 overflow-auto">
+//           {/* Top Section - Welcome and Stats */}
+//           <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-6 space-y-4 lg:space-y-0">
+//             <div className="w-full lg:w-2/3">
+//               <WelcomeSection firstName={firstName} />
+//             </div>
+//             <div className="w-full lg:w-1/3 flex space-x-2 sm:space-x-3 md:space-x-4">
+//               <StatsCard value={completedCount.toString()} label="Resolved" subLabel="Complaints" />
+//               <StatsCard value={inProgressCount.toString()} label="Pending" subLabel="Complaints" />
+//             </div>
+//           </div>
+
+//           {/* Main Content Area */}
+//           <div className="flex flex-col lg:flex-row lg:space-x-6 mt-6 space-y-6 lg:space-y-0">
+//             <div className="w-full lg:w-2/3 space-y-6">
+//               {selectedComplaint ? (
+//                 <ProgressCard
+//                   title={selectedComplaint.title}
+//                   subTitle={selectedComplaint.subTitle}
+//                   progress={selectedComplaint.progress}
+//                   icon={selectedComplaint.icon}
+//                 />
+//               ) : complaints.length > 0 ? (
+//                 <ProgressCard
+//                   title={complaints[0].title}
+//                   subTitle={complaints[0].subTitle}
+//                   progress={complaints[0].progress}
+//                   icon={complaints[0].icon}
+//                 />
+//               ) : (
+//                 <div className="bg-gray-100 rounded-lg p-6 text-center">
+//                   No complaints found. Report an issue to see progress here.
+//                 </div>
+//               )}
+
+//               <ComplaintsSection
+//                 complaints={complaints}
+//                 onViewProgress={handleViewProgress}
+//               />
+//             </div>
+
+//             <div className="w-full lg:w-1/3 space-y-6">
+//               <div>
+//                 <h2 className="text-xl md:text-2xl font-bold mb-4">
+//                   Work statistics
+//                 </h2>
+//                 <Chart />
+//               </div>
+//               {/* <ContactWidget /> */}
+//               <ChatWindow />
+//             </div>
+//           </div>
+//         </div>
+//         {/* Chatbot */}
+//         {/* <Chatbot /> */}
+//       </div>
+
+//     </div>
+//   );
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// "use client";
+// import { useState, useEffect } from "react";
+// import { useSelector } from 'react-redux';
+// import { ChevronDown } from "lucide-react";
+// import Sidebar from "../../components/Rdashboard/Sidebar";
+// import Header from "../../components/Rdashboard/Header";
+// import WelcomeSection from "../../components/Rdashboard/WelcomeSection";
+// import ProgressCard from "../../components/Rdashboard/ProgressCard";
+// import StatsCard from "../../components/Rdashboard/StatsCard";
+// import ComplaintsSection from "../../components/Rdashboard/ComplaintsSection";
+// // import Chart from "../../components/Rdashboard/WorkStatisticsChart";
+// import axios from 'axios';
+// import ChatWindow from '../../components/Chat/ChatWindow';
+// import { connectSocket, disconnectSocket } from '../../utils/socket';
+
+// export default function Dashboard() {
+//   const { user } = useSelector((state) => state.auth);
+//   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+//   const [isExpanded, setIsExpanded] = useState(false);
+//   const [selectedComplaint, setSelectedComplaint] = useState(null);
+//   const [complaints, setComplaints] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState(null);
+
+//   // ✅ Establish socket connection
+//   useEffect(() => {
+//     if (user?._id && user?.token) {
+//       connectSocket(user._id);
+//     }
+
+//     return () => {
+//       disconnectSocket();
+//     };
+//   }, [user?._id, user?.token]);
+
+//   // ✅ Fetch user issues
+//   useEffect(() => {
+//     const fetchUserIssues = async () => {
+//       try {
+//         const config = {
+//           headers: {
+//             Authorization: `Bearer ${user.token}`,
+//           },
+//         };
+
+//         const response = await axios.get('/api/issues/myissues', config);
+
+//         const transformedComplaints = response.data.issues.map(issue => ({
+//           id: issue._id,
+//           title: issue.title,
+//           subTitle: issue.description.length > 25
+//             ? issue.description.slice(0, 25) + "..."
+//             : issue.description,
+//           icon: issue.attachments?.length
+//             ? issue.attachments
+//             : [getIconForIssueType(issue.issueType)],
+//           time: calculateTimeSince(issue.createdAt),
+//           count: issue.upvotes,
+//           progress: calculateProgress(issue.status),
+//           status: issue.status,
+//           issueType: issue.issueType
+//         }));
+
+//         setComplaints(transformedComplaints);
+//         setLoading(false);
+//       } catch (err) {
+//         setError(err.response?.data?.message || 'Failed to fetch issues');
+//         setLoading(false);
+//         console.error('Error fetching issues:', err);
+//       }
+//     };
+
+//     if (user?.token) {
+//       fetchUserIssues();
+//     }
+//   }, [user]);
+
+//   const getIconForIssueType = (issueType) => {
+//     const icons = {
+//       societal: <span role="img" aria-label="Society" className="text-3xl md:text-4xl">🏘️</span>,
+//       household: <span role="img" aria-label="Home" className="text-3xl md:text-4xl">🏠</span>
+//     };
+//     return icons[issueType] || <span role="img" aria-label="Issue" className="text-3xl md:text-4xl">❓</span>;
+//   };
+
+//   const calculateTimeSince = (createdAt) => {
+//     const now = new Date();
+//     const createdDate = new Date(createdAt);
+//     const diffInHours = Math.floor((now - createdDate) / (1000 * 60 * 60));
+
+//     if (diffInHours === 0) return `few mins ago`;
+//     if (diffInHours < 24) return `${diffInHours}h ago`;
+
+//     const diffInDays = Math.floor(diffInHours / 24);
+//     return `${diffInDays}d ago`;
+//   };
+
+//   const calculateProgress = (status) => {
+//     switch (status) {
+//       case 'pending': return 20;
+//       case 'in_progress': return 50;
+//       case 'resolved': return 100;
+//       default: return 0;
+//     }
+//   };
+
+//   const handleViewProgress = (complaint) => setSelectedComplaint(complaint);
+
+//   const completedCount = complaints.filter(c => c.status === 'resolved').length;
+//   const inProgressCount = complaints.filter(c => c.status === 'pending').length;
+
+//   const firstName = user?.fullName || 'Resident';
+
+//   if (loading) {
+//     return <div className="flex justify-center items-center h-screen">Loading...</div>;
+//   }
+
+//   if (error) {
+//     return <div className="flex justify-center items-center h-screen text-red-500">{error}</div>;
+//   }
+
+//   return (
+//     <div className="flex h-screen w-full bg-white overflow-hidden">
+//       {/* Sidebar */}
+//       <div className={`fixed md:relative z-50 h-full ${mobileMenuOpen ? "block" : "hidden"} md:block`}>
+//         <Sidebar
+//           mobileMenuOpen={mobileMenuOpen}
+//           setMobileMenuOpen={setMobileMenuOpen}
+//           isExpanded={isExpanded}
+//           setIsExpanded={setIsExpanded}
+//           user={user}
+//         />
+//       </div>
+
+//       {/* Overlay for mobile */}
+//       {mobileMenuOpen && (
+//         <div
+//           className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+//           onClick={() => setMobileMenuOpen(false)}
+//         />
+//       )}
+
+//       {/* Main */}
+//       <div className="flex-1 flex flex-col overflow-hidden md:ml-16">
+//         <Header
+//           setMobileMenuOpen={setMobileMenuOpen}
+//           mobileMenuOpen={mobileMenuOpen}
+//           user={user}
+//         />
+
+//         <div className="flex-1 p-4 md:p-6 overflow-auto">
+//           <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-6 space-y-4 lg:space-y-0">
+//             <div className="w-full lg:w-2/3">
+//               <WelcomeSection firstName={firstName} />
+//             </div>
+//             <div className="w-full lg:w-1/3 flex space-x-2 sm:space-x-3 md:space-x-4">
+//               <StatsCard value={completedCount.toString()} label="Resolved" subLabel="Complaints" />
+//               <StatsCard value={inProgressCount.toString()} label="Pending" subLabel="Complaints" />
+//             </div>
+//           </div>
+
+//           <div className="flex flex-col lg:flex-row lg:space-x-6 mt-6 space-y-6 lg:space-y-0">
+//             <div className="w-full space-y-6">
+//               {selectedComplaint ? (
+//                 <ProgressCard {...selectedComplaint} />
+//               ) : complaints.length > 0 ? (
+//                 <ProgressCard {...complaints[0]} />
+//               ) : (
+//                 <div className="bg-gray-100 rounded-lg p-6 text-center">
+//                   No complaints found. Report an issue to see progress here.
+//                 </div>
+//               )}
+
+//               <ComplaintsSection
+//                 complaints={complaints}
+//                 onViewProgress={handleViewProgress}
+//               />
+//             </div>
+
+//             {/* <div className="w-full space-y-6">
+//               <h2 className="text-xl md:text-2xl font-bold mb-4">Work statistics</h2>
+//               <Chart />
+              
+//             </div> */}
+//           </div>
+//         </div>
+//       </div>
+//       <ChatWindow />
+//     </div>
+//   );
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// "use client";
+// import { useState, useEffect } from "react";
+// import { useSelector } from 'react-redux';
+// import { ChevronDown } from "lucide-react";
+// import Sidebar from "../../components/Rdashboard/Sidebar";
+// import Header from "../../components/Rdashboard/Header";
+// import WelcomeSection from "../../components/Rdashboard/WelcomeSection";
+// import ProgressCard from "../../components/Rdashboard/ProgressCard";
+// import StatsCard from "../../components/Rdashboard/StatsCard";
+// import ComplaintsSection from "../../components/Rdashboard/ComplaintsSection";
+// import axios from 'axios';
+// import ChatWindow from '../../components/Chat/ChatWindow';
+// import { connectSocket, disconnectSocket, socket } from '../../utils/socket';
+// import { toast } from 'react-toastify';
+
+// export default function Dashboard() {
+//   const { user } = useSelector((state) => state.auth);
+//   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+//   const [isExpanded, setIsExpanded] = useState(false);
+//   const [selectedComplaint, setSelectedComplaint] = useState(null);
+//   const [complaints, setComplaints] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState(null);
+
+//   // Socket connection
+//   useEffect(() => {
+//     if (user?._id && user?.token) {
+//       connectSocket(user._id);
+//     }
+
+//     return () => {
+//       disconnectSocket();
+//     };
+//   }, [user?._id, user?.token]);
+
+//   // Real-time updates listener
+//   useEffect(() => {
+//     const handleIssueUpdate = (updatedIssue) => {
+//       setComplaints(prevComplaints => 
+//         prevComplaints.map(complaint => 
+//           complaint.id === updatedIssue._id ? {
+//             ...complaint,
+//             progress: calculateProgress(updatedIssue.status),
+//             status: updatedIssue.status,
+//             // Update other fields if needed
+//           } : complaint
+//         )
+//       );
+      
+//       // Update selected complaint if it's the one being updated
+//       if (selectedComplaint?.id === updatedIssue._id) {
+//         setSelectedComplaint(prev => ({
+//           ...prev,
+//           progress: calculateProgress(updatedIssue.status),
+//           status: updatedIssue.status
+//         }));
+//       }
+
+//       toast.success(`Issue "${updatedIssue.title}" status updated to ${getStatusText(updatedIssue.status)}`);
+//     };
+
+//     socket?.on('issueUpdated', handleIssueUpdate);
+
+//     return () => {
+//       socket?.off('issueUpdated', handleIssueUpdate);
+//     };
+//   }, [selectedComplaint]);
+
+//   // Fetch user issues
+//   useEffect(() => {
+//     const fetchUserIssues = async () => {
+//       try {
+//         const config = {
+//           headers: {
+//             Authorization: `Bearer ${user.token}`,
+//           },
+//         };
+
+//         const response = await axios.get('/api/issues/myissues', config);
+
+//         const transformedComplaints = response.data.issues.map(issue => ({
+//           id: issue._id,
+//           title: issue.title,
+//           description: issue.description, // Keep full description
+//           subTitle: issue.description.length > 25
+//             ? issue.description.slice(0, 25) + "..."
+//             : issue.description,
+//           icon: issue.attachments?.length
+//             ? issue.attachments
+//             : [getIconForIssueType(issue.issueType)],
+//           time: calculateTimeSince(issue.createdAt),
+//           count: issue.upvotes,
+//           progress: calculateProgress(issue.status),
+//           status: issue.status,
+//           issueType: issue.issueType,
+//           createdAt: issue.createdAt,
+//           updatedAt: issue.updatedAt
+//         }));
+
+//         setComplaints(transformedComplaints);
+//         setLoading(false);
+//       } catch (err) {
+//         setError(err.response?.data?.message || 'Failed to fetch issues');
+//         setLoading(false);
+//         console.error('Error fetching issues:', err);
+//       }
+//     };
+
+//     if (user?.token) {
+//       fetchUserIssues();
+//     }
+//   }, [user]);
+
+//   const getIconForIssueType = (issueType) => {
+//     const icons = {
+//       societal: <span role="img" aria-label="Society" className="text-3xl md:text-4xl">🏘️</span>,
+//       household: <span role="img" aria-label="Home" className="text-3xl md:text-4xl">🏠</span>
+//     };
+//     return icons[issueType] || <span role="img" aria-label="Issue" className="text-3xl md:text-4xl">❓</span>;
+//   };
+
+//   const calculateTimeSince = (dateString) => {
+//     const now = new Date();
+//     const date = new Date(dateString);
+//     const diffInMs = now - date;
+//     const diffInMins = Math.floor(diffInMs / (1000 * 60));
+//     const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
+//     const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+
+//     if (diffInMins < 1) return "Just now";
+//     if (diffInMins < 60) return `${diffInMins}m ago`;
+//     if (diffInHours < 24) return `${diffInHours}h ago`;
+//     if (diffInDays === 1) return "Yesterday";
+//     return `${diffInDays}d ago`;
+//   };
+
+//   const calculateProgress = (status) => {
+//     switch (status) {
+//       case 'pending': return 20;
+//       case 'in_progress': return 50;
+//       case 'completed': return 100;
+//       default: return 0;
+//     }
+//   };
+
+//   const getStatusText = (status) => {
+//     switch (status) {
+//       case 'pending': return 'Pending';
+//       case 'in_progress': return 'In Progress';
+//       case 'completed': return 'Completed';
+//       default: return status;
+//     }
+//   };
+
+//   const handleViewProgress = (complaint) => {
+//     setSelectedComplaint(complaint);
+//   };
+
+//   // Stats calculations
+//   const completedCount = complaints.filter(c => c.status === 'completed').length;
+//   const pendingCount = complaints.filter(c => c.status !== 'completed').length;
+//   const firstName = user?.fullName?.split(' ')[0] || 'Resident';
+
+//   if (loading) {
+//     return (
+//       <div className="flex justify-center items-center h-screen">
+//         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+//       </div>
+//     );
+//   }
+
+//   if (error) {
+//     return (
+//       <div className="flex justify-center items-center h-screen text-red-500">
+//         {error}
+//       </div>
+//     );
+//   }
+
+//   return (
+//     <div className="flex h-screen w-full bg-white overflow-hidden">
+//       {/* Sidebar */}
+//       <div className={`fixed md:relative z-50 h-full ${mobileMenuOpen ? "block" : "hidden"} md:block`}>
+//         <Sidebar
+//           mobileMenuOpen={mobileMenuOpen}
+//           setMobileMenuOpen={setMobileMenuOpen}
+//           isExpanded={isExpanded}
+//           setIsExpanded={setIsExpanded}
+//           user={user}
+//         />
+//       </div>
+
+//       {/* Overlay for mobile */}
+//       {mobileMenuOpen && (
+//         <div
+//           className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+//           onClick={() => setMobileMenuOpen(false)}
+//         />
+//       )}
+
+//       {/* Main Content */}
+//       <div className="flex-1 flex flex-col overflow-hidden md:ml-16">
+//         <Header
+//           setMobileMenuOpen={setMobileMenuOpen}
+//           mobileMenuOpen={mobileMenuOpen}
+//           user={user}
+//         />
+
+//         <div className="flex-1 p-4 md:p-6 overflow-auto">
+//           <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-6 space-y-4 lg:space-y-0">
+//             <div className="w-full lg:w-2/3">
+//               <WelcomeSection firstName={firstName} />
+//             </div>
+//             <div className="w-full lg:w-1/3 flex space-x-2 sm:space-x-3 md:space-x-4">
+//               <StatsCard 
+//                 value={completedCount.toString()} 
+//                 label="Resolved" 
+//                 subLabel="Complaints" 
+//                 trend="up"
+//               />
+//               <StatsCard 
+//                 value={pendingCount.toString()} 
+//                 label="Pending" 
+//                 subLabel="Complaints" 
+//                 trend="down"
+//               />
+//             </div>
+//           </div>
+
+//           <div className="flex flex-col lg:flex-row lg:space-x-6 mt-6 space-y-6 lg:space-y-0">
+//             <div className="w-full space-y-6">
+//               {selectedComplaint ? (
+//                 <ProgressCard {...selectedComplaint} />
+//               ) : complaints.length > 0 ? (
+//                 <ProgressCard {...complaints[0]} />
+//               ) : (
+//                 <div className="bg-gray-100 rounded-lg p-6 text-center">
+//                   No complaints found. Report an issue to see progress here.
+//                 </div>
+//               )}
+
+//               <ComplaintsSection
+//                 complaints={complaints}
+//                 onViewProgress={handleViewProgress}
+//               />
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//       <ChatWindow />
+//     </div>
+//   );
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"use client";
+import { useState, useEffect, useCallback } from "react";
+import { useSelector } from 'react-redux';
 import { ChevronDown } from "lucide-react";
 import Sidebar from "../../components/Rdashboard/Sidebar";
 import Header from "../../components/Rdashboard/Header";
@@ -114,39 +1007,218 @@ import WelcomeSection from "../../components/Rdashboard/WelcomeSection";
 import ProgressCard from "../../components/Rdashboard/ProgressCard";
 import StatsCard from "../../components/Rdashboard/StatsCard";
 import ComplaintsSection from "../../components/Rdashboard/ComplaintsSection";
-import Chart from "../../components/Rdashboard/WorkStatisticsChart";
-// import Chart from "../../components/Rdashboard/Chart";
-// import ChatWidget from "../../components/Rdashboard/ChatWidget";
-import { complaints } from "../../components/data/complaints";
-import ContactWidget from "../../components/Rdashboard/ContactWidget";
+import axios from 'axios';
+import ChatWindow from '../../components/Chat/ChatWindow';
+import { 
+  connectSocket, 
+  disconnectSocket, 
+  getSocket,
+  onConnect,
+  onDisconnect
+} from '../../utils/socket';
+import { toast } from 'react-toastify';
 
 export default function Dashboard() {
+  const { user } = useSelector((state) => state.auth);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  //   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedComplaint, setSelectedComplaint] = useState(null);
+  const [complaints, setComplaints] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [socketConnected, setSocketConnected] = useState(false);
 
-  const handleViewProgress = (complaint) => {
-    setSelectedComplaint(complaint);
+  // Memoized calculation functions
+  const calculateProgress = useCallback((status) => {
+    switch (status) {
+      case 'pending': return 20;
+      case 'in_progress': return 50;
+      case 'completed': return 100;
+      default: return 0;
+    }
+  }, []);
+
+  const getStatusText = useCallback((status) => {
+    switch (status) {
+      case 'pending': return 'Pending';
+      case 'in_progress': return 'In Progress';
+      case 'completed': return 'Completed';
+      default: return status;
+    }
+  }, []);
+
+  // Socket connection management
+  useEffect(() => {
+    if (!user?._id) return;
+
+    const handleConnect = () => {
+      setSocketConnected(true);
+      toast.dismiss();
+      toast.success('Real-time updates connected');
+    };
+
+    const handleDisconnect = () => {
+      setSocketConnected(false);
+      toast.warn('Connection lost - attempting to reconnect...');
+    };
+
+    connectSocket(user._id);
+    onConnect(handleConnect);
+    onDisconnect(handleDisconnect);
+
+    return () => {
+      disconnectSocket(true);
+      const socket = getSocket();
+      socket?.off('connect', handleConnect);
+      socket?.off('disconnect', handleDisconnect);
+    };
+  }, [user?._id]);
+
+  // Real-time updates listener
+  useEffect(() => {
+    const socket = getSocket();
+    if (!socket) return;
+
+    const handleIssueUpdate = (updatedIssue) => {
+      setComplaints(prev => 
+        prev.map(complaint => 
+          complaint.id === updatedIssue._id ? {
+            ...complaint,
+            progress: calculateProgress(updatedIssue.status),
+            status: updatedIssue.status,
+            updatedAt: updatedIssue.updatedAt
+          } : complaint
+        )
+      );
+
+      if (selectedComplaint?.id === updatedIssue._id) {
+        setSelectedComplaint(prev => ({
+          ...prev,
+          progress: calculateProgress(updatedIssue.status),
+          status: updatedIssue.status,
+          updatedAt: updatedIssue.updatedAt
+        }));
+      }
+
+      toast.success(`Status updated: ${updatedIssue.title} is now ${getStatusText(updatedIssue.status)}`);
+    };
+
+    socket.on('issueUpdated', handleIssueUpdate);
+
+    return () => {
+      socket.off('issueUpdated', handleIssueUpdate);
+    };
+  }, [selectedComplaint, calculateProgress, getStatusText]);
+
+  // Fetch user issues
+  useEffect(() => {
+    const fetchUserIssues = async () => {
+      try {
+        const config = {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        };
+
+        const response = await axios.get('/api/issues/myissues', config);
+        
+        const transformIssue = (issue) => ({
+          id: issue._id,
+          title: issue.title,
+          description: issue.description,
+          subTitle: issue.description.length > 25
+            ? `${issue.description.slice(0, 25)}...`
+            : issue.description,
+          icon: issue.attachments?.length
+            ? issue.attachments
+            : getIconForIssueType(issue.issueType),
+          time: calculateTimeSince(issue.createdAt),
+          count: issue.upvotes,
+          progress: calculateProgress(issue.status),
+          status: issue.status,
+          issueType: issue.issueType,
+          createdAt: issue.createdAt,
+          updatedAt: issue.updatedAt
+        });
+
+        setComplaints(response.data.issues.map(transformIssue));
+        setLoading(false);
+      } catch (err) {
+        setError(err.response?.data?.message || 'Failed to fetch issues');
+        setLoading(false);
+        console.error('Error fetching issues:', err);
+      }
+    };
+
+    if (user?.token) {
+      fetchUserIssues();
+    }
+  }, [user, calculateProgress]);
+
+  // Helper functions
+  const getIconForIssueType = (issueType) => {
+    const icons = {
+      societal: <span role="img" aria-label="Society">🏘️</span>,
+      household: <span role="img" aria-label="Home">🏠</span>
+    };
+    return icons[issueType] || <span role="img" aria-label="Issue">❓</span>;
   };
+
+  const calculateTimeSince = (dateString) => {
+    const now = new Date();
+    const date = new Date(dateString);
+    const diffInMs = now - date;
+    const diffInMins = Math.floor(diffInMs / (1000 * 60));
+    const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
+    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+
+    if (diffInMins < 1) return "Just now";
+    if (diffInMins < 60) return `${diffInMins}m ago`;
+    if (diffInHours < 24) return `${diffInHours}h ago`;
+    if (diffInDays === 1) return "Yesterday";
+    return `${diffInDays}d ago`;
+  };
+
+  const handleViewProgress = useCallback((complaint) => {
+    setSelectedComplaint(complaint);
+  }, []);
+
+  // Stats calculations
+  const completedCount = complaints.filter(c => c.status === 'completed').length;
+  const pendingCount = complaints.filter(c => c.status !== 'completed').length;
+  const firstName = user?.fullName?.split(' ')[0] || 'Resident';
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center h-screen text-red-500">
+        {error}
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen w-full bg-white overflow-hidden">
-      {/* Sidebar - fixed width and properly positioned */}
-      <div
-        className={`fixed md:relative z-50 h-full ${
-          mobileMenuOpen ? "block" : "hidden"
-        } md:block`}
-      >
+      {/* Sidebar */}
+      <div className={`fixed md:relative z-50 h-full ${mobileMenuOpen ? "block" : "hidden"} md:block`}>
         <Sidebar
           mobileMenuOpen={mobileMenuOpen}
           setMobileMenuOpen={setMobileMenuOpen}
           isExpanded={isExpanded}
           setIsExpanded={setIsExpanded}
+          user={user}
+          socketConnected={socketConnected}
         />
       </div>
 
-      {/* Overlay for mobile menu */}
+      {/* Overlay for mobile */}
       {mobileMenuOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
@@ -154,50 +1226,46 @@ export default function Dashboard() {
         />
       )}
 
-      {/* Main content area */}
+      {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden md:ml-16">
         <Header
           setMobileMenuOpen={setMobileMenuOpen}
           mobileMenuOpen={mobileMenuOpen}
+          user={user}
+          socketConnected={socketConnected}
         />
 
         <div className="flex-1 p-4 md:p-6 overflow-auto">
-          {/* Top Section - Welcome and Stats */}
           <div className="flex flex-col lg:flex-row lg:items-start lg:space-x-6 space-y-4 lg:space-y-0">
-            {/* Welcome Section - takes 2/3 space on large screens */}
             <div className="w-full lg:w-2/3">
-              <WelcomeSection />
+              <WelcomeSection firstName={firstName} />
             </div>
-
-            {/* Stats Cards - takes 1/3 space on large screens */}
-            {/* <div className="w-full lg:w-1/3 flex space-x-4">
-              <StatsCard value="11" label="completed" subLabel="work" />
-              <StatsCard value="4" label="in progress" subLabel="Work" />
-            </div> */}
             <div className="w-full lg:w-1/3 flex space-x-2 sm:space-x-3 md:space-x-4">
-              <StatsCard value="11" label="completed" subLabel="work" />
-              <StatsCard value="4" label="in progress" subLabel="Work" />
+              <StatsCard 
+                value={completedCount.toString()} 
+                label="Resolved" 
+                subLabel="Complaints" 
+                trend="up"
+              />
+              <StatsCard 
+                value={pendingCount.toString()} 
+                label="Pending" 
+                subLabel="Complaints" 
+                trend="down"
+              />
             </div>
           </div>
 
-          {/* Main Content Area */}
           <div className="flex flex-col lg:flex-row lg:space-x-6 mt-6 space-y-6 lg:space-y-0">
-            {/* Left Column - Progress and Complaints */}
-            <div className="w-full lg:w-2/3 space-y-6">
+            <div className="w-full space-y-6">
               {selectedComplaint ? (
-                <ProgressCard
-                  title={selectedComplaint.title}
-                  subTitle={selectedComplaint.subTitle}
-                  progress={selectedComplaint.progress}
-                  icon={selectedComplaint.icon}
-                />
+                <ProgressCard {...selectedComplaint} />
+              ) : complaints.length > 0 ? (
+                <ProgressCard {...complaints[0]} />
               ) : (
-                <ProgressCard
-                  title={complaints[0].title}
-                  subTitle={complaints[0].subTitle}
-                  progress={complaints[0].progress}
-                  icon={complaints[0].icon}
-                />
+                <div className="bg-gray-100 rounded-lg p-6 text-center">
+                  No complaints found. Report an issue to see progress here.
+                </div>
               )}
 
               <ComplaintsSection
@@ -205,23 +1273,10 @@ export default function Dashboard() {
                 onViewProgress={handleViewProgress}
               />
             </div>
-
-            {/* Right Column - Chart and Chat (hidden on mobile) */}
-            <div className="w-full lg:w-1/3 space-y-6 ">
-              <div>
-                <h2 className="text-xl md:text-2xl font-bold mb-4">
-                  Work statistics
-                </h2>
-              
-                <Chart />
-              {/* <ChatWidget /> */}
-              </div>
-              
-              <ContactWidget />
-            </div>
           </div>
         </div>
       </div>
+      <ChatWindow userId={user?._id} />
     </div>
   );
 }

@@ -1,8 +1,11 @@
+
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { useNavigate } from "react-router-dom" // Import useNavigate for navigation
+import { useNavigate, useLocation } from "react-router-dom"
+import axios from 'axios';
 import logo from "../../assets/logo.png"
+
 
 export default function OtpVerification() {
   // State for the 4 OTP digits
@@ -10,24 +13,35 @@ export default function OtpVerification() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState("")
   const [success, setSuccess] = useState(false)
-  const [resendMessage, setResendMessage] = useState("") // New state for Resend OTP message
+  const [resendMessage, setResendMessage] = useState("")
 
-  const navigate = useNavigate() // Initialize useNavigate
+  const navigate = useNavigate()
+  const location = useLocation()
+  const queryParams = new URLSearchParams(location.search);
+  // const context = queryParams.get("context");
+  const context = queryParams.get("context") || "forgot-password";
+  let email = location.state?.email || "" // Get email from navigation state
+  if (context === "signup" && !email) {
+    const signupData = JSON.parse(sessionStorage.getItem("signupFormData"));
+    email = signupData?.email || "";
+  }
 
-  // Create refs for each input to enable focus management
-  const inputRefs = [useRef(null), useRef(null), useRef(null), useRef(null)]
+  // Create refs for each input
+  const inputRefs = [
+    useRef(null),
+    useRef(null),
+    useRef(null),
+    useRef(null)
+  ]
 
   // Handle input change
   const handleChange = (index, value) => {
-    // Only allow numbers
     if (value && !/^\d+$/.test(value)) return
 
-    // Update the OTP array
     const newOtp = [...otp]
     newOtp[index] = value
     setOtp(newOtp)
 
-    // If value is entered and not the last input, focus next input
     if (value && index < 3) {
       inputRefs[index + 1].current.focus()
     }
@@ -35,7 +49,6 @@ export default function OtpVerification() {
 
   // Handle key press
   const handleKeyDown = (index, e) => {
-    // If backspace is pressed and current input is empty, focus previous input
     if (e.key === "Backspace" && !otp[index] && index > 0) {
       inputRefs[index - 1].current.focus()
     }
@@ -45,59 +58,107 @@ export default function OtpVerification() {
   const handlePaste = (e) => {
     e.preventDefault()
     const pastedData = e.clipboardData.getData("text/plain").trim()
-
-    // Check if pasted content is a 4-digit number
     if (/^\d{4}$/.test(pastedData)) {
       const newOtp = pastedData.split("")
       setOtp(newOtp)
-
-      // Focus the last input
       inputRefs[3].current.focus()
     }
   }
 
-  // Handle form submission
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setError("")
 
-    // Check if OTP is complete
-    if (otp.some((digit) => digit === "")) {
-      setError("Please enter the complete OTP")
+    // Validate OTP is complete
+    if (otp.some(digit => digit === "")) {
+      setError("Please enter the complete 4-digit code")
       return
     }
 
-    // Simulate API call
     setIsSubmitting(true)
-    setTimeout(() => {
+
+    try {
+      const endpoint =
+  context === "signup"
+    ? "http://localhost:5000/api/users/verify-signup-otp"
+    : "http://localhost:5000/api/auth/verify-otp";
+
+    const response = await axios.post(endpoint, {
+  email,
+  otp: otp.join(""), // assuming otp is array of 4 digits
+});
+      
+
+      if (response.data.success) {
+        if (context === "signup") {
+          const signupData = JSON.parse(sessionStorage.getItem("signupFormData"));
+          try {
+            const res = await axios.post("http://localhost:5000/api/users/signup", signupData);
+            if (res.status === 201) {
+              setSuccess(true);
+              setTimeout(() => {
+                sessionStorage.removeItem("signupFormData");
+                navigate("/auth/login");
+              }, 2000);
+            } else {
+              setError("Signup failed after OTP verification");
+            }
+          } catch (err) {
+            setError("Signup failed: " + (err.response?.data?.message || err.message));
+          }
+        } else {
+          setSuccess(true);
+          setTimeout(() => {
+            navigate("/auth/NewPassword", { state: { email } });
+          }, 1500);
+        }
+      }
+
+    } catch (error) {
+      console.error("OTP verification error:", error)
+      setError(error.response?.data?.message ||
+        error.message ||
+        "Failed to verify OTP. Please try again.")
+    } finally {
       setIsSubmitting(false)
-      setSuccess(true)
-
-      // Wait for 2 seconds before navigating to reset password page
-      setTimeout(() => {
-        navigate("/auth/NewPassword")
-      }, 2000) // Redirect after 2 seconds
-    }, 1500)
+    }
   }
 
-  // Handle Resend OTP
-  const handleResendOtp = () => {
-    // Simulate resend OTP API call
-    setResendMessage("Password reset code has been Resent to your email")
 
-    // Optionally, clear OTP and focus the first input again
-    setOtp(["", "", "", ""])
-    inputRefs[0].current.focus()
 
-    // Hide the resend message after 4 seconds
-    setTimeout(() => {
-      setResendMessage("")
-    }, 4000)
+
+
+
+  // Handle resend OTP
+  const handleResendOtp = async () => {
+    setError("")
+    setResendMessage("")
+
+    try {
+      const response = await axios.post('http://localhost:5000/api/users/forgot-password', { email })
+
+      if (response.data.success) {
+        setResendMessage("New OTP sent to your email")
+        setOtp(["", "", "", ""])
+        inputRefs[0].current.focus()
+      } else {
+        setError(response.data.message || "Failed to resend OTP")
+      }
+    } catch (error) {
+      setError(error.response?.data?.message ||
+        "Failed to resend OTP. Please try again.")
+    }
   }
 
-  // Focus first input on component mount
+  // Focus first input on mount
   useEffect(() => {
-    inputRefs[0].current.focus()
+    if (!email) {
+      // Redirect if no email is found (direct access to this page)
+      navigate("/auth/forgot-password")
+    } else {
+      inputRefs[0].current.focus()
+    }
   }, [])
 
   return (
@@ -122,39 +183,48 @@ export default function OtpVerification() {
 
           <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8 md:space-y-10">
             <div>
-              <p className="text-base sm:text-lg md:text-xl mb-4 sm:mb-6">Enter OTP we have sent to your Email</p>
+              <p className="text-base sm:text-lg md:text-xl mb-4 sm:mb-6">
+                Enter OTP sent to {email}
+              </p>
 
               {/* OTP Input Fields */}
               <div className="flex justify-between gap-2 sm:gap-4">
-                {otp.map((digit, index) => (
+                {[0, 1, 2, 3].map((index) => (
                   <input
                     key={index}
                     ref={inputRefs[index]}
                     type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     maxLength={1}
-                    value={digit}
+                    value={otp[index]}
                     onChange={(e) => handleChange(index, e.target.value)}
                     onKeyDown={(e) => handleKeyDown(index, e)}
-                    onPaste={index === 0 ? handlePaste : null}
+                    onPaste={index === 0 ? handlePaste : undefined}
                     className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 text-center text-xl sm:text-2xl md:text-3xl bg-gray-100 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
                     aria-label={`OTP digit ${index + 1}`}
+                    disabled={isSubmitting || success}
                   />
                 ))}
               </div>
 
               {/* Error Message */}
-              {error && <p className="mt-2 text-red-500 text-sm sm:text-base">{error}</p>}
+              {error && (
+                <p className="mt-2 text-red-500 text-sm sm:text-base">
+                  {error}
+                </p>
+              )}
 
               {/* Success Message */}
               {success && (
                 <div className="mt-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-md">
-                  OTP verified successfully! Redirecting to reset password...
+                  OTP verified successfully! Redirecting...
                 </div>
               )}
 
-              {/* Resend OTP Message */}
+              {/* Resend Message */}
               {resendMessage && (
-                <div className="mt-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-md">
+                <div className="mt-4 bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded-md">
                   {resendMessage}
                 </div>
               )}
@@ -167,15 +237,16 @@ export default function OtpVerification() {
                 disabled={isSubmitting || success}
                 className="cursor-pointer bg-black text-white px-8 sm:px-10 md:px-12 py-2.5 sm:py-3 rounded-full text-base sm:text-lg font-medium w-full sm:w-auto disabled:opacity-70"
               >
-                {isSubmitting ? "Verifying..." : "Confirm"}
+                {isSubmitting ? "Verifying..." : "Verify OTP"}
               </button>
 
               <div className="mt-3 sm:mt-4 text-xs sm:text-sm text-gray-600">
                 Didn't receive the code?{" "}
                 <button
                   type="button"
-                  onClick={handleResendOtp} // Trigger Resend OTP logic
-                  className="cursor-pointer text-blue-600 hover:underline"
+                  onClick={handleResendOtp}
+                  disabled={isSubmitting}
+                  className="cursor-pointer text-blue-600 hover:underline disabled:text-gray-400"
                 >
                   Resend OTP
                 </button>

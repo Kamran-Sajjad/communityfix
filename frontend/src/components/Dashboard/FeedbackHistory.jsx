@@ -1,74 +1,148 @@
-import React, { useState, useEffect } from "react";
+// // frontend/src/pages/admin/FeedbackHistory.jsx
+// import React, { useEffect, useState } from "react";
+// import AdSideBare from "../../components/Dashboard/AdSideBare";
+// import FeedbackCard from "../../components/Dashboard/FeedbackCard";
+// import { AdHeader } from "../../components/Dashboard/AdHeader";
+// import axios from "axios";
+
+// const FeedbackHistory = () => {
+//   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
+//   const [feedback, setFeedback] = useState([]);
+
+//   const toggleSidebar = () => {
+//     setIsSidebarExpanded(!isSidebarExpanded);
+//   };
+
+//   const fetchFeedback = async () => {
+//     try {
+//       const { data } = await axios.get("/api/feedback");
+//       setFeedback(data);
+//     } catch (error) {
+//       console.error("Error fetching feedback:", error);
+//     }
+//   };
+
+//   useEffect(() => {
+//     fetchFeedback();
+//   }, []);
+
+//   return (
+//     <div className="flex min-h-screen bg-gray-100">
+//       <div
+//         className={`fixed md:relative transition-all duration-300 bg-black ${isSidebarExpanded ? "w-64" : "w-16"
+//           }`}
+//       >
+//         <AdSideBare isExpanded={isSidebarExpanded} toggleSidebar={toggleSidebar} />
+//       </div>
+
+//       <div
+//         className={`flex-1 p-4 sm:p-6 md:p-8 transition-all duration-300 ${isSidebarExpanded ? "ml-14" : "ml-6"
+//           }`}
+//       >
+//         <AdHeader title="Feedback History" />
+//         <div className="space-y-4 max-w-full md:max-w-5xl mx-auto">
+//           {feedback.length > 0 ? (
+//             feedback.map((item) => (
+//               <FeedbackCard
+//                 key={item._id}
+//                 feedback={{
+//                   ...item,
+//                   imageUrl: item.imageUrl?.startsWith("http")
+//                     ? item.imageUrl
+//                     : item.imageUrl
+//                       ? `http://localhost:5000/uploads/${item.imageUrl}`
+//                       : "",
+//                 }}
+//               />
+//             ))
+//           ) : (
+//             <p className="text-center text-gray-500">No feedback submitted yet.</p>
+//           )}
+
+         
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default FeedbackHistory;
+
+import React, { useEffect, useState } from "react";
 import AdSideBare from "../../components/Dashboard/AdSideBare";
 import FeedbackCard from "../../components/Dashboard/FeedbackCard";
 import { AdHeader } from "../../components/Dashboard/AdHeader";
-import Image from "../../assets/logo.png";
-
-// Placeholder for data.json (replace with actual import tomorrow)
-const feedbackData = [
-  {
-    id: 1,
-    issue: "Solar Installation",
-    issueImage: "", 
-    userName: "Hamza Raza ",
-    userAvatar: "",
-    date: "2023-10-01",
-    message: "Great service! Very satisfied with the support.",
-    rating: 5,
-  },
-  {
-    id: 2,
-    issue: "Electricity Issue",
-    issueImage: "", // Add issue image URL
-    userName: "Sami Ullah",
-    userAvatar: "", // Invalid URL to test fallback
-    date: "2023-10-02",
-    message: "The product could be better, but overall a good experience.",
-    rating: 4,
-  },
-];
+import axios from "axios";
 
 const FeedbackHistory = () => {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
   const [feedback, setFeedback] = useState([]);
 
-  useEffect(() => {
-    // Simulate fetching data from data.json
-    setFeedback(feedbackData);
-  }, []);
-
   const toggleSidebar = () => {
     setIsSidebarExpanded(!isSidebarExpanded);
   };
 
+  const fetchFeedback = async () => {
+    try {
+      const { data } = await axios.get("/api/feedback");
+      setFeedback(data);
+    } catch (error) {
+      console.error("Error fetching feedback:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchFeedback();
+  }, []);
+
   return (
-    <div className="flex min-h-screen bg-gray-100">
-      {/* Sidebar */}
+    <div className="flex bg-gray-100 w-full h-auto">
       <div
-        className={`fixed md:relative transition-all duration-300 ease-in-out bg-black ${
+        className={`fixed md:relative transition-all duration-300 bg-black ${
           isSidebarExpanded ? "w-64" : "w-16"
         }`}
       >
         <AdSideBare isExpanded={isSidebarExpanded} toggleSidebar={toggleSidebar} />
       </div>
 
-      {/* Main Content */}
-      <div
+{/* <<<<<<< ST/basit */}
+
+
+
+
+
+      {/* <div
         className={`flex-1 p-4 sm:p-6 md:p-8 transition-all duration-300 ${
           isSidebarExpanded ? "ml-14" : "ml-6"
-        }`}
-      >
-        {/* Header Section */}
-        <AdHeader className="ml-2" title="Feedback History" />
+        } h-auto`} */}
 
-        {/* Feedback List */}
-        <div className="mx-auto max-w-full md:max-w-7xl space-y-4">
+     
+      <div
+        className={`flex-1 p-2 transition-all duration-300 ${isSidebarExpanded ? "ml-14" : "ml-0"
+          } h-auto`}
+
+
+
+
+      >
+        <AdHeader title="Feedback History" />
+        <div className="space-y-4 max-w-full md:max-w-5xl mx-auto h-auto">
           {feedback.length > 0 ? (
-            feedback.map((feedbackItem) => (
-              <FeedbackCard key={feedbackItem.id} feedback={feedbackItem} />
+            feedback.map((item) => (
+              <FeedbackCard
+                key={item._id}
+                feedback={{
+                  ...item,
+                  imageUrl: item.imageUrl?.startsWith("http")
+                    ? item.imageUrl
+                    : item.imageUrl
+                    ? `http://localhost:5000/uploads/${item.imageUrl}`
+                    : "",
+                }}
+              />
             ))
           ) : (
-            <p className="text-center text-gray-500">No feedback available.</p>
+            <p className="text-center text-gray-500">No feedback submitted yet.</p>
           )}
         </div>
       </div>
