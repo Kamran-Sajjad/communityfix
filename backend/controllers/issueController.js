@@ -700,7 +700,7 @@ export const createIssue = async (req, res) => {
 // Get all issues
 export const getAllIssues = async (req, res) => {
   try {
-    const { issueType, issueCategory } = req.query;
+    const { issueType, issueCategory ,status} = req.query;
 
     // Build the filter object
     let filter = {};
@@ -713,6 +713,9 @@ export const getAllIssues = async (req, res) => {
     // Add issueCategory to filter if it exists
     if (issueCategory) {
       filter.issueCategory = issueCategory;
+    }
+    if (status) {
+      filter.status = status;
     }
 
     // Find the issues based on the filter
@@ -853,7 +856,10 @@ export const getUserIssues = async (req, res) => {
       return res.status(400).json({ success: false, message: 'User not authenticated' });
     }
 
-    const issues = await Issue.find({ createdBy: userId }).select('title description issueType status upvotes createdAt attachments');
+    // const issues = await Issue.find({ createdBy: userId }).select('title description issueType status upvotes createdAt attachments');
+    const issues = await Issue.find({ createdBy: userId })
+  .select('title description issueType status upvotes createdAt attachments progress updatedAt');
+
     return res.status(200).json({ success: true, issues });
   } catch (error) {
     console.error("Error in getUserIssues:", error);
@@ -1110,17 +1116,6 @@ export const updateIssueStatus = async (req, res) => {
 
     // const isCreator = existingIssue.createdBy._id.equals(req.user._id);
     const isCreator = existingIssue.createdBy?._id?.toString() === req.user._id.toString();
-
-    // let isAssignedTeam = false;
-    // if (Array.isArray(existingIssue.assignedToServiceTeam)) {
-    //   isAssignedTeam = existingIssue.assignedToServiceTeam.some((m) =>
-    //     m._id.equals(req.user._id)
-    //   );
-    // } else if (existingIssue.assignedToServiceTeam?._id) {
-    //   isAssignedTeam = existingIssue.assignedToServiceTeam._id.equals(req.user._id);
-    // }
-
-
 
 
     let isAssignedTeam = false;
