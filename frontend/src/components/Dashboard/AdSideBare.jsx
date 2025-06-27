@@ -444,18 +444,164 @@
 
 
 
+// import React, { useState } from "react";
+// import OutsideClickHandler from "react-outside-click-handler";
+// import { FaUser, FaExclamationCircle, FaChartLine, FaCog, FaSignOutAlt, FaChevronRight, FaChevronLeft, FaHome, FaBars, FaUserPlus, FaUserEdit } from "react-icons/fa";
+// import { Link } from "react-router-dom";
+// import { useDispatch } from 'react-redux';
+// import { logout } from "../../features/auth/authSlice";  // Import logout action
+// import logo from "../../assets/logo.png";
+
+// const AdSideBare = () => {
+//   const dispatch = useDispatch();
+//   const [isExpanded, setIsExpanded] = useState(false);  // To control sidebar expand/collapse on desktop
+//   const [isMobileOpen, setIsMobileOpen] = useState(false);  // To control sidebar visibility on mobile
+
+//   const toggleSidebar = () => {
+//     setIsExpanded(!isExpanded);
+//   };
+
+//   const closeSidebar = () => {
+//     setIsExpanded(false);
+//     setIsMobileOpen(false);
+//   };
+
+//   const toggleMobileMenu = () => {
+//     setIsMobileOpen(!isMobileOpen);
+//   };
+
+//   const showExpanded = isExpanded || isMobileOpen;
+
+//   const navItems = [
+//     { icon: <FaHome className="w-5 h-5" />, text: "Dashboard", path: "/admin/admindb" },
+//     { icon: <FaUser className="w-5 h-5" />, text: "Registered Users", path: "/admin/requestedusers" },
+//     { icon: <FaExclamationCircle className="w-5 h-5" />, text: "Requested Issues", path: "/admin/requestedreports" },
+//     { icon: <FaUserPlus className="w-5 h-5" />, text: "Create Admin", path: "/admin/createadmin" },
+//     { icon: <FaChartLine className="w-5 h-5" />, text: "Analytics", path: "/admin/analytics" },
+//     { icon: <FaUserEdit className="w-5 h-5" />, text: "Update Profile", path: "/admin/updateprofile" },
+//     {
+//       icon: <FaSignOutAlt className="w-5 h-5 text-red-500" /> ,
+//       text: "Logout",
+//       action: () => {
+//         dispatch(logout());
+//         window.location.href = "/auth/login";
+//       },
+//     },
+//   ];
+
+//   return (
+//     <>
+//       {/* Hamburger Button */}
+//       <button
+//         onClick={toggleMobileMenu}
+//         className={`md:hidden fixed top-4 left-4 z-40 bg-gray-800 text-white p-2 rounded-md shadow-md transition-all ${isMobileOpen ? "opacity-0 pointer-events-none" : "opacity-100"}`}
+//       >
+//         <FaBars className="w-5 h-5" />
+//       </button>
+
+//       <OutsideClickHandler onOutsideClick={closeSidebar}>
+//         <div
+//           className={`fixed left-0 top-0 h-full bg-gray-900 text-white shadow-lg transition-all duration-300 ease-in-out ${isExpanded ? "w-60" : "w-16"} ${isMobileOpen ? "translate-x-0 z-40" : "-translate-x-full md:translate-x-0 z-20"}`}
+//         >
+//           {/* Logo Section - Show text 'CF' when on mobile, and logo when expanded */}
+//           <div className="flex justify-center items-center py-6">
+//             {isMobileOpen ? (
+//               <span className="text-2xl mt-2 font-bold">CF.</span> // Showing CF text on mobile
+//             ) : isExpanded ? (
+//               <img src={logo} alt="Logo" className="w-24 h-auto rounded-sm" />  // Logo on expanded sidebar
+//             ) : (
+//               <span className="text-2xl font-bold">CF.</span>  // Also showing CF text in collapsed sidebar on desktop
+//             )}
+//           </div>
+
+//           {/* Toggle Button */}
+//           <button
+//             onClick={toggleSidebar}
+//             className="absolute top-6 -right-4 bg-gray-800 text-white p-2 rounded-full shadow-md hover:bg-blue-600 transition hidden md:block z-10"
+//           >
+//             {isExpanded ? (
+//               <FaChevronLeft className="w-4 h-4" />
+//             ) : (
+//               <FaChevronRight className="w-4 h-4" />
+//             )}
+//           </button>
+
+//           {/* Close button for mobile */}
+//           <button
+//             onClick={closeSidebar}
+//             className="md:hidden absolute top-1 right-2 text-white p-2 z-10"
+//           >
+//             ✕
+//           </button>
+
+//           {/* Navigation Items */}
+//           <ul className="mt-1 space-y-2 px-2">
+//             {navItems.map((item, index) => (
+//               <li key={index} className="group flex items-center p-3 rounded-md hover:bg-gray-700 cursor-pointer transition duration-200 relative">
+//                 <Link to={item.path} className="flex items-center w-full" onClick={closeSidebar}>
+//                   <span className="flex-shrink-0">{item.icon}</span>
+//                   {/* Tooltip for collapsed state */}
+//                   {!isExpanded && (
+//                     <div className="absolute left-16 bg-black text-white text-sm px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
+//                       {item.text}
+//                     </div>
+//                   )}
+//                   {/* Text for expanded state */}
+//                   {isExpanded && (
+//                     <span className="ml-3 text-sm font-medium">{item.text}</span>
+//                   )}
+//                 </Link>
+//               </li>
+//             ))}
+//           </ul>
+//         </div>
+//       </OutsideClickHandler>
+//     </>
+//   );
+// };
+
+// export default AdSideBare;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import React, { useState } from "react";
 import OutsideClickHandler from "react-outside-click-handler";
-import { FaUser, FaExclamationCircle, FaChartLine, FaCog, FaSignOutAlt, FaChevronRight, FaChevronLeft, FaHome, FaBars, FaUserPlus, FaUserEdit } from "react-icons/fa";
+import {
+  FaUser,
+  FaExclamationCircle,
+  FaChartLine,
+  FaCog,
+  FaSignOutAlt,
+  FaChevronRight,
+  FaChevronLeft,
+  FaHome,
+  FaBars,
+  FaUserPlus,
+  FaUserEdit,
+} from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { useDispatch } from 'react-redux';
-import { logout } from "../../features/auth/authSlice";  // Import logout action
+import { useDispatch } from "react-redux";
+import { logout } from "../../features/auth/authSlice";
 import logo from "../../assets/logo.png";
 
 const AdSideBare = () => {
   const dispatch = useDispatch();
-  const [isExpanded, setIsExpanded] = useState(false);  // To control sidebar expand/collapse on desktop
-  const [isMobileOpen, setIsMobileOpen] = useState(false);  // To control sidebar visibility on mobile
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   const toggleSidebar = () => {
     setIsExpanded(!isExpanded);
@@ -480,7 +626,7 @@ const AdSideBare = () => {
     { icon: <FaChartLine className="w-5 h-5" />, text: "Analytics", path: "/admin/analytics" },
     { icon: <FaUserEdit className="w-5 h-5" />, text: "Update Profile", path: "/admin/updateprofile" },
     {
-      icon: <FaSignOutAlt className="w-5 h-5 text-red-500" /> ,
+      icon: <FaSignOutAlt className="w-5 h-5 text-red-500" />,
       text: "Logout",
       action: () => {
         dispatch(logout());
@@ -494,23 +640,27 @@ const AdSideBare = () => {
       {/* Hamburger Button */}
       <button
         onClick={toggleMobileMenu}
-        className={`md:hidden fixed top-4 left-4 z-40 bg-gray-800 text-white p-2 rounded-md shadow-md transition-all ${isMobileOpen ? "opacity-0 pointer-events-none" : "opacity-100"}`}
+        className={`md:hidden fixed top-4 left-4 z-40 bg-gray-800 text-white p-2 rounded-md shadow-md transition-all ${
+          isMobileOpen ? "opacity-0 pointer-events-none" : "opacity-100"
+        }`}
       >
         <FaBars className="w-5 h-5" />
       </button>
 
       <OutsideClickHandler onOutsideClick={closeSidebar}>
         <div
-          className={`fixed left-0 top-0 h-full bg-gray-900 text-white shadow-lg transition-all duration-300 ease-in-out ${isExpanded ? "w-60" : "w-16"} ${isMobileOpen ? "translate-x-0 z-40" : "-translate-x-full md:translate-x-0 z-20"}`}
+          className={`fixed left-0 top-0 h-full bg-gray-900 text-white shadow-lg transition-all duration-300 ease-in-out ${
+            isExpanded ? "w-60" : "w-16"
+          } ${isMobileOpen ? "translate-x-0 z-40" : "-translate-x-full md:translate-x-0 z-20"}`}
         >
-          {/* Logo Section - Show text 'CF' when on mobile, and logo when expanded */}
+          {/* Logo Section */}
           <div className="flex justify-center items-center py-6">
             {isMobileOpen ? (
-              <span className="text-2xl mt-2 font-bold">CF.</span> // Showing CF text on mobile
+              <span className="text-2xl mt-2 font-bold">CF.</span>
             ) : isExpanded ? (
-              <img src={logo} alt="Logo" className="w-24 h-auto rounded-sm" />  // Logo on expanded sidebar
+              <img src={logo} alt="Logo" className="w-24 h-auto rounded-sm" />
             ) : (
-              <span className="text-2xl font-bold">CF.</span>  // Also showing CF text in collapsed sidebar on desktop
+              <span className="text-2xl font-bold">CF.</span>
             )}
           </div>
 
@@ -519,14 +669,10 @@ const AdSideBare = () => {
             onClick={toggleSidebar}
             className="absolute top-6 -right-4 bg-gray-800 text-white p-2 rounded-full shadow-md hover:bg-blue-600 transition hidden md:block z-10"
           >
-            {isExpanded ? (
-              <FaChevronLeft className="w-4 h-4" />
-            ) : (
-              <FaChevronRight className="w-4 h-4" />
-            )}
+            {isExpanded ? <FaChevronLeft className="w-4 h-4" /> : <FaChevronRight className="w-4 h-4" />}
           </button>
 
-          {/* Close button for mobile */}
+          {/* Close Button (Mobile) */}
           <button
             onClick={closeSidebar}
             className="md:hidden absolute top-1 right-2 text-white p-2 z-10"
@@ -537,20 +683,34 @@ const AdSideBare = () => {
           {/* Navigation Items */}
           <ul className="mt-1 space-y-2 px-2">
             {navItems.map((item, index) => (
-              <li key={index} className="group flex items-center p-3 rounded-md hover:bg-gray-700 cursor-pointer transition duration-200 relative">
-                <Link to={item.path} className="flex items-center w-full" onClick={closeSidebar}>
-                  <span className="flex-shrink-0">{item.icon}</span>
-                  {/* Tooltip for collapsed state */}
-                  {!isExpanded && (
-                    <div className="absolute left-16 bg-black text-white text-sm px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
-                      {item.text}
-                    </div>
-                  )}
-                  {/* Text for expanded state */}
-                  {isExpanded && (
-                    <span className="ml-3 text-sm font-medium">{item.text}</span>
-                  )}
-                </Link>
+              <li
+                key={index}
+                className="group flex items-center p-3 rounded-md hover:bg-gray-700 cursor-pointer transition duration-200 relative"
+                onClick={() => {
+                  if (item.action) item.action();
+                }}
+              >
+                {item.path && !item.action ? (
+                  <Link to={item.path} className="flex items-center w-full" onClick={closeSidebar}>
+                    <span className="flex-shrink-0">{item.icon}</span>
+                    {!isExpanded && (
+                      <div className="absolute left-16 bg-black text-white text-sm px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
+                        {item.text}
+                      </div>
+                    )}
+                    {isExpanded && <span className="ml-3 text-sm font-medium">{item.text}</span>}
+                  </Link>
+                ) : (
+                  <div className="flex items-center w-full">
+                    <span className="flex-shrink-0">{item.icon}</span>
+                    {!isExpanded && (
+                      <div className="absolute left-16 bg-black text-white text-sm px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-10">
+                        {item.text}
+                      </div>
+                    )}
+                    {isExpanded && <span className="ml-3 text-sm font-medium">{item.text}</span>}
+                  </div>
+                )}
               </li>
             ))}
           </ul>

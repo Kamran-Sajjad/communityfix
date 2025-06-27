@@ -579,6 +579,7 @@ const RequestedReports = () => {
       setLoading(true);
       const token = localStorage.getItem("token");
 
+      
       // Fetch issues based on filters
       const { data } = await axios.get("http://localhost:5000/api/issues", {
         headers: {
