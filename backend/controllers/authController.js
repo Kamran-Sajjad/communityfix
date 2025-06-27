@@ -273,6 +273,49 @@ export const forgotPassword = async (req, res) => {
 
 
 
+// export const verifyOtp = async (req, res) => {
+//   const { email, otp } = req.body;
+
+//   try {
+//     const user = await User.findOne({ email });
+
+//     if (!user) {
+//       return res.status(404).json({ 
+//         success: false,
+//         message: 'User not found' 
+//       });
+//     }
+
+//     // Ensure OTP is string and trimmed
+//     const storedOtp = user.resetPasswordOtp?.toString().trim();
+//     const inputOtp = otp?.toString().trim();
+//     const isExpired = user.resetPasswordOtpExpiry < new Date();
+
+//     if (storedOtp !== inputOtp || isExpired) {
+//       return res.status(400).json({ 
+//         success: false,
+//         message: 'Invalid or expired OTP' 
+//       });
+//     }
+
+//     res.status(200).json({ 
+//       success: true,
+//       message: 'OTP verified successfully',
+//       email: email
+//     });
+
+//   } catch (error) {
+//     console.error('[VERIFY OTP ERROR]', error);
+//     res.status(500).json({ 
+//       success: false,
+//       message: 'Server error' 
+//     });
+//   }
+// };
+
+
+
+// Enhanced verifyOtp controller
 export const verifyOtp = async (req, res) => {
   const { email, otp } = req.body;
 
@@ -286,15 +329,28 @@ export const verifyOtp = async (req, res) => {
       });
     }
 
-    // Ensure OTP is string and trimmed
-    const storedOtp = user.resetPasswordOtp?.toString().trim();
-    const inputOtp = otp?.toString().trim();
-    const isExpired = user.resetPasswordOtpExpiry < new Date();
+    // Convert both OTPs to string and trim whitespace
+    const storedOtp = user.resetPasswordOtp?.toString().trim() || '';
+    const inputOtp = otp?.toString().trim() || '';
 
-    if (storedOtp !== inputOtp || isExpired) {
+    if (!storedOtp || !inputOtp) {
       return res.status(400).json({ 
         success: false,
-        message: 'Invalid or expired OTP' 
+        message: 'OTP required' 
+      });
+    }
+
+    if (storedOtp !== inputOtp) {
+      return res.status(400).json({ 
+        success: false,
+        message: 'Invalid OTP' 
+      });
+    }
+
+    if (user.resetPasswordOtpExpiry < new Date()) {
+      return res.status(400).json({ 
+        success: false,
+        message: 'OTP expired' 
       });
     }
 
