@@ -68,4 +68,10 @@ router.post("/create-admin", protect , createAdmin);
 // router.post("/create-admin", protect ,adminOnly, createAdmin);
 
 
+router.use((req, res, next) => {
+  console.log(`[AUTH ROUTE] ${req.method} ${req.originalUrl}`);
+  next();
+});
+
+
 export default router;
