@@ -160,7 +160,8 @@ const issueSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: ["pending", "in_progress", "delayed", "completed", "resolved"],
+      // enum: ["pending", "in_progress", "delayed", "completed", "resolved"],
+      enum: ["pending", "in_progress", "delayed", "completed", ],
       default: "pending",
     },
 
