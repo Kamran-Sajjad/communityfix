@@ -781,9 +781,11 @@ const ReportCard = ({ report, onApprove, onReject, accepted }) => {
                   }`}
               >
                 {report.status === "completed"
-                  ? "Resolved"
+                  ? "completed"
                   : report.status === "rejected"
                     ? "Rejected"
+                  : report.status === "in_progress"
+                    ? "in_progress"
                     : "Pending"}
               </span>
             </div>

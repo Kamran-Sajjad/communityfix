@@ -376,8 +376,10 @@ router.get("/progress", protect, getWorkProgress);
 router.get("/myissues", protect, getUserIssues);
 router.get("/user/:userId", protect, getUserIssues);
 router.get("/status/:status", protect, getIssuesByStatus);
-router.get("/:issueId", protect, getIssueById);
-router.post("/:issueId/upvote", protect, upvoteIssue);
+// router.get("/:issueId", protect, getIssueById);
+router.get("/:id", protect, getIssueById);
+// router.post("/:issueId/upvote", protect, upvoteIssue);
+router.post("/:id/upvote", protect, upvoteIssue);
 router.post("/:issueId/comment", protect, commentOnIssue);
 
 // Admin approval routes

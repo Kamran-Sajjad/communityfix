@@ -1065,8 +1065,189 @@
 
 
 
+// "use client";
+// import { useState, useEffect } from "react";
+// import axios from "axios";
+// import { toast } from "react-toastify";
+// import { Users } from "lucide-react";
+// import Sidebar from "../../components/STdashboard/Sidebar";
+// import Header from "../../components/STdashboard/Header";
+// import IssueTable from "../../components/STdashboard/IssueTable";
+// import Button from "../../components/STdashboard/Button";
+
+// export default function AssignedIssuesPage() {
+//   const [issues, setIssues] = useState([]);
+//   const [filter, setFilter] = useState("all");
+//   const [loading, setLoading] = useState(true);
+//   const [updatingId, setUpdatingId] = useState(null);
+//   const [error, setError] = useState(null);
+
+//   useEffect(() => {
+//     const fetchAcceptedIssues = async () => {
+//       try {
+//         const token = localStorage.getItem("token");
+//         if (!token) throw new Error("No authentication token found");
+
+//         const response = await axios.get("/api/issues/service/accepted", {
+//           headers: { Authorization: `Bearer ${token}` },
+//         });
+
+//         if (!response.data?.issues) throw new Error("Invalid response format");
+
+//         setIssues(response.data.issues);
+//         setError(null);
+//       } catch (err) {
+//         console.error("Error fetching issues:", err);
+//         setError(err.response?.data?.message || "Failed to load issues");
+//         toast.error(err.response?.data?.message || "Failed to load issues");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchAcceptedIssues();
+//   }, []);
+
+//   const filteredIssues = issues.filter((issue) => {
+//     if (filter === "all") return true;
+//     if (filter === "pending") return issue.status !== "completed";
+//     if (filter === "completed") return issue.status === "completed";
+//     return false;
+//   });
+
+//   const handleUpdateIssue = async (updatedIssue) => {
+//     const issueId = updatedIssue._id;
+//     if (!issueId) return toast.error("Invalid issue ID");
+
+//     setUpdatingId(issueId);
+
+//     try {
+//       const token = localStorage.getItem("token");
+//       if (!token) throw new Error("No authentication token found");
+
+//       if (!updatedIssue.status) throw new Error("Status is required");
+
+//       const validStatuses = ["pending", "in_progress", "completed"];
+//       if (!validStatuses.includes(updatedIssue.status))
+//         throw new Error("Invalid status");
+
+//       const payload = {
+//         status: updatedIssue.status,
+//         progress: updatedIssue.progress,
+//         notes: updatedIssue.notes || "",
+//         images: updatedIssue.images || [],
+//       };
+
+//       const response = await axios.put(`/api/issues/${issueId}/status`, payload, {
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//           "Content-Type": "application/json",
+//         },
+//       });
+
+//       if (!response.data?.issue) throw new Error("Invalid response");
+
+//       setIssues((prev) =>
+//         prev.map((i) => (i._id === issueId ? response.data.issue : i))
+//       );
+
+//       toast.success("Status updated");
+//     } catch (error) {
+//       console.error("Update error:", error);
+//       const msg = error.response?.data?.message || error.message || "Update failed";
+//       toast.error(msg);
+//     } finally {
+//       setUpdatingId(null);
+//     }
+//   };
+
+//   if (loading) {
+//     return (
+//       <div className="flex justify-center items-center h-screen">
+//         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+//       </div>
+//     );
+//   }
+
+//   if (error) {
+//     return (
+//       <div className="flex justify-center items-center h-screen">
+//         <div className="text-red-500 text-lg">{error}</div>
+//       </div>
+//     );
+//   }
+
+//   return (
+//     <div className="flex h-screen w-full bg-white overflow-hidden">
+//       <Sidebar />
+//       <div className="flex-1 flex flex-col overflow-hidden">
+//         <Header title="Assigned Issues" />
+//         <main className="flex-1 lg:ml-[250px] p-6 overflow-auto">
+//           <div className="flex items-center mb-8">
+//             <Users className="w-6 h-6 mr-2 text-blue-600" />
+//             <h2 className="text-xl font-bold text-gray-800">Your Assigned Issues</h2>
+//           </div>
+
+//           <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+//             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+//               <h3 className="text-lg font-bold text-gray-700">Issue Management</h3>
+//               <div className="flex flex-wrap gap-2">
+//                 <Button active={filter === "all"} onClick={() => setFilter("all")}>
+//                   All ({issues.length})
+//                 </Button>
+//                 <Button
+//                   active={filter === "pending"}
+//                   onClick={() => setFilter("pending")}
+//                 >
+//                   Pending ({issues.filter((i) => i.status !== "completed").length})
+//                 </Button>
+//                 <Button
+//                   active={filter === "completed"}
+//                   onClick={() => setFilter("completed")}
+//                 >
+//                   Completed ({issues.filter((i) => i.status === "completed").length})
+//                 </Button>
+//               </div>
+//             </div>
+
+//             {filteredIssues.length === 0 ? (
+//               <div className="text-center py-8 text-gray-500">
+//                 No issues found matching your filters
+//               </div>
+//             ) : (
+//               <IssueTable
+//                 issues={filteredIssues}
+//                 onUpdateIssue={handleUpdateIssue}
+//                 updatingId={updatingId}
+//               />
+//             )}
+//           </div>
+//         </main>
+//       </div>
+//     </div>
+//   );
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 "use client";
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux"; // ✅ NEW
 import axios from "axios";
 import { toast } from "react-toastify";
 import { Users } from "lucide-react";
@@ -1081,6 +1262,9 @@ export default function AssignedIssuesPage() {
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState(null);
   const [error, setError] = useState(null);
+
+  const { user } = useSelector((state) => state.auth); // ✅ NEW
+  const firstName = user?.fullName?.split(" ")[0] || "User"; // ✅ NEW
 
   useEffect(() => {
     const fetchAcceptedIssues = async () => {
@@ -1181,7 +1365,7 @@ export default function AssignedIssuesPage() {
     <div className="flex h-screen w-full bg-white overflow-hidden">
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden">
-        <Header title="Assigned Issues" />
+        <Header title="Assigned Issues" firstName={firstName} /> {/* ✅ UPDATED */}
         <main className="flex-1 lg:ml-[250px] p-6 overflow-auto">
           <div className="flex items-center mb-8">
             <Users className="w-6 h-6 mr-2 text-blue-600" />

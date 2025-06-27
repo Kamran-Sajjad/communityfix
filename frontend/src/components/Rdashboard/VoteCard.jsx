@@ -478,6 +478,7 @@ export default function VoteCard({
       `/api/issues/${issueId}/upvote`,
       "POST",
       { priority }
+      
     );
 
     setVoteCount(voteCount + 1);
