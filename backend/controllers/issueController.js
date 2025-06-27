@@ -593,6 +593,17 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 import { JSDOM } from "jsdom";
 import createDOMPurify from "dompurify";
 const window = new JSDOM("").window;
@@ -998,7 +1009,7 @@ export const getIssueStatistics = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-  
+
       message: "Error fetching statistics",
       data: emptyData
     });
@@ -1024,52 +1035,175 @@ export const getWorkProgress = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
-// <<<<<<< ST/basit
-// =======
 
-// <<<<<<< notification
-// Add this new function to update issue status and send notifications
+
+
 export const updateIssueStatus = async (req, res) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
   try {
     const { id } = req.params;
-    const { status } = req.body;
+    const {
+      status,
+      progress,
+      notes,
+      images,
+      completionDate,
+      resolutionSummary,
+    } = req.body;
 
-    const validStatuses = ['pending', 'in_progress', 'resolved'];
-    if (!validStatuses.includes(status)) {
-      return res.status(400).json({ success: false, message: "Invalid status" });
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      await session.abortTransaction();
+      return res.status(400).json({ success: false, message: "Invalid issue ID" });
     }
 
-    const issue = await Issue.findByIdAndUpdate(
-      id,
-      { status },
-      { new: true }
-    );
+    if (!status) {
+      await session.abortTransaction();
+      return res.status(400).json({ success: false, message: "Status is required" });
+    }
 
-    if (!issue) {
+    const validStatuses = ["pending", "in_progress", "delayed", "completed"];
+    if (!validStatuses.includes(status)) {
+      await session.abortTransaction();
+      return res.status(400).json({ success: false, message: "Invalid status value" });
+    }
+
+    if (
+      progress !== undefined &&
+      (isNaN(progress) || progress < 0 || progress > 100)
+    ) {
+      await session.abortTransaction();
+      return res
+        .status(400)
+        .json({ success: false, message: "Progress must be between 0 and 100" });
+    }
+
+    const existingIssue = await Issue.findById(id)
+      .populate("createdBy", "_id fullName email")
+      .populate("assignedToServiceTeam", "_id fullName email")
+      .session(session);
+
+    if (!existingIssue) {
+      await session.abortTransaction();
       return res.status(404).json({ success: false, message: "Issue not found" });
     }
 
-    // Send notification to issue creator about status change
-    if (issue.createdBy.toString() !== req.user._id.toString()) {
-      try {
-        await Notification.create({
-          recipient: issue.createdBy,
-          sender: req.user._id,
-          message: `Your issue "${issue.title}" status changed to ${status}`,
-          issue: issue._id,
-          notificationType: "status_changed"
-        });
-      } catch (notificationError) {
-        console.error("Status change notification failed:", notificationError);
-      }
+    // const isCreator = existingIssue.createdBy._id.equals(req.user._id);
+    const isCreator = existingIssue.createdBy?._id?.toString() === req.user._id.toString();
+
+    // let isAssignedTeam = false;
+    // if (Array.isArray(existingIssue.assignedToServiceTeam)) {
+    //   isAssignedTeam = existingIssue.assignedToServiceTeam.some((m) =>
+    //     m._id.equals(req.user._id)
+    //   );
+    // } else if (existingIssue.assignedToServiceTeam?._id) {
+    //   isAssignedTeam = existingIssue.assignedToServiceTeam._id.equals(req.user._id);
+    // }
+
+
+
+
+    let isAssignedTeam = false;
+
+    if (
+      existingIssue.assignedToServiceTeam &&
+      existingIssue.assignedToServiceTeam.toString() === req.user._id.toString()
+    ) {
+      isAssignedTeam = true;
+    }
+    else if (existingIssue.assignedToServiceTeam?._id) {
+      isAssignedTeam = existingIssue.assignedToServiceTeam._id.equals(req.user._id);
     }
 
-    res.status(200).json({ success: true, issue });
+    if (!isCreator && !isAssignedTeam) {
+      await session.abortTransaction();
+      return res.status(403).json({ success: false, message: "Unauthorized" });
+    }
+
+    const updateData = {
+      status,
+      updatedAt: new Date(),
+      lastUpdatedBy: req.user._id,
+      $push: {
+        statusHistory: {
+          status: existingIssue.status,
+          changedAt: existingIssue.updatedAt,
+          changedBy: existingIssue.lastUpdatedBy,
+        },
+      },
+    };
+
+    if (status === "completed") {
+      updateData.progress = 100;
+      updateData.completedAt = new Date();
+      updateData.resolutionSummary =
+        resolutionSummary || `Issue resolved by ${req.user.fullName}`;
+    } else if (progress !== undefined) {
+      updateData.progress = Math.min(Math.max(progress, 0), 100);
+    }
+
+    if (notes) updateData.notes = notes;
+    if (images) updateData.images = images;
+    if (completionDate) updateData.completionDate = new Date(completionDate);
+
+    const updatedIssue = await Issue.findByIdAndUpdate(id, updateData, {
+      new: true,
+      runValidators: true,
+      session,
+    })
+      .populate("createdBy", "_id fullName email")
+      .populate("assignedToServiceTeam", "_id fullName email")
+      .populate("lastUpdatedBy", "_id fullName email");
+
+    await session.commitTransaction();
+    res.status(200).json({ success: true, issue: updatedIssue });
   } catch (error) {
+    await session.abortTransaction();
     console.error("Error updating issue status:", error);
-    res.status(500).json({ success: false, message: "Server error" });
+    res.status(500).json({
+      success: false,
+      message: "Failed to update issue status",
+      error: error.message,
+    });
+  } finally {
+    session.endSession();
   }
 };
+
+
+// Service Team Accepted Issues
+export const getServiceTeamAcceptedIssues = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    const issues = await Issue.find({
+      $or: [
+        {
+          issueType: 'societal',
+          serviceAccepted: true,
+          assignedToServiceTeam: userId
+        },
+        {
+          issueType: 'household',
+          serviceAccepted: true,
+          assignedToServiceTeam: userId
+        }
+      ]
+    })
+      .sort({ createdAt: -1 })
+      .populate('createdBy', 'fullName');
+
+    res.status(200).json({ success: true, issues });
+  } catch (error) {
+    console.error("Error fetching service team issues:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch issues"
+    });
+  }
+};
+
 
 
 
@@ -1088,8 +1222,6 @@ export const acceptIssue = async (req, res) => {
     // Mark the issue as accepted by admin
     issue.adminAccepted = true;
 
-    // You could assign it to a service team member here if needed
-    // For now, it will remain unassigned (null)
 
     await issue.save();
 
@@ -1189,31 +1321,6 @@ export const acceptIssueByServiceTeam = async (req, res) => {
     res.status(500).json({ success: false, message: "Failed to accept issue" });
   }
 };
-
-
-
-
-
-// export const rejectIssueByServiceTeam = async (req, res) => {
-//   try {
-//     const { issueId } = req.params;
-//     const userId = req.user._id;
-
-//     const issue = await Issue.findById(issueId);
-//     if (!issue) return res.status(404).json({ message: "Issue not found" });
-
-//     // Prevent duplicate rejections
-//     if (!issue.rejectedByServiceTeam.includes(userId)) {
-//       issue.rejectedByServiceTeam.push(userId);
-//       await issue.save();
-//     }
-
-//     res.status(200).json({ success: true, message: "Issue rejected", issue });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ success: false, message: "Failed to reject issue" });
-//   }
-// };
 
 
 
