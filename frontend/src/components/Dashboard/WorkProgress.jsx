@@ -248,6 +248,8 @@
 //   );
 // };
 
+
+
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -259,7 +261,8 @@ export const WorkProgress = () => {
       try {
         const token = localStorage.getItem("token");
 
-        const { data } = await axios.get("http://localhost:5000/api/issues/work-progress", {
+        // const { data } = await axios.get("http://localhost:5000/api/issues/work-progress", {
+        const { data } = await axios.get("http://localhost:5000/api/issues/progress", {
           headers: {
             Authorization: `Bearer ${token}`,
           },

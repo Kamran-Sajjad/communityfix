@@ -883,6 +883,41 @@ export const getIssuesByStatus = async (req, res) => {
 
 
 
+// @desc    Get work progress percentage
+
+export const getWorkProgress = async (req, res) => {
+  try {
+    const totalIssues = await Issue.countDocuments();
+    // const resolvedIssues = await Issue.countDocuments({ status: "resolved" });
+    const resolvedIssues = await Issue.countDocuments({ status: "completed" });
+
+    const progress = totalIssues > 0 ? (resolvedIssues / totalIssues) * 100 : 0;
+
+    res.status(200).json({
+      success: true,
+      totalIssues,
+      resolvedIssues,
+      progress: Math.round(progress),
+    });
+  } catch (error) {
+    console.error("Error fetching work progress:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export const getIssueStatistics = async (req, res) => {
   try {
     const { year, month, timeRange } = req.query;
@@ -890,7 +925,6 @@ export const getIssueStatistics = async (req, res) => {
     const monthNum = month ? parseInt(month) : new Date().getMonth() + 1;
 
     if (timeRange === 'monthly') {
-
       const result = {
         labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
         totalIssues: Array(12).fill(0),
@@ -937,7 +971,7 @@ export const getIssueStatistics = async (req, res) => {
         }),
         totalIssues: Array(daysInMonth).fill(0),
         pendingIssues: Array(daysInMonth).fill(0),
-        resolvedIssues: Array(daysInMonth).fill(0)
+        resolvedIssues: Array(daysInMonth).fill(0) // still using this key in frontend
       };
 
       const stats = await Issue.aggregate([
@@ -963,8 +997,8 @@ export const getIssueStatistics = async (req, res) => {
             pending: {
               $sum: { $cond: [{ $eq: ["$status", "pending"] }, 1, 0] }
             },
-            resolved: {
-              $sum: { $cond: [{ $eq: ["$status", "resolved"] }, 1, 0] }
+            completed: {
+              $sum: { $cond: [{ $eq: ["$status", "completed"] }, 1, 0] }
             }
           }
         },
@@ -976,7 +1010,7 @@ export const getIssueStatistics = async (req, res) => {
         if (dayIndex >= 0 && dayIndex < daysInMonth) {
           result.totalIssues[dayIndex] = stat.total || 0;
           result.pendingIssues[dayIndex] = stat.pending || 0;
-          result.resolvedIssues[dayIndex] = stat.resolved || 0;
+          result.resolvedIssues[dayIndex] = stat.completed || 0; // ✅ FIXED
         }
       });
 
@@ -993,7 +1027,6 @@ export const getIssueStatistics = async (req, res) => {
     }
   } catch (err) {
     console.error("Error in getIssueStatistics:", err);
-    // <<<<<<< notification
     const emptyData = timeRange === 'monthly'
       ? {
         labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
@@ -1009,32 +1042,18 @@ export const getIssueStatistics = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-
       message: "Error fetching statistics",
       data: emptyData
     });
   }
 };
-// @desc    Get work progress percentage
 
-export const getWorkProgress = async (req, res) => {
-  try {
-    const totalIssues = await Issue.countDocuments();
-    const resolvedIssues = await Issue.countDocuments({ status: "resolved" });
 
-    const progress = totalIssues > 0 ? (resolvedIssues / totalIssues) * 100 : 0;
 
-    res.status(200).json({
-      success: true,
-      totalIssues,
-      resolvedIssues,
-      progress: Math.round(progress),
-    });
-  } catch (error) {
-    console.error("Error fetching work progress:", error);
-    res.status(500).json({ success: false, message: "Server error" });
-  }
-};
+
+
+
+
 
 
 

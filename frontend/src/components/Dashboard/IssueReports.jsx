@@ -828,7 +828,7 @@ const IssueReports = () => {
                       <span className="capitalize">{report.issueType}</span>
                     </div>
                   </td>
-                  <td
+                  {/* <td
                     className={`py-3 px-4 flex items-center ${
                       report.status === "resolved"
                         ? "text-green-600"
@@ -841,7 +841,29 @@ const IssueReports = () => {
                       {report.status === "resolved" ? "✓" : report.status === "in_progress" ? "⌛" : "✗"}
                     </span>
                     {report.status === "in_progress" ? "In Progress" : report.status === "resolved" ? "Resolved" : "Pending"}
+                  </td> */}
+                  <td
+                    className={`py-3 px-4 flex items-center ${report.status === "completed"
+                        ? "text-green-600"
+                        : report.status === "in_progress"
+                          ? "text-gray-600"
+                          : "text-red-500"
+                      }`}
+                  >
+                    <span className="mr-2">
+                      {report.status === "completed"
+                        ? "✓"
+                        : report.status === "in_progress"
+                          ? "⌛"
+                          : "✗"}
+                    </span>
+                    {report.status === "in_progress"
+                      ? "In Progress"
+                      : report.status === "completed"
+                        ? "Completed"
+                        : "Pending"}
                   </td>
+
                   <td className="py-3 px-4 text-center">
                     {expandedId === report._id ? "▲" : "▼"}
                   </td>
