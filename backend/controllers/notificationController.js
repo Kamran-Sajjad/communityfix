@@ -532,7 +532,8 @@ export const notifyIssueReported = async (issue, reporter) => {
 export const notifyFeedbackSubmitted = async (feedback, sender) => {
   const admins = await User.find({ accountType: "admin" });
   const serviceTeam = await User.find({ accountType: "serviceTeam" });
-  const message = `New feedback submitted: ${feedback.message}`;
+  const message = `New feedback submitted.`;
+  // const message = `New feedback submitted: ${feedback.message}`;
 
   const allRecipients = [...admins, ...serviceTeam];
 

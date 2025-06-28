@@ -490,7 +490,8 @@ export const Stats = () => {
             pointBackgroundColor: '#e11d48'
           },
           {
-            label: 'Resolved Issues',
+            label: 'Completed Issues',
+            // label: 'Resolved Issues',
             data: chartData.resolvedIssues || [],
             borderColor: '#10b981',
             backgroundColor: 'rgba(16, 185, 129, 0.1)',
@@ -600,7 +601,7 @@ export const Stats = () => {
             <p className="text-2xl font-bold text-red-600">{chartData.pendingIssues.reduce((a, b) => a + b, 0)}</p>
           </div>
           <div className="bg-green-50 p-4 rounded-lg">
-            <h4 className="text-sm font-medium text-green-800">Resolved Issues</h4>
+            <h4 className="text-sm font-medium text-green-800">Completed Issues</h4>
             <p className="text-2xl font-bold text-green-600">{chartData.resolvedIssues.reduce((a, b) => a + b, 0)}</p>
           </div>
         </div>

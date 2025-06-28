@@ -450,7 +450,7 @@ export default function Popup({ issue, onClose, onUpdate }) {
   const statusOptions = [
     { value: "pending", label: "Pending", emoji: "🕒" },
     { value: "in_progress", label: "In Progress", emoji: "⚙️" },
-    { value: "delayed", label: "Delayed", emoji: "⚠️" },
+    // { value: "delayed", label: "Delayed", emoji: "⚠️" },
     { value: "completed", label: "Completed", emoji: "✅" }
   ];
 
