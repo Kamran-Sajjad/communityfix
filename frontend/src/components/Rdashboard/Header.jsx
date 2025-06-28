@@ -74,18 +74,105 @@
 //   );
 // }
 
+
+
+
+
+
+
+
+// "use client";
+
+// import { ChevronDown, Menu } from "lucide-react";
+// import logo from "../../assets/logo.png";
+// import NotificationBell from "../../components/Notification/NotificationBell";
+
+// export default function Header({ setMobileMenuOpen, mobileMenuOpen }) {
+//   return (
+//     <div className="bg-black text-white p-4 flex items-center justify-between">
+//       {/* Mobile menu button */}
+//       {!mobileMenuOpen && (
+//         <button 
+//           onClick={() => setMobileMenuOpen(true)}
+//           className="md:hidden mr-3"
+//         >
+//           <Menu className="w-6 h-6" />
+//         </button>
+//       )}
+
+//       {/* Logo - visible only on mobile */}
+//       <div className="md:hidden flex items-center">
+//         <img src={logo} alt="Community Fix Logo" className="w-7 h-7 rounded" />
+//       </div>
+
+//       {/* Notification and profile - aligned to right */}
+//       <div className="flex items-center ml-auto">
+//         <div className="mr-4">
+//           <NotificationBell color="white"/>
+//         </div>
+
+//         <div className="flex items-center">
+//           <img src={logo} alt="User" className="w-8 h-8 md:w-10 md:h-10 rounded-full" />
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 "use client";
 
-import { ChevronDown, Menu } from "lucide-react";
+import { Menu } from "lucide-react";
 import logo from "../../assets/logo.png";
 import NotificationBell from "../../components/Notification/NotificationBell";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function Header({ setMobileMenuOpen, mobileMenuOpen }) {
+  const [userInitial, setUserInitial] = useState("U");
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await axios.get("/api/users/profile", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+
+        const fullName = res.data?.fullName || "User";
+        const firstLetter = fullName.trim().charAt(0).toUpperCase();
+        setUserInitial(firstLetter);
+      } catch (err) {
+        console.error("Failed to fetch user profile:", err);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
   return (
     <div className="bg-black text-white p-4 flex items-center justify-between">
       {/* Mobile menu button */}
       {!mobileMenuOpen && (
-        <button 
+        <button
           onClick={() => setMobileMenuOpen(true)}
           className="md:hidden mr-3"
         >
@@ -101,11 +188,12 @@ export default function Header({ setMobileMenuOpen, mobileMenuOpen }) {
       {/* Notification and profile - aligned to right */}
       <div className="flex items-center ml-auto">
         <div className="mr-4">
-          <NotificationBell color="white"/>
+          <NotificationBell color="white" />
         </div>
 
-        <div className="flex items-center">
-          <img src={logo} alt="User" className="w-8 h-8 md:w-10 md:h-10 rounded-full" />
+        {/* User Initial Avatar with Gray Background */}
+        <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gray-300 text-black flex items-center justify-center font-bold text-sm md:text-base">
+          {userInitial}
         </div>
       </div>
     </div>

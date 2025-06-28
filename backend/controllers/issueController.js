@@ -593,6 +593,17 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 import { JSDOM } from "jsdom";
 import createDOMPurify from "dompurify";
 const window = new JSDOM("").window;
@@ -689,7 +700,7 @@ export const createIssue = async (req, res) => {
 // Get all issues
 export const getAllIssues = async (req, res) => {
   try {
-    const { issueType, issueCategory } = req.query;
+    const { issueType, issueCategory ,status} = req.query;
 
     // Build the filter object
     let filter = {};
@@ -702,6 +713,9 @@ export const getAllIssues = async (req, res) => {
     // Add issueCategory to filter if it exists
     if (issueCategory) {
       filter.issueCategory = issueCategory;
+    }
+    if (status) {
+      filter.status = status;
     }
 
     // Find the issues based on the filter
@@ -842,7 +856,10 @@ export const getUserIssues = async (req, res) => {
       return res.status(400).json({ success: false, message: 'User not authenticated' });
     }
 
-    const issues = await Issue.find({ createdBy: userId }).select('title description issueType status upvotes createdAt attachments');
+    // const issues = await Issue.find({ createdBy: userId }).select('title description issueType status upvotes createdAt attachments');
+    const issues = await Issue.find({ createdBy: userId })
+  .select('title description issueType status upvotes createdAt attachments progress updatedAt');
+
     return res.status(200).json({ success: true, issues });
   } catch (error) {
     console.error("Error in getUserIssues:", error);
@@ -872,6 +889,41 @@ export const getIssuesByStatus = async (req, res) => {
 
 
 
+// @desc    Get work progress percentage
+
+export const getWorkProgress = async (req, res) => {
+  try {
+    const totalIssues = await Issue.countDocuments();
+    // const resolvedIssues = await Issue.countDocuments({ status: "resolved" });
+    const resolvedIssues = await Issue.countDocuments({ status: "completed" });
+
+    const progress = totalIssues > 0 ? (resolvedIssues / totalIssues) * 100 : 0;
+
+    res.status(200).json({
+      success: true,
+      totalIssues,
+      resolvedIssues,
+      progress: Math.round(progress),
+    });
+  } catch (error) {
+    console.error("Error fetching work progress:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export const getIssueStatistics = async (req, res) => {
   try {
     const { year, month, timeRange } = req.query;
@@ -879,7 +931,6 @@ export const getIssueStatistics = async (req, res) => {
     const monthNum = month ? parseInt(month) : new Date().getMonth() + 1;
 
     if (timeRange === 'monthly') {
-
       const result = {
         labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
         totalIssues: Array(12).fill(0),
@@ -926,7 +977,7 @@ export const getIssueStatistics = async (req, res) => {
         }),
         totalIssues: Array(daysInMonth).fill(0),
         pendingIssues: Array(daysInMonth).fill(0),
-        resolvedIssues: Array(daysInMonth).fill(0)
+        resolvedIssues: Array(daysInMonth).fill(0) // still using this key in frontend
       };
 
       const stats = await Issue.aggregate([
@@ -952,8 +1003,8 @@ export const getIssueStatistics = async (req, res) => {
             pending: {
               $sum: { $cond: [{ $eq: ["$status", "pending"] }, 1, 0] }
             },
-            resolved: {
-              $sum: { $cond: [{ $eq: ["$status", "resolved"] }, 1, 0] }
+            completed: {
+              $sum: { $cond: [{ $eq: ["$status", "completed"] }, 1, 0] }
             }
           }
         },
@@ -965,7 +1016,7 @@ export const getIssueStatistics = async (req, res) => {
         if (dayIndex >= 0 && dayIndex < daysInMonth) {
           result.totalIssues[dayIndex] = stat.total || 0;
           result.pendingIssues[dayIndex] = stat.pending || 0;
-          result.resolvedIssues[dayIndex] = stat.resolved || 0;
+          result.resolvedIssues[dayIndex] = stat.completed || 0; // ✅ FIXED
         }
       });
 
@@ -982,7 +1033,6 @@ export const getIssueStatistics = async (req, res) => {
     }
   } catch (err) {
     console.error("Error in getIssueStatistics:", err);
-    // <<<<<<< notification
     const emptyData = timeRange === 'monthly'
       ? {
         labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
@@ -998,78 +1048,176 @@ export const getIssueStatistics = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-  
       message: "Error fetching statistics",
       data: emptyData
     });
   }
 };
-// @desc    Get work progress percentage
 
-export const getWorkProgress = async (req, res) => {
-  try {
-    const totalIssues = await Issue.countDocuments();
-    const resolvedIssues = await Issue.countDocuments({ status: "resolved" });
 
-    const progress = totalIssues > 0 ? (resolvedIssues / totalIssues) * 100 : 0;
 
-    res.status(200).json({
-      success: true,
-      totalIssues,
-      resolvedIssues,
-      progress: Math.round(progress),
-    });
-  } catch (error) {
-    console.error("Error fetching work progress:", error);
-    res.status(500).json({ success: false, message: "Server error" });
-  }
-};
-// <<<<<<< ST/basit
-// =======
 
-// <<<<<<< notification
-// Add this new function to update issue status and send notifications
+
+
+
+
+
+
 export const updateIssueStatus = async (req, res) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
   try {
     const { id } = req.params;
-    const { status } = req.body;
+    const {
+      status,
+      progress,
+      notes,
+      images,
+      completionDate,
+      resolutionSummary,
+    } = req.body;
 
-    const validStatuses = ['pending', 'in_progress', 'resolved'];
-    if (!validStatuses.includes(status)) {
-      return res.status(400).json({ success: false, message: "Invalid status" });
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      await session.abortTransaction();
+      return res.status(400).json({ success: false, message: "Invalid issue ID" });
     }
 
-    const issue = await Issue.findByIdAndUpdate(
-      id,
-      { status },
-      { new: true }
-    );
+    if (!status) {
+      await session.abortTransaction();
+      return res.status(400).json({ success: false, message: "Status is required" });
+    }
 
-    if (!issue) {
+    const validStatuses = ["pending", "in_progress", "delayed", "completed"];
+    if (!validStatuses.includes(status)) {
+      await session.abortTransaction();
+      return res.status(400).json({ success: false, message: "Invalid status value" });
+    }
+
+    if (
+      progress !== undefined &&
+      (isNaN(progress) || progress < 0 || progress > 100)
+    ) {
+      await session.abortTransaction();
+      return res
+        .status(400)
+        .json({ success: false, message: "Progress must be between 0 and 100" });
+    }
+
+    const existingIssue = await Issue.findById(id)
+      .populate("createdBy", "_id fullName email")
+      .populate("assignedToServiceTeam", "_id fullName email")
+      .session(session);
+
+    if (!existingIssue) {
+      await session.abortTransaction();
       return res.status(404).json({ success: false, message: "Issue not found" });
     }
 
-    // Send notification to issue creator about status change
-    if (issue.createdBy.toString() !== req.user._id.toString()) {
-      try {
-        await Notification.create({
-          recipient: issue.createdBy,
-          sender: req.user._id,
-          message: `Your issue "${issue.title}" status changed to ${status}`,
-          issue: issue._id,
-          notificationType: "status_changed"
-        });
-      } catch (notificationError) {
-        console.error("Status change notification failed:", notificationError);
-      }
+    // const isCreator = existingIssue.createdBy._id.equals(req.user._id);
+    const isCreator = existingIssue.createdBy?._id?.toString() === req.user._id.toString();
+
+
+    let isAssignedTeam = false;
+
+    if (
+      existingIssue.assignedToServiceTeam &&
+      existingIssue.assignedToServiceTeam.toString() === req.user._id.toString()
+    ) {
+      isAssignedTeam = true;
+    }
+    else if (existingIssue.assignedToServiceTeam?._id) {
+      isAssignedTeam = existingIssue.assignedToServiceTeam._id.equals(req.user._id);
     }
 
-    res.status(200).json({ success: true, issue });
+    if (!isCreator && !isAssignedTeam) {
+      await session.abortTransaction();
+      return res.status(403).json({ success: false, message: "Unauthorized" });
+    }
+
+    const updateData = {
+      status,
+      updatedAt: new Date(),
+      lastUpdatedBy: req.user._id,
+      $push: {
+        statusHistory: {
+          status: existingIssue.status,
+          changedAt: existingIssue.updatedAt,
+          changedBy: existingIssue.lastUpdatedBy,
+        },
+      },
+    };
+
+    if (status === "completed") {
+      updateData.progress = 100;
+      updateData.completedAt = new Date();
+      updateData.resolutionSummary =
+        resolutionSummary || `Issue resolved by ${req.user.fullName}`;
+    } else if (progress !== undefined) {
+      updateData.progress = Math.min(Math.max(progress, 0), 100);
+    }
+
+    if (notes) updateData.notes = notes;
+    if (images) updateData.images = images;
+    if (completionDate) updateData.completionDate = new Date(completionDate);
+
+    const updatedIssue = await Issue.findByIdAndUpdate(id, updateData, {
+      new: true,
+      runValidators: true,
+      session,
+    })
+      .populate("createdBy", "_id fullName email")
+      .populate("assignedToServiceTeam", "_id fullName email")
+      .populate("lastUpdatedBy", "_id fullName email");
+
+    await session.commitTransaction();
+    res.status(200).json({ success: true, issue: updatedIssue });
   } catch (error) {
+    await session.abortTransaction();
     console.error("Error updating issue status:", error);
-    res.status(500).json({ success: false, message: "Server error" });
+    res.status(500).json({
+      success: false,
+      message: "Failed to update issue status",
+      error: error.message,
+    });
+  } finally {
+    session.endSession();
   }
 };
+
+
+// Service Team Accepted Issues
+export const getServiceTeamAcceptedIssues = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    const issues = await Issue.find({
+      $or: [
+        {
+          issueType: 'societal',
+          serviceAccepted: true,
+          assignedToServiceTeam: userId
+        },
+        {
+          issueType: 'household',
+          serviceAccepted: true,
+          assignedToServiceTeam: userId
+        }
+      ]
+    })
+      .sort({ createdAt: -1 })
+      .populate('createdBy', 'fullName');
+
+    res.status(200).json({ success: true, issues });
+  } catch (error) {
+    console.error("Error fetching service team issues:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch issues"
+    });
+  }
+};
+
 
 
 
@@ -1088,8 +1236,6 @@ export const acceptIssue = async (req, res) => {
     // Mark the issue as accepted by admin
     issue.adminAccepted = true;
 
-    // You could assign it to a service team member here if needed
-    // For now, it will remain unassigned (null)
 
     await issue.save();
 
@@ -1192,31 +1338,6 @@ export const acceptIssueByServiceTeam = async (req, res) => {
 
 
 
-
-
-// export const rejectIssueByServiceTeam = async (req, res) => {
-//   try {
-//     const { issueId } = req.params;
-//     const userId = req.user._id;
-
-//     const issue = await Issue.findById(issueId);
-//     if (!issue) return res.status(404).json({ message: "Issue not found" });
-
-//     // Prevent duplicate rejections
-//     if (!issue.rejectedByServiceTeam.includes(userId)) {
-//       issue.rejectedByServiceTeam.push(userId);
-//       await issue.save();
-//     }
-
-//     res.status(200).json({ success: true, message: "Issue rejected", issue });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ success: false, message: "Failed to reject issue" });
-//   }
-// };
-
-
-
 export const rejectIssueByServiceTeam = async (req, res) => {
   try {
     const { issueId } = req.params;
@@ -1240,5 +1361,3 @@ export const rejectIssueByServiceTeam = async (req, res) => {
     res.status(500).json({ success: false, message: "Failed to reject issue" });
   }
 };
-
-

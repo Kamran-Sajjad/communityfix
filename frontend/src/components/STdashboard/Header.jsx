@@ -152,69 +152,199 @@
 
 
 
+
+
+
+
+
+
+// "use client";
+
+// import React from "react";
+// // import Notification from "./Notification"; // Adjust the import path as needed
+// import NotificationBell from "../../components/Notification/NotificationBell";
+
+// // const Header = ({ title = "Welcome back" }) => {
+// const Header = ({ firstName= "Welcome back" }) => {
+//   // const initialNotifications = [
+//   //   {
+//   //     id: 1,
+//   //     text: "New service request from Kamran",
+//   //     time: "2 mins ago",
+//   //     read: false,
+//   //   },
+//   //   {
+//   //     id: 2,
+//   //     text: "Service completed for Nizam",
+//   //     time: "1 hour ago",
+//   //     read: true,
+//   //   },
+//   //   {
+//   //     id: 3,
+//   //     text: "Urgent: Pipe leak reported by Basit",
+//   //     time: "3 hours ago",
+//   //     read: false,
+//   //   },
+//   // ];
+//  // Get current time for dynamic greeting
+//  const currentHour = new Date().getHours();
+//  let greeting = "Welcome";
+ 
+//  if (currentHour < 12) {
+//    greeting = "Good morning";
+//  } else if (currentHour < 18) {
+//    greeting = "Good afternoon";
+//  } else {
+//    greeting = "Good evening";
+//  }
+//   return (
+//     <header className="mb-2 p-2 px-2 flex flex-col sm:flex-row items-center justify-between gap-2">
+//       {/* Title */}
+//       <h1 className="w-full text-center sm:text-left sm:pl-25 md:pl-72 lg:pl-80 font-bold text-xl sm:text-2xl md:text-3xl">
+//        {greeting}, {firstName}!
+//       </h1>
+
+//       {/* Notification + Profile */}
+//       <div className="flex items-center justify-center sm:justify-end gap-4 w-full sm:w-auto">
+//         {/* Using the Notification component */}
+//         {/* <Notification initialNotifications={initialNotifications} /> */}
+
+//         <div className="mr-4">
+//           <NotificationBell color="black"/>
+//         </div>
+
+//         {/* Profile Section - Unchanged */}
+//         <div className="flex items-center gap-2 sm:gap-3">
+//           <div className="h-8 w-8 sm:h-7 sm:w-10 md:h-10 md:w-12 rounded-full bg-gray-300 flex items-center justify-center">
+//             <span className="text-sm sm:text-lg font-bold">A</span>
+//           </div>
+//           <div className="hidden sm:block">
+//             <h2 className="font-bold text-sm md:text-base">{firstName}</h2>
+//             <p className="text-xs md:text-sm text-gray-600">Painter</p>
+//           </div>
+//         </div>
+//       </div>
+//     </header>
+//   );
+// };
+
+// export default Header;
+
+
+
+
+
+
+
+
+
+
+// "use client";
+
+// import React from "react";
+// import NotificationBell from "../../components/Notification/NotificationBell";
+
+// const Header = ({ firstName = "User" }) => {
+//   // Get current time for dynamic greeting
+//   const currentHour = new Date().getHours();
+//   let greeting = "Welcome";
+
+//   if (currentHour < 12) {
+//     greeting = "Good morning";
+//   } else if (currentHour < 18) {
+//     greeting = "Good afternoon";
+//   } else {
+//     greeting = "Good evening";
+//   }
+
+//   return (
+//     <header className="mb-2 p-2 px-2 flex flex-col sm:flex-row items-center justify-between gap-2">
+//       {/* Greeting Title (left side) */}
+//       <h1 className="w-full text-center sm:text-left sm:pl-25 md:pl-72 lg:pl-80 font-bold text-xl sm:text-2xl md:text-3xl">
+//         {greeting}, {firstName}!
+//       </h1>
+
+//       {/* Notification + Profile Section */}
+//       <div className="flex items-center justify-center sm:justify-end gap-4 w-full sm:w-auto">
+//         {/* Notification Bell */}
+//         <div className="mr-4">
+//           <NotificationBell color="black" />
+//         </div>
+
+//         {/* Profile Info */}
+//         <div className="flex items-center gap-2 sm:gap-3">
+//           {/* Profile Image Placeholder */}
+//           <div className="h-8 w-8 sm:h-7 sm:w-10 md:h-10 md:w-12 rounded-full bg-gray-300 flex items-center justify-center">
+//             <span className="text-sm sm:text-lg font-bold">
+//               {firstName.charAt(0).toUpperCase()}
+//             </span>
+//           </div>
+
+//           {/* Name + Profession */}
+//           <div className="hidden sm:block">
+//             <h2 className="font-bold text-sm md:text-base">{firstName}</h2>
+//             <p className="text-xs md:text-sm text-gray-600">Painter</p>
+//           </div>
+//         </div>
+//       </div>
+//     </header>
+//   );
+// };
+
+// export default Header;
+
+
+
+
+
+
+
+
+
+
+
 "use client";
 
 import React from "react";
-// import Notification from "./Notification"; // Adjust the import path as needed
 import NotificationBell from "../../components/Notification/NotificationBell";
 
-// const Header = ({ title = "Welcome back" }) => {
-const Header = ({ firstName= "Welcome back" }) => {
-  // const initialNotifications = [
-  //   {
-  //     id: 1,
-  //     text: "New service request from Kamran",
-  //     time: "2 mins ago",
-  //     read: false,
-  //   },
-  //   {
-  //     id: 2,
-  //     text: "Service completed for Nizam",
-  //     time: "1 hour ago",
-  //     read: true,
-  //   },
-  //   {
-  //     id: 3,
-  //     text: "Urgent: Pipe leak reported by Basit",
-  //     time: "3 hours ago",
-  //     read: false,
-  //   },
-  // ];
- // Get current time for dynamic greeting
- const currentHour = new Date().getHours();
- let greeting = "Welcome";
- 
- if (currentHour < 12) {
-   greeting = "Good morning";
- } else if (currentHour < 18) {
-   greeting = "Good afternoon";
- } else {
-   greeting = "Good evening";
- }
+const Header = ({ firstName = "User" }) => {
+  // Calculate current hour in GMT+5 timezone
+  const now = new Date();
+  const gmtPlus5Hour = new Date(
+    now.getTime() + (5 - now.getTimezoneOffset() / 60) * 60 * 60 * 1000
+  ).getUTCHours();
+
+  let greeting = "Welcome";
+  if (gmtPlus5Hour < 12) {
+    greeting = "Good morning";
+  } else if (gmtPlus5Hour < 18) {
+    greeting = "Good afternoon";
+  } else {
+    greeting = "Good evening";
+  }
+
   return (
     <header className="mb-2 p-2 px-2 flex flex-col sm:flex-row items-center justify-between gap-2">
-      {/* Title */}
       <h1 className="w-full text-center sm:text-left sm:pl-25 md:pl-72 lg:pl-80 font-bold text-xl sm:text-2xl md:text-3xl">
-       {greeting}, {firstName}!
+        {greeting}, {firstName}!
       </h1>
 
-      {/* Notification + Profile */}
       <div className="flex items-center justify-center sm:justify-end gap-4 w-full sm:w-auto">
-        {/* Using the Notification component */}
-        {/* <Notification initialNotifications={initialNotifications} /> */}
-
         <div className="mr-4">
-          <NotificationBell color="black"/>
+          <NotificationBell color="black" />
         </div>
 
-        {/* Profile Section - Unchanged */}
         <div className="flex items-center gap-2 sm:gap-3">
           <div className="h-8 w-8 sm:h-7 sm:w-10 md:h-10 md:w-12 rounded-full bg-gray-300 flex items-center justify-center">
-            <span className="text-sm sm:text-lg font-bold">A</span>
+            <span className="text-sm sm:text-lg font-bold">
+              {firstName.charAt(0).toUpperCase()}
+            </span>
           </div>
+
           <div className="hidden sm:block">
             <h2 className="font-bold text-sm md:text-base">{firstName}</h2>
-            <p className="text-xs md:text-sm text-gray-600">Painter</p>
+            {/* <p className="text-xs md:text-sm text-gray-600">Painter</p> */}
           </div>
         </div>
       </div>
